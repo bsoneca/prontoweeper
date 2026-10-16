@@ -63,3 +63,20 @@ at x = 23 and the field scrolls across 794 px
 (`journal/phone-expert.png`). The second `./saytw integrate` **exits 0**.
 It reports 10 findings, all `minor`. The ones I read say the page is mostly
 empty desktop, which is the intended look.
+
+## Turn 2 — 2026-10-16: the right button belongs to the game
+
+**Before:** in v0.1.0, right-clicking a square flagged it **and** opened the
+browser's context menu. In omnishell 0.11.0 the terminal cancels a
+`contextmenu` default only for a machine (`data-machine`) that has an arrow
+for it. A reduce, such as `data-on-contextmenu="sweep"` on the squares, never
+cancels it. Headless Chrome draws no menu, so no earlier check could see
+this.
+
+**After:** a one-row `tab` entity, `RightButton`, carries a one-state chart
+around the window and its dialogs. Its only arrow is `contextmenu`, so the
+terminal cancels the browser menu anywhere in the game; `sweep` still does
+the flagging. In the built app, real right-clicks on a square, the face, the
+title bar and a counter now all report `defaultPrevented: true`. On the live
+v0.1.0 site all of them reported `false`. Flagging and opening work as
+before. `generate`, `lint`, `test` and `integrate` exit 0.

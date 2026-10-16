@@ -95,6 +95,19 @@ code: pronto.#App & {
 				{ordinal: 4, name: "who", type: "string", cel: "this.size() >= 1 && this.size() <= 32"},
 			]
 		}
+		// Who answers the right button. One row, one state: its chart's only
+		// arrow is contextmenu, and an arrow for it is what tells the terminal
+		// to cancel the browser's own menu over the window.
+		RightButton: {
+			id: "0xdb7e2ee081412442"
+			table:      "right_button"
+			durability: "tab"
+			fields: [
+				{ordinal: 1, name: "id", type: "string", pk: true, cel: "this == 'right'"},
+				{ordinal: 2, name: "owner", type: "string", cel: "this in ['game']"},
+			]
+			seed: [{id: "right", owner: "game"}]
+		}
 		// The clock the timer reads: one number a machine advances each second.
 		Tick: {
 			id: "0xa4af84ac49cc02cb"

@@ -12,6 +12,7 @@ i18n:
 local:
   tick: tab
   game: tab
+  right_button: tab
   cell: tab
   best: device
 seed:
@@ -4952,6 +4953,9 @@ seed:
       time: 0
       time_led: '000'
       t0: 0
+  right_button:
+    - id: right
+      owner: game
   tick:
     - id: tick
       'n': 0
@@ -5172,6 +5176,20 @@ schema:
           sizeMin: 1
           sizeMax: 32
         name: who
+        type: string
+        required: true
+  right_button:
+    durability: tab
+    fields:
+      - enum:
+          - right
+        name: id
+        pk: true
+        type: string
+        required: true
+      - enum:
+          - game
+        name: owner
         type: string
         required: true
   tick:

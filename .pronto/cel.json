@@ -1,4 +1,5 @@
 {
+  "this == 'right'": {"expr":{"callExpr":{"function":"_==_","args":[{"identExpr":{"name":"this"}},{"constExpr":{"stringValue":"right"}}]}}},
   "this == 'tick'": {"expr":{"callExpr":{"function":"_==_","args":[{"identExpr":{"name":"this"}},{"constExpr":{"stringValue":"tick"}}]}}},
   "this >= -999 && this <= 999": {"expr":{"callExpr":{"function":"_&&_","args":[{"callExpr":{"function":"_>=_","args":[{"identExpr":{"name":"this"}},{"constExpr":{"int64Value":"-999"}}]}},{"callExpr":{"function":"_<=_","args":[{"identExpr":{"name":"this"}},{"constExpr":{"int64Value":"999"}}]}}]}}},
   "this >= 0": {"expr":{"callExpr":{"function":"_>=_","args":[{"identExpr":{"name":"this"}},{"constExpr":{"int64Value":"0"}}]}}},
@@ -10,6 +11,7 @@
   "this in ['', '1', '2', '3', '4', '5', '6', '7', '8', '?']": {"expr":{"callExpr":{"function":"@in","args":[{"identExpr":{"name":"this"}},{"listExpr":{"elements":[{"constExpr":{"stringValue":""}},{"constExpr":{"stringValue":"1"}},{"constExpr":{"stringValue":"2"}},{"constExpr":{"stringValue":"3"}},{"constExpr":{"stringValue":"4"}},{"constExpr":{"stringValue":"5"}},{"constExpr":{"stringValue":"6"}},{"constExpr":{"stringValue":"7"}},{"constExpr":{"stringValue":"8"}},{"constExpr":{"stringValue":"?"}}]}}]}}},
   "this in ['b', 'i', 'e']": {"expr":{"callExpr":{"function":"@in","args":[{"identExpr":{"name":"this"}},{"listExpr":{"elements":[{"constExpr":{"stringValue":"b"}},{"constExpr":{"stringValue":"i"}},{"constExpr":{"stringValue":"e"}}]}}]}}},
   "this in ['beginner', 'intermediate', 'expert']": {"expr":{"callExpr":{"function":"@in","args":[{"identExpr":{"name":"this"}},{"listExpr":{"elements":[{"constExpr":{"stringValue":"beginner"}},{"constExpr":{"stringValue":"intermediate"}},{"constExpr":{"stringValue":"expert"}}]}}]}}},
+  "this in ['game']": {"expr":{"callExpr":{"function":"@in","args":[{"identExpr":{"name":"this"}},{"listExpr":{"elements":[{"constExpr":{"stringValue":"game"}}]}}]}}},
   "this in ['hidden', 'flag', 'mark', 'open', 'boom', 'mine', 'wrong']": {"expr":{"callExpr":{"function":"@in","args":[{"identExpr":{"name":"this"}},{"listExpr":{"elements":[{"constExpr":{"stringValue":"hidden"}},{"constExpr":{"stringValue":"flag"}},{"constExpr":{"stringValue":"mark"}},{"constExpr":{"stringValue":"open"}},{"constExpr":{"stringValue":"boom"}},{"constExpr":{"stringValue":"mine"}},{"constExpr":{"stringValue":"wrong"}}]}}]}}},
   "this in ['no', 'yes']": {"expr":{"callExpr":{"function":"@in","args":[{"identExpr":{"name":"this"}},{"listExpr":{"elements":[{"constExpr":{"stringValue":"no"}},{"constExpr":{"stringValue":"yes"}}]}}]}}},
   "this in ['on']": {"expr":{"callExpr":{"function":"@in","args":[{"identExpr":{"name":"this"}},{"listExpr":{"elements":[{"constExpr":{"stringValue":"on"}}]}}]}}},

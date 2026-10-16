@@ -119,6 +119,21 @@
       }
     }
   },
+  "0xdb7e2ee081412442": {
+    "name": "right_button",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "owner",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
   "0xa4af84ac49cc02cb": {
     "name": "tick",
     "fields": {

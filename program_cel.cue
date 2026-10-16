@@ -86,6 +86,18 @@ code: state: entities: {
 			}
 		}
 	}
+	RightButton: {
+		seed: [...{
+			id?: "right"
+			owner?: ("game")
+		}]
+		cel: {
+			enums: {
+				id: ["right"]
+				owner: ["game"]
+			}
+		}
+	}
 	Tick: {
 		seed: [...{
 			id?: "tick"

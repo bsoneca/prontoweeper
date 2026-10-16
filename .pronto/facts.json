@@ -3,26 +3,26 @@
 
   ],
   "app_literal": [
-    {"path":"shell/shared/window.css","line":48,"decl":27,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":62,"decl":41,"prop":"inset","value":"0","dimension":"space","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":86,"decl":55,"prop":"padding","value":"0","dimension":"space","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":88,"decl":56,"prop":"font","value":"inherit","dimension":"shorthand","norm":"shorthand"},
-    {"path":"shell/shared/window.css","line":91,"decl":59,"prop":"border","value":"0","dimension":"rule","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":102,"decl":68,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":110,"decl":74,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":111,"decl":75,"prop":"border","value":"0","dimension":"rule","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":132,"decl":94,"prop":"border-width","value":"0","dimension":"rule","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":132,"decl":94,"prop":"border-width","value":"0","dimension":"rule","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":155,"decl":109,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":180,"decl":126,"prop":"padding","value":"0","dimension":"space","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":254,"decl":170,"prop":"padding","value":"0","dimension":"space","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":255,"decl":171,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":257,"decl":173,"prop":"font","value":"inherit","dimension":"shorthand","norm":"shorthand"},
-    {"path":"shell/shared/window.css","line":260,"decl":176,"prop":"line-height","value":"1","dimension":"leading","norm":"num:1000"},
-    {"path":"shell/shared/window.css","line":263,"decl":179,"prop":"border","value":"0","dimension":"rule","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":268,"decl":182,"prop":"border","value":"0","dimension":"rule","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":336,"decl":226,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
-    {"path":"shell/shared/window.css","line":346,"decl":240,"prop":"font","value":"inherit","dimension":"shorthand","norm":"shorthand"}
+    {"path":"shell/shared/window.css","line":50,"decl":28,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":64,"decl":42,"prop":"inset","value":"0","dimension":"space","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":88,"decl":56,"prop":"padding","value":"0","dimension":"space","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":90,"decl":57,"prop":"font","value":"inherit","dimension":"shorthand","norm":"shorthand"},
+    {"path":"shell/shared/window.css","line":93,"decl":60,"prop":"border","value":"0","dimension":"rule","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":104,"decl":69,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":112,"decl":75,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":113,"decl":76,"prop":"border","value":"0","dimension":"rule","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":134,"decl":95,"prop":"border-width","value":"0","dimension":"rule","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":134,"decl":95,"prop":"border-width","value":"0","dimension":"rule","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":157,"decl":110,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":182,"decl":127,"prop":"padding","value":"0","dimension":"space","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":256,"decl":171,"prop":"padding","value":"0","dimension":"space","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":257,"decl":172,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":259,"decl":174,"prop":"font","value":"inherit","dimension":"shorthand","norm":"shorthand"},
+    {"path":"shell/shared/window.css","line":262,"decl":177,"prop":"line-height","value":"1","dimension":"leading","norm":"num:1000"},
+    {"path":"shell/shared/window.css","line":265,"decl":180,"prop":"border","value":"0","dimension":"rule","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":270,"decl":183,"prop":"border","value":"0","dimension":"rule","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":338,"decl":227,"prop":"margin","value":"0","dimension":"space","norm":"px:0"},
+    {"path":"shell/shared/window.css","line":348,"decl":241,"prop":"font","value":"inherit","dimension":"shorthand","norm":"shorthand"}
   ],
   "app_token": [
     {"path":"shell/screens/beginner.css","token":"--cols"},
@@ -32,20 +32,21 @@
     {"path":"shell/shared/window.css","token":"--bevel"}
   ],
   "artifact": [
-    {"path":"program.cue","sha256":"9a76046d2024c120b26dc6d5d943a44b1d3bc8de2a1479304d66d6c838b16d87","derived":false},
+    {"path":"program.cue","sha256":"2cd44dbe3fe0a406411bbc994098e7969223d98136726f540d82daf12e294687","derived":false},
     {"path":"DESIGN.md","sha256":"707a8a54e01aacefa78ac8096d027f51bdb90febe2f0a3fccb08aabd09bef051","derived":false},
-    {"path":"ir.html","sha256":"eb7d7ea8b065c871c2d18d04952c1d09062c438ad4bbb104bdbdefeb69f3b8ac","derived":false},
+    {"path":"ir.html","sha256":"5893d6ea810b4ce36f2391f3e79519b835208b9a9a5e32e3c1d1c5410e678217","derived":false},
     {"path":"acceptance.md","sha256":"2f66201fd3a0abd4a7868edf9d8c942eebc87f863380468838764353ed9f1016","derived":false},
-    {"path":".pronto/cel.json","sha256":"373ac7d959d502d9b0f6ccbdb03b924757df14e1e62d15844c84fcadafa5fed3","derived":true},
-    {"path":"program_cel.cue","sha256":"c3d065581c9f22b282893bcaf98bcdfa6f0e5b8ae061b10183aea48eb2c222df","derived":true},
-    {"path":"program_derived.cue","sha256":"057d3001f89b280b3c5856122d6695f860f19491102022a5b0cdc5277d1af891","derived":true},
+    {"path":".pronto/cel.json","sha256":"bcaa477dd95939a174a4ab91d55199e97580b627dbf6c8affe294bf40033ef3a","derived":true},
+    {"path":"program_cel.cue","sha256":"68414fabad2d5b1adca3488a610ca67740ac639eddd7c22ba5c41efd306bf8b9","derived":true},
+    {"path":"program_derived.cue","sha256":"abc8b1508649066de7c7655aa55dfe6a77eb5831aad32f16e2a47a33be718f35","derived":true},
     {"path":"shell/screens/beginner.css","sha256":"8e74290098372610dfcb87a41db7ad51d8906c735bb5341f898f936a4a42ed7b","derived":false},
     {"path":"shell/screens/expert.css","sha256":"6c5697db61ee62cd73ab594567dcf9f9faee8dee6a89f2eecf32105b0fdeac02","derived":false},
     {"path":"shell/screens/intermediate.css","sha256":"7466021e1184c4142c044250bcb7fc87069e33acf859bac51397ac45b8e3844a","derived":false},
-    {"path":"shell/shared/window.css","sha256":"364343c855a3fc3570e2218a056066eb6bef123bf839468f396eb5ae016ab903","derived":false},
+    {"path":"shell/shared/window.css","sha256":"a5dad824c9d45adc851da12ca3de84ce3f66a23903976e3d055af6a0053e6320","derived":false},
     {"path":"shell/design.css","sha256":"b9a951263b447c0d049e6b435cdc7ba6fd638c9ca594886d7a7d290db4d77076","derived":true}
   ],
   "cel_ir": [
+    {"cel":"this == 'right'"},
     {"cel":"this == 'tick'"},
     {"cel":"this >= -999 && this <= 999"},
     {"cel":"this >= 0"},
@@ -57,6 +58,7 @@
     {"cel":"this in ['', '1', '2', '3', '4', '5', '6', '7', '8', '?']"},
     {"cel":"this in ['b', 'i', 'e']"},
     {"cel":"this in ['beginner', 'intermediate', 'expert']"},
+    {"cel":"this in ['game']"},
     {"cel":"this in ['hidden', 'flag', 'mark', 'open', 'boom', 'mine', 'wrong']"},
     {"cel":"this in ['no', 'yes']"},
     {"cel":"this in ['on']"},
@@ -89,19 +91,27 @@
     {"entity":"Best","col":"level","cel":"this in ['beginner', 'intermediate', 'expert']"},
     {"entity":"Best","col":"time","cel":"this >= 0 && this <= 999"},
     {"entity":"Best","col":"who","cel":"this.size() >= 1 && this.size() <= 32"},
+    {"entity":"RightButton","col":"id","cel":"this == 'right'"},
+    {"entity":"RightButton","col":"owner","cel":"this in ['game']"},
     {"entity":"Tick","col":"id","cel":"this == 'tick'"},
     {"entity":"Tick","col":"n","cel":"this >= 0"},
     {"entity":"Tick","col":"beat","cel":"this in ['on']"}
   ],
   "chart": [
     {"screen":"beginner","table":"tick","field":"beat","initial":"on","machine":"{\"field\":\"beat\",\"initial\":\"on\",\"states\":{\"on\":{\"after\":{\"1000\":{\"assign\":{\"n\":\"bump\"},\"target\":\"on\"}}}}}"},
+    {"screen":"beginner","table":"right_button","field":"owner","initial":"game","machine":"{\"field\":\"owner\",\"initial\":\"game\",\"states\":{\"game\":{\"on\":{\"contextmenu\":[{\"target\":\"game\"}]}}}}"},
     {"screen":"expert","table":"tick","field":"beat","initial":"on","machine":"{\"field\":\"beat\",\"initial\":\"on\",\"states\":{\"on\":{\"after\":{\"1000\":{\"assign\":{\"n\":\"bump\"},\"target\":\"on\"}}}}}"},
-    {"screen":"intermediate","table":"tick","field":"beat","initial":"on","machine":"{\"field\":\"beat\",\"initial\":\"on\",\"states\":{\"on\":{\"after\":{\"1000\":{\"assign\":{\"n\":\"bump\"},\"target\":\"on\"}}}}}"}
+    {"screen":"expert","table":"right_button","field":"owner","initial":"game","machine":"{\"field\":\"owner\",\"initial\":\"game\",\"states\":{\"game\":{\"on\":{\"contextmenu\":[{\"target\":\"game\"}]}}}}"},
+    {"screen":"intermediate","table":"tick","field":"beat","initial":"on","machine":"{\"field\":\"beat\",\"initial\":\"on\",\"states\":{\"on\":{\"after\":{\"1000\":{\"assign\":{\"n\":\"bump\"},\"target\":\"on\"}}}}}"},
+    {"screen":"intermediate","table":"right_button","field":"owner","initial":"game","machine":"{\"field\":\"owner\",\"initial\":\"game\",\"states\":{\"game\":{\"on\":{\"contextmenu\":[{\"target\":\"game\"}]}}}}"}
   ],
   "chart_state": [
     {"screen":"beginner","table":"tick","field":"beat","state":"on"},
+    {"screen":"beginner","table":"right_button","field":"owner","state":"game"},
     {"screen":"expert","table":"tick","field":"beat","state":"on"},
-    {"screen":"intermediate","table":"tick","field":"beat","state":"on"}
+    {"screen":"expert","table":"right_button","field":"owner","state":"game"},
+    {"screen":"intermediate","table":"tick","field":"beat","state":"on"},
+    {"screen":"intermediate","table":"right_button","field":"owner","state":"game"}
   ],
   "claim": [
     {"rung":"acceptance","kind":"accept","id":"accept-ready","where":null},
@@ -148,6 +158,7 @@
     {"rung":"program","kind":"entity","id":"Cell","where":"entities.Cell","owed":false},
     {"rung":"program","kind":"entity","id":"Game","where":"entities.Game","owed":false},
     {"rung":"program","kind":"entity","id":"Best","where":"entities.Best","owed":true},
+    {"rung":"program","kind":"entity","id":"RightButton","where":"entities.RightButton","owed":false},
     {"rung":"program","kind":"entity","id":"Tick","where":"entities.Tick","owed":false},
     {"rung":"program","kind":"screen","id":"beginner","where":"screens.beginner","owed":true},
     {"rung":"program","kind":"screen","id":"expert","where":"screens.expert","owed":true},
@@ -157,7 +168,8 @@
     {"rung":"program","kind":"state","id":"beginner-populated","where":"screens.beginner.states.populated","owed":true},
     {"rung":"program","kind":"state","id":"expert-populated","where":"screens.expert.states.populated","owed":true},
     {"rung":"program","kind":"state","id":"intermediate-populated","where":"screens.intermediate.states.populated","owed":true},
-    {"rung":"program","kind":"machine","id":"Tick-beat","where":"screens.beginner.tick.beat","owed":false}
+    {"rung":"program","kind":"machine","id":"Tick-beat","where":"screens.beginner.tick.beat","owed":false},
+    {"rung":"program","kind":"machine","id":"RightButton-owner","where":"screens.beginner.right_button.owner","owed":false}
   ],
   "denied_identifier": [
     {"name":"window","reason":"handlers run in an SES compartment with no endowments","except_role":""},
@@ -432,6 +444,7 @@
     {"name":"Cell","table":"cell","durability":"tab"},
     {"name":"Game","table":"game","durability":"tab"},
     {"name":"Best","table":"best","durability":"device"},
+    {"name":"RightButton","table":"right_button","durability":"tab"},
     {"name":"Tick","table":"tick","durability":"tab"}
   ],
   "enum_value": [
@@ -473,6 +486,8 @@
     {"entity":"Best","field":"level","value":"beginner"},
     {"entity":"Best","field":"level","value":"intermediate"},
     {"entity":"Best","field":"level","value":"expert"},
+    {"entity":"RightButton","field":"id","value":"right"},
+    {"entity":"RightButton","field":"owner","value":"game"},
     {"entity":"Tick","field":"id","value":"tick"},
     {"entity":"Tick","field":"beat","value":"on"}
   ],
@@ -502,6 +517,8 @@
     {"entity":"Best","name":"level","type":"string","cel":"this in ['beginner', 'intermediate', 'expert']"},
     {"entity":"Best","name":"time","type":"int32","cel":"this >= 0 && this <= 999"},
     {"entity":"Best","name":"who","type":"string","cel":"this.size() >= 1 && this.size() <= 32"},
+    {"entity":"RightButton","name":"id","type":"string","cel":"this == 'right'"},
+    {"entity":"RightButton","name":"owner","type":"string","cel":"this in ['game']"},
     {"entity":"Tick","name":"id","type":"string","cel":"this == 'tick'"},
     {"entity":"Tick","name":"n","type":"int32","cel":"this >= 0"},
     {"entity":"Tick","name":"beat","type":"string","cel":"this in ['on']"}
@@ -848,14 +865,17 @@
     {"screen":"beginner","entity":"Best"},
     {"screen":"beginner","entity":"Cell"},
     {"screen":"beginner","entity":"Game"},
+    {"screen":"beginner","entity":"RightButton"},
     {"screen":"beginner","entity":"Tick"},
     {"screen":"expert","entity":"Best"},
     {"screen":"expert","entity":"Cell"},
     {"screen":"expert","entity":"Game"},
+    {"screen":"expert","entity":"RightButton"},
     {"screen":"expert","entity":"Tick"},
     {"screen":"intermediate","entity":"Best"},
     {"screen":"intermediate","entity":"Cell"},
     {"screen":"intermediate","entity":"Game"},
+    {"screen":"intermediate","entity":"RightButton"},
     {"screen":"intermediate","entity":"Tick"}
   ],
   "scale_declaration": [
@@ -1344,8 +1364,11 @@
   ],
   "transition": [
     {"screen":"beginner","table":"tick","field":"beat","from_state":"on","event":"after:1000","to_state":"on"},
+    {"screen":"beginner","table":"right_button","field":"owner","from_state":"game","event":"contextmenu","to_state":"game"},
     {"screen":"expert","table":"tick","field":"beat","from_state":"on","event":"after:1000","to_state":"on"},
-    {"screen":"intermediate","table":"tick","field":"beat","from_state":"on","event":"after:1000","to_state":"on"}
+    {"screen":"expert","table":"right_button","field":"owner","from_state":"game","event":"contextmenu","to_state":"game"},
+    {"screen":"intermediate","table":"tick","field":"beat","from_state":"on","event":"after:1000","to_state":"on"},
+    {"screen":"intermediate","table":"right_button","field":"owner","from_state":"game","event":"contextmenu","to_state":"game"}
   ],
   "unique_claim": [
     {"rung":"acceptance","kind":"accept"},

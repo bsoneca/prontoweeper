@@ -35,6 +35,11 @@ message Game {
   optional int32 t0 = 11 [json_name = "t0"];
 }
 
+message RightButton {
+  optional string id = 1 [json_name = "id"];
+  optional string owner = 2 [json_name = "owner"];
+}
+
 message Tick {
   optional string id = 1 [json_name = "id"];
   optional int32 n = 2 [json_name = "n"];

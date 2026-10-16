@@ -17,6 +17,8 @@
   color: var(--primary);
 }
 .metronome { display: none; }
+/* The right button's region: it holds the window and owns no box of its own. */
+.desk { display: contents; }
 
 .raised, .window, .face, .cell[data-look="hidden"], .cell[data-look="flag"], .cell[data-look="mark"], .cap, .push, .dialog, .menu {
   border-style: solid;

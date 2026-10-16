@@ -7209,6 +7209,64 @@
       "uniques": [],
       "validations": {}
     },
+    "RightButton": {
+      "name": "RightButton",
+      "ir": "RightButton",
+      "table": "right_button",
+      "id": "0xdb7e2ee081412442",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "string",
+          "pk": true,
+          "required": true,
+          "cel": "this == 'right'"
+        },
+        {
+          "name": "owner",
+          "ordinal": 2,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true,
+          "cel": "this in ['game']"
+        }
+      ],
+      "seed": [
+        {
+          "id": "right",
+          "owner": "game"
+        }
+      ],
+      "durability": "tab",
+      "level": "ephemeral",
+      "server": false,
+      "writers": [
+        {
+          "by": "RightButton-owner",
+          "kind": "chart",
+          "ops": [
+            "update"
+          ]
+        }
+      ],
+      "cel": {
+        "checks": {},
+        "enums": {
+          "id": [
+            "right"
+          ],
+          "owner": [
+            "game"
+          ]
+        },
+        "bounds": {}
+      },
+      "uniques": [],
+      "validations": {}
+    },
     "Tick": {
       "name": "Tick",
       "ir": "Tick",

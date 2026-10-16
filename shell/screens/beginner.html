@@ -7,6 +7,11 @@
        data-machine='{"field":"beat","initial":"on","states":{"on":{"after":{"1000":{"assign":{"n":"bump"},"target":"on"}}}}}'></div>
   <div class="metronome" data-live="tick" data-filter="id=eq.tick" data-on-mutation="clock" data-reads="game"></div>
 
+  <!-- The right button is the game's: a one-state chart whose only arrow is
+       contextmenu, so the terminal cancels the browser's menu anywhere in
+       the window and its dialogs. Flagging is still sweep's, on the square. -->
+  <div class="desk" data-live="right_button" data-filter="id=eq.right"
+       data-machine='{"field":"owner","initial":"game","states":{"game":{"on":{"contextmenu":[{"target":"game"}]}}}}'>
   <div class="window">
     <header class="titlebar">
       <span class="icon" aria-hidden="true"></span>
@@ -19,7 +24,7 @@
       <button type="button" class="menu-title" popovertarget="help-b" data-text="{msg.menu_help}">Help</button>
     </nav>
     <!-- The Game menu: New is the face's click, the levels are routes. -->
-    <div id="game-menu-b" class="menu" popover="auto" data-live="game" data-filter="id=eq.b" data-reads="cell,game,tick,best">
+    <div id="game-menu-b" class="menu" popover="auto" data-live="game" data-filter="id=eq.b" data-reads="cell,game,tick,best" data-empty="">
       <button type="button" id="new" class="item" data-on-click="sweep"><span data-text="{msg.menu_new}">New</span></button>
       <hr>
       <a class="item level" aria-current="page" data-route="beginner" data-text="{msg.beginner}">Beginner</a>
@@ -34,7 +39,7 @@
 
     <div class="body raised">
       <!-- Counter, face, timer: one slot over this level's game row. -->
-      <div class="status-panel sunk" data-live="game" data-filter="id=eq.b" data-reads="cell,game,tick,best">
+      <div class="status-panel sunk" data-live="game" data-filter="id=eq.b" data-reads="cell,game,tick,best" data-empty="">
         <div class="status" data-status="{status}">
           <output class="led" aria-label="{msg.mines_left}" data-text="{left_led}">000</output>
           <button type="button" id="face" class="face" data-face="{face}" data-on-click="sweep" aria-label="{msg.new_game}"><span class="smiley" aria-hidden="true"></span></button>
@@ -71,4 +76,5 @@
       <button type="button" class="push" commandfor="about-b" command="close" data-text="{msg.ok}">OK</button>
     </div>
   </dialog>
+  </div>
 </section>
