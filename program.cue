@@ -160,7 +160,7 @@ code: pronto.#App & {
 	meta: {
 		name:        "minesweeper"
 		description: "Minesweeper, a homage to the game that shipped with Windows."
-		ir: {sha256: "eb7d7ea8b065c871c2d18d04952c1d09062c438ad4bbb104bdbdefeb69f3b8ac"}
+		ir: {sha256: "000b205795afa38a6b6bcad266ed5e19e9da4d19ba780570734d477a58eda222"}
 		targets: ["pages"]
 		i18n: {
 			default: "en"

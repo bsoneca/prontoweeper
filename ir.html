@@ -12,8 +12,8 @@
 </head>
 <body>
   <h1>Minesweeper — IR</h1>
-  <p>Three <code>tab</code> entities and one <code>device</code> entity, read and written by three level screens in one browser tab.
-  The field, the games and the clock are <code>tab</code>: they are machine-checked and owe this document nothing.
+  <p>Four <code>tab</code> entities and one <code>device</code> entity, read and written by three level screens in one browser tab.
+  The field, the games, the clock and the right button are <code>tab</code>: they are machine-checked and owe this document nothing.
   <code>Best</code> is <code>device</code>, so a record survives a reload, and it is described here.</p>
 
   <h2>Overview</h2>
@@ -22,6 +22,7 @@
   It rebuilds the level's field from its rows, plays the gesture, and writes back only the squares and game columns that changed.</p>
   <p>The first click on a fresh field returns <code>then: {seed: true}</code>: the terminal draws a <code>uint32</code> and re-wakes <code>sweep</code> with it, and the mines are laid from that draw anywhere but the clicked square. <code>?seed=</code> replays the same field.</p>
   <p>Time is a <code>Tick</code> row advanced by a one-state machine every second on the terminal's clock (<code>?clock=manual</code> holds it). The <code>clock</code> fold hears each beat and sets each game being played to the seconds since its first click, capped at 999, writing only a timer that moved.</p>
+  <p>The right button is the game's. The terminal cancels a <code>contextmenu</code> default only where a chart draws an arrow for it, and a reduce never does, so a one-row <code>RightButton</code> carries a one-state chart around the window and its dialogs whose only arrow is <code>contextmenu</code>. The browser's menu never opens over the game; flagging stays <code>sweep</code>'s.</p>
 
   <h2>Entities</h2>
   <section id="Best" data-kind="entity" data-durability="device" data-type-id="0xda7be0dea7ec91f6">

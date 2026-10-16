@@ -32,9 +32,9 @@
     {"path":"shell/shared/window.css","token":"--bevel"}
   ],
   "artifact": [
-    {"path":"program.cue","sha256":"2cd44dbe3fe0a406411bbc994098e7969223d98136726f540d82daf12e294687","derived":false},
+    {"path":"program.cue","sha256":"81c36717dbc9785dafccb55b54f6bed751906c66ad93c7dee094d00841b582a9","derived":false},
     {"path":"DESIGN.md","sha256":"707a8a54e01aacefa78ac8096d027f51bdb90febe2f0a3fccb08aabd09bef051","derived":false},
-    {"path":"ir.html","sha256":"5893d6ea810b4ce36f2391f3e79519b835208b9a9a5e32e3c1d1c5410e678217","derived":false},
+    {"path":"ir.html","sha256":"000b205795afa38a6b6bcad266ed5e19e9da4d19ba780570734d477a58eda222","derived":false},
     {"path":"acceptance.md","sha256":"2f66201fd3a0abd4a7868edf9d8c942eebc87f863380468838764353ed9f1016","derived":false},
     {"path":".pronto/cel.json","sha256":"bcaa477dd95939a174a4ab91d55199e97580b627dbf6c8affe294bf40033ef3a","derived":true},
     {"path":"program_cel.cue","sha256":"68414fabad2d5b1adca3488a610ca67740ac639eddd7c22ba5c41efd306bf8b9","derived":true},
