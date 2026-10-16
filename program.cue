@@ -1,10 +1,11 @@
 // Minesweeper, as it shipped with Windows: three level screens over one field
-// of squares. Every entity but Best is `tab` — the game is played in one
-// browser tab — and Best is `device`, so a record survives a reload. The same
-// clicks, seed and clock replay the same game.
+// of squares, and a Hall of Fame. The game is `tab` — it is played in one
+// browser tab — Best is `device`, so a record survives a reload, and Score is
+// `server`: the one ranking every player shares. The same clicks, seed and
+// clock replay the same game.
 @extern(embed)
 
-package minesweeper
+package prontoweeper
 
 import (
 	"list"
@@ -73,10 +74,13 @@ code: pronto.#App & {
 				{ordinal: 10, name: "time_led", type: "string", cel: "this.matches('^[0-9]{3}$')"},
 				// The metronome's reading at the first click.
 				{ordinal: 11, name: "t0", type: "int32", cel: "this >= 0"},
+				// The draw this field was laid from, empty before the first
+				// click. It names one game, so a win is posted at most once.
+				{ordinal: 12, name: "round", type: "string", cel: "this.matches('^[0-9]{0,10}$')"},
 			]
 			seed: [for L in _levels {
 				id: L.lv, rows: L.rows, cols: L.cols, mines: L.mines, status: "ready", face: "smile"
-				left: L.mines, left_led: "0\(L.mines)", time: 0, time_led: "000", t0: 0
+				left: L.mines, left_led: "0\(L.mines)", time: 0, time_led: "000", t0: 0, round: ""
 			}]
 		}
 		// The fastest win at each level, kept across reloads in this browser.
@@ -93,6 +97,42 @@ code: pronto.#App & {
 				{ordinal: 2, name: "level", type: "string", cel: "this in ['beginner', 'intermediate', 'expert']"},
 				{ordinal: 3, name: "time", type: "int32", cel: "this >= 0 && this <= 999"},
 				{ordinal: 4, name: "who", type: "string", cel: "this.size() >= 1 && this.size() <= 32"},
+			]
+		}
+		// The cluster's identities. The auth service writes a guest's row
+		// (id, handle) at sign-in; nothing in the app reads it, so no reader
+		// may: a score carries the name its player typed.
+		AppUser: {
+			id: "0xcf5431bbdd3c2cc3"
+			table:      "app_user"
+			durability: "server"
+			access: {scope: "internal"}
+			fields: [
+				// No default: the auth service supplies the id.
+				{ordinal: 1, name: "id", type: "uuid", pk: true},
+				{ordinal: 2, name: "handle", type: "string", unique: true, cel: "this.size() > 0"},
+			]
+		}
+		// One posted win: the Hall of Fame every player shares. Anyone reads
+		// it; a player inserts only their own rows and changes none, the
+		// policies in 011_score_writes.sql (#Access has no "everyone reads,
+		// the owner writes" mode).
+		Score: {
+			id: "0xec8f14b4320f217c"
+			table:      "score"
+			durability: "server"
+			access: {scope: "public"}
+			// One post per player per game: a retried or repeated submit is
+			// the same row, never a second one.
+			uniques: [{name: "uq_score_round", cols: ["user_id", "round"]}]
+			fields: [
+				{ordinal: 1, name: "id", type: "uuid", pk: true},
+				{ordinal: 2, name: "user_id", type: "uuid", ref: "app_user", default: "auth_uid()"},
+				{ordinal: 3, name: "level", type: "string", cel: "this in ['b', 'i', 'e']"},
+				{ordinal: 4, name: "time", type: "int32", cel: "this >= 1 && this <= 999"},
+				{ordinal: 5, name: "name", type: "string", cel: "this.size() >= 1 && this.size() <= 20"},
+				{ordinal: 6, name: "round", type: "string", cel: "this.matches('^[0-9]{1,10}$')"},
+				{ordinal: 7, name: "created", type: "timestamp", default: "now()"},
 			]
 		}
 		// Who answers the right button. One row, one state: its chart's only
@@ -122,7 +162,17 @@ code: pronto.#App & {
 		}
 	}
 
+	// Guests only: the edge tier signs in guests and no one else, so the
+	// terminal mints one silently at boot and nobody meets a login screen.
+	// Playing needs no identity; posting a win writes under it.
+	state: rawMigrations: [
+		// Works around an emitter regression; see the file.
+		{name: "010_electric_login.sql", src: "services/database/sql/010_electric_login.sql"},
+		{name: "011_score_writes.sql", src: "services/database/sql/011_score_writes.sql"},
+	]
+
 	capabilities: {
+		auth: {required: false, service: "/auth"}
 		blobs: false
 		hatches: {}
 		vendored: {}
@@ -138,6 +188,7 @@ code: pronto.#App & {
 				files: shared: ["shell/shared/window.css"]
 				paths: {
 					play: {states: ["populated", "populated"], accepts: ["accept-ready", "accept-first-click", "accept-numbers", "accept-flag", "accept-chord", "accept-timer", "accept-lose", "accept-win", "accept-new-game"]}
+					post: {states: ["populated", "populated"], accepts: ["accept-post-score"]}
 					records: {states: ["populated", "populated"], accepts: ["accept-best-times", "accept-levels"]}
 				}
 			}
@@ -151,6 +202,12 @@ code: pronto.#App & {
 				files: shared: ["shell/shared/window.css"]
 				paths: play: {states: ["populated", "populated"], accepts: ["accept-levels"]}
 			}
+			// The ranking every player shares, top ten per level.
+			halloffame: {
+				title: "Hall of Fame", route: "/hall-of-fame", label: "nav_halloffame", keep: 0, strip: false, states: ["populated"]
+				files: shared: ["shell/shared/window.css"]
+				paths: browse: {states: ["populated", "populated"], accepts: ["accept-hall-of-fame"]}
+			}
 		}
 		handlers: {}
 		design: (pronto.#DesignMd & {text: _designMd}).design
@@ -158,10 +215,14 @@ code: pronto.#App & {
 	}
 
 	meta: {
-		name:        "minesweeper"
+		// The released name: the Worker and its workers.dev address. The
+		// window still says Minesweeper.
+		name:        "prontoweeper"
 		description: "Minesweeper, a homage to the game that shipped with Windows."
 		ir: {sha256: "000b205795afa38a6b6bcad266ed5e19e9da4d19ba780570734d477a58eda222"}
-		targets: ["pages"]
+		// Cloudflare, not Pages: a ranking shared by everyone needs a cluster
+		// every player reaches, and Pages runs a cluster per tab.
+		targets: ["cloudflare"]
 		i18n: {
 			default: "en"
 			locales: {
@@ -173,6 +234,9 @@ code: pronto.#App & {
 		decisions: {
 			"decision-escape-hatches": {}
 			"decision-durability": {}
+			"decision-guests": {}
+			"decision-score-writes": {}
+			"decision-hosting": {}
 		}
 		tests: {}
 	}

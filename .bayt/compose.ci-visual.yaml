@@ -41,12 +41,13 @@ secrets:
   bkid_project:
     environment: BKID_PROJECT
 services:
-  minesweeper-ci-visual:
+  prontoweeper-ci-visual:
     build:
       additional_contexts:
-        minesweeper-integrate_srcs: service:minesweeper-integrate_srcs
-        minesweeper-integrate_bayt: service:minesweeper-integrate_bayt
-        minesweeper-caddy_srcs: service:minesweeper-caddy_srcs
+        prontoweeper-integrate_srcs: service:prontoweeper-integrate_srcs
+        prontoweeper-integrate_bayt: service:prontoweeper-integrate_bayt
+        prontoweeper-database_srcs: service:prontoweeper-database_srcs
+        prontoweeper-caddy_srcs: service:prontoweeper-caddy_srcs
         bayt: >-
           docker-image://bonitao/bayt-runtime:1.2.1@sha256:c5776093b5c464b77365e3bb5310b2c5d9c8d99f5cc07a131c30a4ea03d42f5c
       context: ..
@@ -74,12 +75,12 @@ services:
       - bkid_project
       target: ci-visual
       tags:
-      - bayt-minesweeper-ci-visual:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
-      - bayt-minesweeper-ci-visual:latest
+      - bayt-prontoweeper-ci-visual:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-prontoweeper-ci-visual:latest
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-minesweeper-ci-visual:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    image: bayt-prontoweeper-ci-visual:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     scale: 0
     secrets:
     - docker_host
@@ -102,16 +103,17 @@ services:
     - actions_results_url
     - actions_runtime_token
     - bkid_project
-  minesweeper-ci-visual_bayt:
+  prontoweeper-ci-visual_bayt:
     build:
       additional_contexts:
-        minesweeper-integrate_bayt: service:minesweeper-integrate_bayt
-        minesweeper-caddy_bayt: service:minesweeper-caddy_bayt
+        prontoweeper-integrate_bayt: service:prontoweeper-integrate_bayt
+        prontoweeper-database_bayt: service:prontoweeper-database_bayt
+        prontoweeper-caddy_bayt: service:prontoweeper-caddy_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.ci-visual
       target: ci-visual_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-minesweeper-ci-visual_bayt:latest
+    image: bayt-prontoweeper-ci-visual_bayt:latest
     scale: 0

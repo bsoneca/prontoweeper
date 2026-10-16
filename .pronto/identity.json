@@ -91,6 +91,11 @@
         "name": "t0",
         "type": "int32",
         "retired": false
+      },
+      "12": {
+        "name": "round",
+        "type": "string",
+        "retired": false
       }
     }
   },
@@ -115,6 +120,61 @@
       "4": {
         "name": "who",
         "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xcf5431bbdd3c2cc3": {
+    "name": "app_user",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "handle",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xec8f14b4320f217c": {
+    "name": "score",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "uuid",
+        "retired": false
+      },
+      "2": {
+        "name": "user_id",
+        "type": "uuid",
+        "retired": false
+      },
+      "3": {
+        "name": "level",
+        "type": "string",
+        "retired": false
+      },
+      "4": {
+        "name": "time",
+        "type": "int32",
+        "retired": false
+      },
+      "5": {
+        "name": "name",
+        "type": "string",
+        "retired": false
+      },
+      "6": {
+        "name": "round",
+        "type": "string",
+        "retired": false
+      },
+      "7": {
+        "name": "created",
+        "type": "timestamp",
         "retired": false
       }
     }

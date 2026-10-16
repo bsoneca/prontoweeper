@@ -209,7 +209,7 @@
   --type-leading-title: 1.25;
   --type-leading-body: 1.625;
   --shell-bg: var(--neutral);
-  --shell-fg: var(--primary);
+  --shell-fg: var(--title-ink);
   --shell-rule: var(--border);
   color-scheme: light dark;
 }

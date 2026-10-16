@@ -7009,6 +7009,15 @@
           "pk": false,
           "required": true,
           "cel": "this >= 0"
+        },
+        {
+          "name": "round",
+          "ordinal": 12,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true,
+          "cel": "this.matches('^[0-9]{0,10}$')"
         }
       ],
       "seed": [
@@ -7023,7 +7032,8 @@
           "left_led": "010",
           "time": 0,
           "time_led": "000",
-          "t0": 0
+          "t0": 0,
+          "round": ""
         },
         {
           "id": "i",
@@ -7036,7 +7046,8 @@
           "left_led": "040",
           "time": 0,
           "time_led": "000",
-          "t0": 0
+          "t0": 0,
+          "round": ""
         },
         {
           "id": "e",
@@ -7049,7 +7060,8 @@
           "left_led": "099",
           "time": 0,
           "time_led": "000",
-          "t0": 0
+          "t0": 0,
+          "round": ""
         }
       ],
       "durability": "tab",
@@ -7127,6 +7139,9 @@
           },
           "t0": {
             "intMin": 0
+          },
+          "round": {
+            "regex": "^[0-9]{0,10}$"
           }
         }
       },
@@ -7207,6 +7222,194 @@
         }
       },
       "uniques": [],
+      "validations": {}
+    },
+    "AppUser": {
+      "access": {
+        "scope": "internal"
+      },
+      "name": "AppUser",
+      "ir": "AppUser",
+      "read": "eager",
+      "table": "app_user",
+      "id": "0xcf5431bbdd3c2cc3",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "uuid",
+          "pk": true,
+          "required": true
+        },
+        {
+          "name": "handle",
+          "ordinal": 2,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true,
+          "unique": true,
+          "cel": "this.size() > 0"
+        }
+      ],
+      "seed": [],
+      "durability": "server",
+      "level": "replicated",
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {
+          "handle": "char_length(handle) > 0"
+        },
+        "enums": {},
+        "bounds": {
+          "handle": {
+            "sizeMin": 1
+          }
+        }
+      },
+      "uniques": [],
+      "validations": {}
+    },
+    "Score": {
+      "access": {
+        "scope": "public"
+      },
+      "name": "Score",
+      "ir": "Score",
+      "read": "lazy",
+      "table": "score",
+      "id": "0xec8f14b4320f217c",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "uuid",
+          "pk": true,
+          "required": true
+        },
+        {
+          "name": "user_id",
+          "ordinal": 2,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true,
+          "ref": "app_user",
+          "default": "auth_uid()"
+        },
+        {
+          "name": "level",
+          "ordinal": 3,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true,
+          "cel": "this in ['b', 'i', 'e']"
+        },
+        {
+          "name": "time",
+          "ordinal": 4,
+          "retired": false,
+          "type": "int32",
+          "pk": false,
+          "required": true,
+          "cel": "this >= 1 && this <= 999"
+        },
+        {
+          "name": "name",
+          "ordinal": 5,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true,
+          "cel": "this.size() >= 1 && this.size() <= 20"
+        },
+        {
+          "name": "round",
+          "ordinal": 6,
+          "retired": false,
+          "type": "string",
+          "pk": false,
+          "required": true,
+          "cel": "this.matches('^[0-9]{1,10}$')"
+        },
+        {
+          "name": "created",
+          "ordinal": 7,
+          "retired": false,
+          "type": "timestamp",
+          "pk": false,
+          "required": true,
+          "default": "now()"
+        }
+      ],
+      "seed": [],
+      "durability": "server",
+      "level": "replicated",
+      "server": true,
+      "writers": [
+        {
+          "by": "beginner",
+          "kind": "screen",
+          "ops": [
+            "create"
+          ]
+        },
+        {
+          "by": "intermediate",
+          "kind": "screen",
+          "ops": [
+            "create"
+          ]
+        },
+        {
+          "by": "expert",
+          "kind": "screen",
+          "ops": [
+            "create"
+          ]
+        }
+      ],
+      "cel": {
+        "checks": {
+          "level": "level IN ('b', 'i', 'e')",
+          "time": "time >= 1 AND time <= 999",
+          "name": "char_length(name) >= 1 AND char_length(name) <= 20",
+          "round": "round ~ '^[0-9]{1,10}$'"
+        },
+        "enums": {
+          "level": [
+            "b",
+            "i",
+            "e"
+          ]
+        },
+        "bounds": {
+          "time": {
+            "intMin": 1,
+            "intMax": 999
+          },
+          "name": {
+            "sizeMin": 1,
+            "sizeMax": 20
+          },
+          "round": {
+            "regex": "^[0-9]{1,10}$"
+          }
+        }
+      },
+      "uniques": [
+        {
+          "name": "uq_score_round",
+          "cols": [
+            "user_id",
+            "round"
+          ]
+        }
+      ],
       "validations": {}
     },
     "RightButton": {
@@ -7362,6 +7565,15 @@
     }
   },
   "hatches": {},
-  "rawMigrations": [],
+  "rawMigrations": [
+    {
+      "name": "010_electric_login.sql",
+      "src": "services/database/sql/010_electric_login.sql"
+    },
+    {
+      "name": "011_score_writes.sql",
+      "src": "services/database/sql/011_score_writes.sql"
+    }
+  ],
   "duckstreams": {}
 }

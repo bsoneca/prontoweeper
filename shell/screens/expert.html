@@ -32,6 +32,7 @@
       <a class="item level" aria-current="page" data-route="expert" data-text="{msg.expert}">Expert</a>
       <hr>
       <button type="button" class="item" commandfor="best-e" command="show-modal" data-text="{msg.menu_best}">Best Times...</button>
+      <a class="item" data-route="halloffame" data-text="{msg.menu_hall}">Hall of Fame...</a>
     </div>
     <div id="help-e" class="menu help" popover="auto">
       <button type="button" class="item" commandfor="about-e" command="show-modal" data-text="{msg.menu_about}">About Minesweeper...</button>
@@ -53,6 +54,30 @@
         <template data-item>
           <button type="button" class="cell" data-look="{look}" data-n="{shown}" data-on-click="sweep" data-on-contextmenu="sweep" aria-label="{msg[look]}" data-text="{shown}"></button>
         </template>
+      </div>
+
+      <!-- After a win, the original's "type your name" box, posting to the
+           Hall of Fame. The create form mints the score's key; level, time
+           and round come from this game's row, and the player from the
+           session. -->
+      <div class="post-panel" data-live="game" data-filter="id=eq.e" data-empty="">
+        <div class="post sunk" data-status="{status}">
+          <!-- Whether this game's win is posted already: the scores for its
+               round, which a player's own unconfirmed write is among. -->
+          <div class="posted" data-live="score" data-filter="level=eq.e&round=eq.{round}" data-empty="">
+            <template data-item><p class="done"><span data-text="{msg.posted}">Your time is in the Hall of Fame.</span> <a data-route="halloffame" data-text="{msg.see_hall}">See it</a></p></template>
+          </div>
+          <form class="post-form" data-entity="score" data-action="create">
+            <p><span data-text="{msg.post_before}">You won in</span> <b data-text="{time}">0</b> <span data-text="{msg.post_after}">seconds. Type your name for the Hall of Fame:</span></p>
+            <input type="hidden" name="level" data-value="{id}">
+            <input type="hidden" name="time" data-value="{time}">
+            <input type="hidden" name="round" data-value="{round}">
+            <div class="post-row">
+              <input name="name" class="field-input sunk" required maxlength="20" autocomplete="nickname" aria-label="{msg.your_name}">
+              <button type="submit" class="push" data-text="{msg.ok}">OK</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

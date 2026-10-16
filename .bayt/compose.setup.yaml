@@ -1,19 +1,19 @@
 # generated from bayt.cue — do not edit
 services:
-  minesweeper-setup:
+  prontoweeper-setup:
     build:
       context: ..
       dockerfile: .bayt/Dockerfile.setup
       target: setup
       tags:
-      - bayt-minesweeper-setup:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
-      - bayt-minesweeper-setup:latest
+      - bayt-prontoweeper-setup:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-prontoweeper-setup:latest
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-minesweeper-setup:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    image: bayt-prontoweeper-setup:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     scale: 0
-  minesweeper-setup_bayt:
+  prontoweeper-setup_bayt:
     build:
       context: ..
       dockerfile: .bayt/Dockerfile.setup
@@ -21,9 +21,9 @@ services:
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-minesweeper-setup_bayt:latest
+    image: bayt-prontoweeper-setup_bayt:latest
     scale: 0
-  minesweeper-setup_srcs:
+  prontoweeper-setup_srcs:
     build:
       context: ..
       dockerfile: .bayt/Dockerfile.setup
@@ -31,5 +31,5 @@ services:
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-minesweeper-setup_srcs:latest
+    image: bayt-prontoweeper-setup_srcs:latest
     scale: 0

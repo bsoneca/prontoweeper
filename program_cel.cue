@@ -9,7 +9,7 @@
 // An invariant binds `this` to the ROW, and a predicate over
 // several columns constrains no single field's value, so it derives a
 // CHECK body and nothing for CUE.
-package minesweeper
+package prontoweeper
 
 import "strings"
 
@@ -49,6 +49,7 @@ code: state: entities: {
 			time?: >=0 & <=999
 			time_led?: =~ "^[0-9]{3}$"
 			t0?: >=0
+			round?: =~ "^[0-9]{0,10}$"
 		}]
 		cel: {
 			enums: {
@@ -65,6 +66,7 @@ code: state: entities: {
 				time: {intMin: 0, intMax: 999}
 				time_led: {regex: "^[0-9]{3}$"}
 				t0: {intMin: 0}
+				round: {regex: "^[0-9]{0,10}$"}
 			}
 		}
 	}
@@ -83,6 +85,43 @@ code: state: entities: {
 			bounds: {
 				time: {intMin: 0, intMax: 999}
 				who: {sizeMin: 1, sizeMax: 32}
+			}
+		}
+	}
+	AppUser: {
+		seed: [...{
+			handle?: strings.MinRunes(1)
+		}]
+		cel: {
+			checks: {
+				handle: "char_length(handle) > 0"
+			}
+			bounds: {
+				handle: {sizeMin: 1}
+			}
+		}
+	}
+	Score: {
+		seed: [...{
+			level?: ("b" | "i" | "e")
+			time?: >=1 & <=999
+			name?: strings.MinRunes(1) & strings.MaxRunes(20)
+			round?: =~ "^[0-9]{1,10}$"
+		}]
+		cel: {
+			checks: {
+				level: "level IN ('b', 'i', 'e')"
+				time: "time >= 1 AND time <= 999"
+				name: "char_length(name) >= 1 AND char_length(name) <= 20"
+				round: "round ~ '^[0-9]{1,10}$'"
+			}
+			enums: {
+				level: ["b","i","e"]
+			}
+			bounds: {
+				time: {intMin: 1, intMax: 999}
+				name: {sizeMin: 1, sizeMax: 20}
+				round: {regex: "^[0-9]{1,10}$"}
 			}
 		}
 	}

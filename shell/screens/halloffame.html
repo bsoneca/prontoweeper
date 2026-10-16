@@ -1,0 +1,38 @@
+<!-- The Hall of Fame: the ten fastest posted wins at each level, everyone's. -->
+<section class="screen" data-screen="halloffame">
+  <div class="desk" data-live="right_button" data-filter="id=eq.right"
+       data-machine='{"field":"owner","initial":"game","states":{"game":{"on":{"contextmenu":[{"target":"game"}]}}}}'>
+  <div class="window hall">
+    <header class="titlebar">
+      <span class="icon" aria-hidden="true"></span>
+      <h1 data-text="{msg.hall_title}">Hall of Fame</h1>
+      <span class="caps" aria-hidden="true"><span class="cap min"></span><span class="cap max"></span><span class="cap shut"></span></span>
+    </header>
+    <nav class="menubar">
+      <a class="menu-title" data-route="beginner" data-text="{msg.beginner}">Beginner</a>
+      <a class="menu-title" data-route="intermediate" data-text="{msg.intermediate}">Intermediate</a>
+      <a class="menu-title" data-route="expert" data-text="{msg.expert}">Expert</a>
+    </nav>
+    <div class="body raised boards">
+      <section class="board sunk">
+        <h2 data-text="{msg.beginner}">Beginner</h2>
+        <ol class="ranks" data-live="score" data-filter="level=eq.b&limit=10" data-order="time.asc,created.asc" data-project='{"rank":"index"}' data-empty="{msg.nobody}">
+          <template data-item><li class="rank"><span class="pos" data-text="{rank}">1</span><span class="who" data-text="{name}"></span><span class="secs" data-text="{time}">0</span></li></template>
+        </ol>
+      </section>
+      <section class="board sunk">
+        <h2 data-text="{msg.intermediate}">Intermediate</h2>
+        <ol class="ranks" data-live="score" data-filter="level=eq.i&limit=10" data-order="time.asc,created.asc" data-project='{"rank":"index"}' data-empty="{msg.nobody}">
+          <template data-item><li class="rank"><span class="pos" data-text="{rank}">1</span><span class="who" data-text="{name}"></span><span class="secs" data-text="{time}">0</span></li></template>
+        </ol>
+      </section>
+      <section class="board sunk">
+        <h2 data-text="{msg.expert}">Expert</h2>
+        <ol class="ranks" data-live="score" data-filter="level=eq.e&limit=10" data-order="time.asc,created.asc" data-project='{"rank":"index"}' data-empty="{msg.nobody}">
+          <template data-item><li class="rank"><span class="pos" data-text="{rank}">1</span><span class="who" data-text="{name}"></span><span class="secs" data-text="{time}">0</span></li></template>
+        </ol>
+      </section>
+    </div>
+  </div>
+  </div>
+</section>

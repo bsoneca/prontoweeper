@@ -80,3 +80,35 @@ the flagging. In the built app, real right-clicks on a square, the face, the
 title bar and a counter now all report `defaultPrevented: true`. On the live
 v0.1.0 site all of them reported `false`. Flagging and opening work as
 before. `generate`, `lint`, `test` and `integrate` exit 0.
+
+## Turn 3 — 2026-10-16: a Hall of Fame every player shares
+
+**Asked for:** Google sign-in through Firebase, and the names added to a
+ranking. **Built instead:** guest sign-in, with a typed name per post.
+Pronto's terminal offers passkey and guest sign-in only (Firebase is its
+*planned* third mode, still absent in omnishell 0.12.1), and pronto refuses a
+program that demands a mode the terminal lacks. Cloudflare, the free host
+that can run a shared ranking, signs in guests only.
+
+**After:** a won game shows the original's "type your name" box under the
+field (`journal/post-box.png`). OK posts the time as a `Score` row, a public
+`server` table any guest may insert into under their own id and nobody may
+edit. The Game menu opens a Hall of Fame with the ten fastest wins per level
+(`journal/hall-of-fame.png`). The release target moved from `pages` to
+`cloudflare`, and the app is now named `prontoweeper`.
+
+Checked against the real container cluster (`sayt launch`): a player won,
+posted "Ada", and a second player in a separate session saw "1 Ada 4". Through
+the HTTP API, posting under another player's id was refused (403), editing or
+deleting another's row touched nothing, posting with no session was refused
+(401), and posting the same game twice was refused (409, `uq_score_round`).
+`generate`, `lint`, `test` and `integrate` exit 0.
+
+Upstream issues found in pronto 0.13.4, each worked around in a file that says
+how to remove it:
+
+- The emitted `001_roles.sql` dropped the `electric` role's password, so the
+  sync service could never log in once the app had server tables.
+  `services/database/sql/010_electric_login.sql` restores it.
+- `.goreleaser.yaml` is emitted only for the `pages` target, but every
+  target's release needs it. It is now hand-written.

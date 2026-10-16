@@ -138,6 +138,8 @@
 /* The body: a raised panel holding the status row and the field. */
 .body {
   display: grid;
+  /* The field's width: everything else in the body wraps to it. */
+  grid-template-columns: min-content;
   gap: calc(var(--u) * 2);
   padding: calc(var(--u) * 2);
   border-width: calc(var(--u) * 1.5);
@@ -350,3 +352,45 @@
 }
 .push:active { border-color: var(--lowlite) var(--hilite) var(--hilite) var(--lowlite); }
 .push:focus-visible { outline: var(--border-size-1) dotted var(--primary); outline-offset: calc(var(--u) * -2.5); }
+
+/* After a win: the "type your name" box, in the body under the field. It
+   shows only for a won game, and gives way to a note once that win is
+   posted. */
+/* As wide as the field and no wider: the body's grid column is the field's. */
+.post-panel { inline-size: 0; min-inline-size: 100%; }
+.post { display: none; box-sizing: border-box; padding: calc(var(--u) * 2); }
+.post[data-status="won"] { display: grid; gap: var(--sp-sm); }
+.post p { margin: 0; overflow-wrap: anywhere; }
+.post:has(.done) .post-form { display: none; }
+.post-form { display: grid; gap: var(--sp-sm); }
+.post-row { display: flex; gap: var(--sp-sm); align-items: center; }
+.post .push { margin: 0; flex: none; min-inline-size: calc(var(--control-cell) * 2.5); }
+.field-input {
+  flex: 1;
+  min-inline-size: 0;
+  font: inherit;
+  padding: var(--u) calc(var(--u) * 2);
+  background: var(--hilite);
+  color: var(--primary);
+}
+.field-input:focus-visible { outline: var(--border-size-1) dotted var(--primary); outline-offset: calc(var(--u) * -2); }
+.done a, .menu a.item { color: inherit; }
+
+/* The Hall of Fame: three sunk boards in a raised body. */
+.hall .menubar a.menu-title { text-decoration: none; }
+.boards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(calc(var(--control-cell) * 8), 1fr));
+  gap: calc(var(--u) * 3);
+}
+@media (max-width: 720px) {
+  .boards { grid-template-columns: minmax(0, 1fr); }
+}
+.board { padding: calc(var(--u) * 2); background: var(--hilite); }
+.board h2 { margin: 0 0 var(--sp-sm); font-size: var(--type-label); font-weight: 700; }
+.ranks { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--u); }
+.ranks .empty { margin: 0; color: var(--primary); }
+.rank { display: grid; grid-template-columns: 2ch 1fr auto; gap: var(--sp-sm); font-variant-numeric: tabular-nums; }
+.rank .pos { text-align: end; color: var(--secondary); }
+.rank .who { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rank .secs { text-align: end; font-weight: 700; }

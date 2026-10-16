@@ -7,8 +7,20 @@
     "ports": [],
     "volumes": [],
     "depends_on": {
-      "minesweeper-caddy": {
+      "prontoweeper-caddy": {
         "condition": "service_healthy"
+      },
+      "prontoweeper-database": {
+        "condition": "service_healthy"
+      },
+      "prontoweeper-crud": {
+        "condition": "service_healthy"
+      },
+      "prontoweeper-electric": {
+        "condition": "service_healthy"
+      },
+      "prontoweeper-auth": {
+        "condition": "service_started"
       }
     },
     "networks": {
@@ -22,7 +34,7 @@
       "test": [
         "CMD",
         "echo",
-        "minesweeper is healthy"
+        "prontoweeper is healthy"
       ],
       "interval": "5s",
       "timeout": "2s",
@@ -52,7 +64,7 @@
     ]
   },
   "name": "launch",
-  "project": "minesweeper",
+  "project": "prontoweeper",
   "dir": ".",
   "activate": "",
   "skaffold": {
@@ -109,7 +121,7 @@
   "synthetics": {
     "bayt": {
       "name": "launch_bayt",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "activate": "",
       "srcs": {
@@ -147,12 +159,16 @@
       },
       "upClosure": [
         "./.bayt/compose.launch.yaml",
-        "./.bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.auth.yaml"
       ]
     },
     "outs": {
       "name": "launch_outs",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "activate": "",
       "srcs": {
@@ -176,30 +192,86 @@
       },
       "upClosure": [
         "./.bayt/compose.launch.yaml",
-        "./.bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.auth.yaml"
       ]
     }
   },
   "visibility": "internal",
   "emitsSrcs": false,
   "deps": [
-    "caddy_outs"
+    "caddy_outs",
+    "database_outs",
+    "crud_outs",
+    "electric_outs",
+    "auth_outs"
   ],
   "sameProjectDeps": [
-    "caddy_outs"
+    "caddy_outs",
+    "database_outs",
+    "crud_outs",
+    "electric_outs",
+    "auth_outs"
   ],
   "transitiveDeps": [
-    "caddy_outs"
+    "caddy_outs",
+    "database_outs",
+    "crud_outs",
+    "electric_outs",
+    "auth_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
     "./.bayt/compose.launch.yaml",
-    "./.bayt/compose.caddy.yaml"
+    "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.electric.yaml",
+    "./.bayt/compose.auth.yaml"
   ],
   "chainedDeps": [
     {
       "name": "caddy_outs",
-      "project": "minesweeper",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "database_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "crud_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "electric_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "auth_outs",
+      "project": "prontoweeper",
       "dir": ".",
       "outs": {
         "globs": [],

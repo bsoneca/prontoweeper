@@ -12,6 +12,8 @@ processes:
     - --help
   caddy:
     depends_on:
+      crud:
+        condition: process_healthy
       "bayt:httpcheck":
         condition: process_completed_successfully
     entrypoint:
@@ -29,3 +31,73 @@ processes:
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 32
+  database:
+    entrypoint:
+    - docker-entrypoint.sh
+    - postgres
+    - -c
+    - wal_level=logical
+    - -c
+    - fsync=off
+    - -c
+    - synchronous_commit=off
+    - -c
+    - full_page_writes=off
+    - -c
+    - shared_buffers=32MB
+    - -c
+    - max_connections=200
+    availability:
+      exit_on_skipped: true
+    readiness_probe:
+      exec:
+        command: >-
+          pg_isready -h localhost -p 5432 -d ${POSTGRES_DB:-prontoweeper} -U
+          ${POSTGRES_USER:-postgres}
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 330
+  crud:
+    depends_on:
+      database:
+        condition: process_healthy
+      "bayt:httpcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - postgrest
+    availability:
+      exit_on_skipped: true
+    environment:
+    - PGRST_ADMIN_SERVER_PORT=3001
+    - PGRST_DB_ANON_ROLE=anon
+    - PGRST_DB_PRE_REQUEST=public.app_pre_request
+    - PGRST_DB_SCHEMA=public
+    - >-
+      PGRST_DB_URI=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:5432/${POSTGRES_DB:-prontoweeper}
+    - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    - PGRST_SERVER_HOST=*
+    - PGRST_SERVER_PORT=3000
+    readiness_probe:
+      exec:
+        command: bayt microcheck httpcheck http://127.0.0.1:3001/ready
+      period_seconds: 5
+      timeout_seconds: 5
+      failure_threshold: 36
+  auth:
+    depends_on:
+      database:
+        condition: process_healthy
+    entrypoint:
+    - deno
+    - run
+    - --allow-net
+    - --allow-env
+    - main.ts
+    availability:
+      exit_on_skipped: true
+    environment:
+    - >-
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:5432/${POSTGRES_DB:-prontoweeper}
+    - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    - WEBAUTHN_ORIGIN=${WEBAUTHN_ORIGIN:-https://localhost:*}
+    - WEBAUTHN_RP_ID=${WEBAUTHN_RP_ID:-localhost}

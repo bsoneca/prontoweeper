@@ -100,7 +100,7 @@
     "cmd": null
   },
   "name": "ci-visual",
-  "project": "minesweeper",
+  "project": "prontoweeper",
   "dir": ".",
   "activate": "",
   "srcs": {
@@ -121,7 +121,7 @@
   "synthetics": {
     "bayt": {
       "name": "ci-visual_bayt",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "activate": "",
       "srcs": {
@@ -155,12 +155,16 @@
         "./.bayt/compose.ci-visual.yaml",
         "./.bayt/compose.integrate.yaml",
         "./.bayt/compose.launch.yaml",
-        "./.bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.auth.yaml"
       ]
     },
     "outs": {
       "name": "ci-visual_outs",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "activate": "",
       "srcs": {
@@ -186,7 +190,11 @@
         "./.bayt/compose.ci-visual.yaml",
         "./.bayt/compose.integrate.yaml",
         "./.bayt/compose.launch.yaml",
-        "./.bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.electric.yaml",
+        "./.bayt/compose.auth.yaml"
       ]
     }
   },
@@ -200,30 +208,38 @@
   "deps": [
     "integrate_srcs",
     "integrate_bayt",
+    "database_srcs",
     "caddy_srcs"
   ],
   "sameProjectDeps": [
     "integrate_srcs",
     "integrate_bayt",
+    "database_srcs",
     "caddy_srcs"
   ],
   "transitiveDeps": [
     "integrate_srcs",
     "integrate_bayt",
+    "database_srcs",
     "caddy_srcs",
-    "launch_outs_srcs"
+    "launch_outs_srcs",
+    "crud_outs_srcs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
     "./.bayt/compose.ci-visual.yaml",
     "./.bayt/compose.integrate.yaml",
     "./.bayt/compose.launch.yaml",
-    "./.bayt/compose.caddy.yaml"
+    "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.electric.yaml",
+    "./.bayt/compose.auth.yaml"
   ],
   "chainedDeps": [
     {
       "name": "integrate_srcs",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "outs": {
         "globs": [
@@ -235,7 +251,7 @@
     },
     {
       "name": "integrate_bayt",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "outs": {
         "globs": [
@@ -258,8 +274,28 @@
       }
     },
     {
+      "name": "database_srcs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "services/database/migrations/000_extensions.sql",
+          "services/database/migrations/001_roles.sql",
+          "services/database/migrations/002_grants.sql",
+          "services/database/migrations/004_types.sql",
+          "services/database/migrations/005_create_tables.sql",
+          "services/database/migrations/006_policies.sql",
+          "services/database/migrations/007_txid.sql",
+          "services/database/migrations/008_publication.sql",
+          "services/database/migrations/010_electric_login.sql",
+          "services/database/migrations/011_score_writes.sql"
+        ],
+        "exclude": []
+      }
+    },
+    {
       "name": "caddy_srcs",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "outs": {
         "globs": [
@@ -277,6 +313,8 @@
           "shell/screens/intermediate.css",
           "shell/screens/expert.html",
           "shell/screens/expert.css",
+          "shell/screens/halloffame.html",
+          "shell/screens/halloffame.css",
           "shell/handlers/bump.js",
           "shell/handlers/clock.js",
           "shell/handlers/sweep.js",

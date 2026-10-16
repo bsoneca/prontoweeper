@@ -1,7 +1,7 @@
 {
   "_generated_from": "bayt.cue (do not edit)",
   "name": "integrate-action",
-  "project": "minesweeper",
+  "project": "prontoweeper",
   "dir": ".",
   "activate": "mise x --",
   "srcs": {
@@ -43,7 +43,7 @@
   "chainedDeps": [
     {
       "name": "build",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "outs": {
         "globs": [],
@@ -52,7 +52,7 @@
     },
     {
       "name": "generate",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "outs": {
         "globs": [],
@@ -61,7 +61,7 @@
     },
     {
       "name": "setup",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "outs": {
         "globs": [],

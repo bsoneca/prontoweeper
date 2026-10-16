@@ -24,7 +24,7 @@ const world = () => {
   for (let r = 0; r < 9; r++) for (let c = 0; c < 9; c++) cell.push({ id: key(r, c), lv: "b", mine: "no", look: "hidden", n: 0, shown: "" });
   return {
     cell,
-    game: [{ id: "b", rows: 9, cols: 9, mines: 10, status: "ready", face: "smile", left: 10, left_led: "010", time: 0, time_led: "000", t0: 0 }] as Row[],
+    game: [{ id: "b", rows: 9, cols: 9, mines: 10, status: "ready", face: "smile", left: 10, left_led: "010", time: 0, time_led: "000", t0: 0, round: "" }] as Row[],
     tick: [{ id: "tick", n: 40, beat: "on" }] as Row[],
     best: [] as Row[],
   };
@@ -65,7 +65,7 @@ const laid = (mines: string[]) => {
       at(w, key(r, c)).n = n;
     }
   }
-  Object.assign(game(w), { mines: mines.length, left: mines.length, left_led: String(mines.length).padStart(3, "0"), status: "playing", time: 1, time_led: "001", t0: 40 });
+  Object.assign(game(w), { mines: mines.length, left: mines.length, left_led: String(mines.length).padStart(3, "0"), status: "playing", time: 1, time_led: "001", t0: 40, round: "77" });
   return w;
 };
 
@@ -85,6 +85,7 @@ Deno.test("the draw lays ten mines, never under the first square, and opens it",
     assertEquals(at(w, "b0404").mine, "no");
     assertEquals(at(w, "b0404").look, "open");
     assertEquals([game(w).status === "playing" || game(w).status === "won", game(w).time, game(w).time_led, game(w).t0], [true, 1, "001", 40]);
+    assertEquals(game(w).round, String(seed >>> 0), "the round names the draw");
     for (const c of w.cell) {
       const r = Number(c.id.slice(1, 3)), k = Number(c.id.slice(3));
       let n = 0;
@@ -185,7 +186,7 @@ Deno.test("the face and New reset the level to a fresh field", async () => {
     const reply = sweep({ items: [game(w)], rows: w }, { type: "click", from });
     apply(w, reply.updates);
     assertEquals(w.cell.every((c) => c.mine === "no" && c.look === "hidden" && c.n === 0 && c.shown === ""), true, from);
-    assertEquals([game(w).status, game(w).face, game(w).left_led, game(w).time_led], ["ready", "smile", "002", "000"]);
+    assertEquals([game(w).status, game(w).face, game(w).left_led, game(w).time_led, game(w).round], ["ready", "smile", "002", "000", ""]);
   }
 });
 

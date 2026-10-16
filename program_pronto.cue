@@ -1,2 +1,2 @@
-package minesweeper
+package prontoweeper
 loop: surface: sources: pronto: ""

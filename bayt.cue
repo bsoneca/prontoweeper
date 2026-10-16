@@ -4,7 +4,7 @@
 // keeps bayt's schema live at generate time.
 @extern(embed)
 
-package minesweeper
+package prontoweeper
 
 import (
 	bayt "github.com/bonisoft3/bayt/core:bayt"
@@ -23,8 +23,8 @@ loop:     prontoloop.#Loop
 
 _baytData: _ @embed(file="bayt.json")
 
-project: _minesweeper
-_minesweeper: bayt.#project & _baytData
+project: _prontoweeper
+_prontoweeper: bayt.#project & _baytData
 
 depManifestsIn: {[string]: _}
-_render: (bayt.#render & {project: _minesweeper, depManifests: depManifestsIn})
+_render: (bayt.#render & {project: _prontoweeper, depManifests: depManifestsIn})

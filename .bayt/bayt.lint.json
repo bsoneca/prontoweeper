@@ -5,7 +5,7 @@
     "preambleCopyContexts": [],
     "from": {
       "ref": ":generate",
-      "name": "minesweeper-generate"
+      "name": "prontoweeper-generate"
     },
     "add": [],
     "mounts": [],
@@ -20,7 +20,7 @@
     "cmd": null
   },
   "name": "lint",
-  "project": "minesweeper",
+  "project": "prontoweeper",
   "dir": ".",
   "activate": "mise x --",
   "srcs": {
@@ -45,7 +45,7 @@
   "synthetics": {
     "bayt": {
       "name": "lint_bayt",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "activate": "",
       "srcs": {
@@ -83,7 +83,7 @@
     },
     "outs": {
       "name": "lint_outs",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "activate": "",
       "srcs": {
@@ -113,7 +113,7 @@
     },
     "srcs": {
       "name": "lint_srcs",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "activate": "",
       "srcs": {
@@ -145,7 +145,7 @@
       ],
       "transitiveCrossDeps": [
         {
-          "project": "minesweeper",
+          "project": "prontoweeper",
           "name": "generate_srcs",
           "dir": ".",
           "outs": {
@@ -162,7 +162,7 @@
           }
         },
         {
-          "project": "minesweeper",
+          "project": "prontoweeper",
           "name": "setup_srcs",
           "dir": ".",
           "outs": {
@@ -218,7 +218,7 @@
   "chainedDeps": [
     {
       "name": "generate",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "outs": {
         "globs": [],
@@ -227,7 +227,7 @@
     },
     {
       "name": "lint-inputs",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "outs": {
         "globs": [],
@@ -236,7 +236,7 @@
     },
     {
       "name": "setup",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "outs": {
         "globs": [],

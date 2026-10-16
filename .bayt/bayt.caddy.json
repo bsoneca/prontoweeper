@@ -17,7 +17,11 @@
     },
     "ports": [],
     "volumes": [],
-    "depends_on": {},
+    "depends_on": {
+      "prontoweeper-crud": {
+        "condition": "service_healthy"
+      }
+    },
     "networks": {
       "default": {
         "aliases": [
@@ -113,6 +117,16 @@
           "action": "sync+restart",
           "path": "../shell/screens/expert.css",
           "target": "/srv/shell/screens/expert.css"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/halloffame.html",
+          "target": "/srv/shell/screens/halloffame.html"
+        },
+        {
+          "action": "sync+restart",
+          "path": "../shell/screens/halloffame.css",
+          "target": "/srv/shell/screens/halloffame.css"
         },
         {
           "action": "sync+restart",
@@ -603,6 +617,8 @@
           "shell/screens/intermediate.css",
           "shell/screens/expert.html",
           "shell/screens/expert.css",
+          "shell/screens/halloffame.html",
+          "shell/screens/halloffame.css",
           "shell/handlers/bump.js",
           "shell/handlers/clock.js",
           "shell/handlers/sweep.js",
@@ -664,7 +680,9 @@
       "ELECTRIC_SECRET": "${ELECTRIC_SECRET:-dev-electric-secret}",
       "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}"
     },
-    "after": {},
+    "after": {
+      "crud": "healthy"
+    },
     "host": true
   },
   "expose": {
@@ -685,7 +703,7 @@
     "start_period": "10s"
   },
   "name": "caddy",
-  "project": "minesweeper",
+  "project": "prontoweeper",
   "dir": ".",
   "activate": "",
   "srcs": {
@@ -704,6 +722,8 @@
       "shell/screens/intermediate.css",
       "shell/screens/expert.html",
       "shell/screens/expert.css",
+      "shell/screens/halloffame.html",
+      "shell/screens/halloffame.css",
       "shell/handlers/bump.js",
       "shell/handlers/clock.js",
       "shell/handlers/sweep.js",
@@ -731,7 +751,7 @@
   "synthetics": {
     "bayt": {
       "name": "caddy_bayt",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "activate": "",
       "srcs": {
@@ -761,12 +781,14 @@
         "similar": false
       },
       "upClosure": [
-        "./.bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     },
     "outs": {
       "name": "caddy_outs",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "activate": "",
       "srcs": {
@@ -789,12 +811,14 @@
         "similar": false
       },
       "upClosure": [
-        "./.bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     },
     "srcs": {
       "name": "caddy_srcs",
-      "project": "minesweeper",
+      "project": "prontoweeper",
       "dir": ".",
       "activate": "",
       "srcs": {
@@ -817,6 +841,8 @@
           "shell/screens/intermediate.css",
           "shell/screens/expert.html",
           "shell/screens/expert.css",
+          "shell/screens/halloffame.html",
+          "shell/screens/halloffame.css",
           "shell/handlers/bump.js",
           "shell/handlers/clock.js",
           "shell/handlers/sweep.js",
@@ -836,7 +862,9 @@
       "env": {},
       "visibility": "internal",
       "deps": [],
-      "transitiveDeps": [],
+      "transitiveDeps": [
+        "crud_outs_srcs"
+      ],
       "transitiveCrossDeps": [],
       "chainedDeps": [],
       "cmds": [],
@@ -845,20 +873,40 @@
         "similar": false
       },
       "upClosure": [
-        "./.bayt/compose.caddy.yaml"
+        "./.bayt/compose.caddy.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml"
       ]
     }
   },
   "visibility": "internal",
   "emitsSrcs": true,
-  "deps": [],
-  "sameProjectDeps": [],
-  "transitiveDeps": [],
+  "deps": [
+    "crud_outs"
+  ],
+  "sameProjectDeps": [
+    "crud_outs"
+  ],
+  "transitiveDeps": [
+    "crud_outs"
+  ],
   "transitiveCrossDeps": [],
   "upClosure": [
-    "./.bayt/compose.caddy.yaml"
+    "./.bayt/compose.caddy.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.database.yaml"
   ],
-  "chainedDeps": [],
+  "chainedDeps": [
+    {
+      "name": "crud_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
   "cmds": [],
   "cache": {
     "full": false,

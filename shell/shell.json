@@ -1,5 +1,16 @@
 {
-  "app": "minesweeper",
+  "access": {
+    "score": {
+      "scope": "public"
+    }
+  },
+  "app": "prontoweeper",
+  "auth": {
+    "required": false,
+    "service": "/auth",
+    "mode": "passkey",
+    "promote": false
+  },
   "floors": {
     "touch": 24
   },
@@ -20,6 +31,9 @@
     "right_button": "tab",
     "cell": "tab",
     "best": "device"
+  },
+  "read": {
+    "score": "lazy"
   },
   "seed": {
     "cell": [
@@ -6572,7 +6586,8 @@
         "left_led": "010",
         "time": 0,
         "time_led": "000",
-        "t0": 0
+        "t0": 0,
+        "round": ""
       },
       {
         "id": "i",
@@ -6585,7 +6600,8 @@
         "left_led": "040",
         "time": 0,
         "time_led": "000",
-        "t0": 0
+        "t0": 0,
+        "round": ""
       },
       {
         "id": "e",
@@ -6598,7 +6614,8 @@
         "left_led": "099",
         "time": 0,
         "time_led": "000",
-        "t0": 0
+        "t0": 0,
+        "round": ""
       }
     ],
     "right_button": [
@@ -6615,7 +6632,7 @@
       }
     ]
   },
-  "server": false,
+  "server": true,
   "routes": [
     {
       "keep": 0,
@@ -6697,9 +6714,34 @@
       "states": [
         "populated"
       ]
+    },
+    {
+      "keep": 0,
+      "path": "/hall-of-fame",
+      "screen": "halloffame",
+      "nav": {
+        "key": "nav_halloffame",
+        "label": "Hall of Fame",
+        "strip": false
+      },
+      "files": {
+        "html": "shell/screens/halloffame.html",
+        "css": "shell/screens/halloffame.css",
+        "handlers": [],
+        "adapters": [],
+        "shared": [
+          "shell/shared/window.css"
+        ]
+      },
+      "ssr": "spa",
+      "states": [
+        "populated"
+      ]
     }
   ],
-  "tables": [],
+  "tables": [
+    "score"
+  ],
   "schema": {
     "cell": {
       "durability": "tab",
@@ -6877,6 +6919,14 @@
           "name": "t0",
           "type": "int32",
           "required": true
+        },
+        {
+          "bounds": {
+            "regex": "^[0-9]{0,10}$"
+          },
+          "name": "round",
+          "type": "string",
+          "required": true
         }
       ]
     },
@@ -6921,6 +6971,75 @@
           "name": "who",
           "type": "string",
           "required": true
+        }
+      ]
+    },
+    "score": {
+      "durability": "server",
+      "fields": [
+        {
+          "name": "id",
+          "pk": true,
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "defaulted": true,
+          "name": "user_id",
+          "ref": "app_user",
+          "type": "uuid",
+          "required": true
+        },
+        {
+          "enum": [
+            "b",
+            "i",
+            "e"
+          ],
+          "name": "level",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "intMin": 1,
+            "intMax": 999
+          },
+          "name": "time",
+          "type": "int32",
+          "required": true
+        },
+        {
+          "bounds": {
+            "sizeMin": 1,
+            "sizeMax": 20
+          },
+          "name": "name",
+          "type": "string",
+          "required": true
+        },
+        {
+          "bounds": {
+            "regex": "^[0-9]{1,10}$"
+          },
+          "name": "round",
+          "type": "string",
+          "required": true
+        },
+        {
+          "defaulted": true,
+          "name": "created",
+          "type": "timestamp",
+          "required": true
+        }
+      ],
+      "uniques": [
+        {
+          "name": "uq_score_round",
+          "cols": [
+            "user_id",
+            "round"
+          ]
         }
       ]
     },
@@ -7441,6 +7560,25 @@
       "tsvector": "string"
     }
   },
-  "migrations": [],
-  "pipelines": []
+  "migrations": [
+    "services/database/migrations/000_extensions.sql",
+    "services/database/migrations/001_roles.sql",
+    "services/database/migrations/002_grants.sql",
+    "services/database/migrations/004_types.sql",
+    "services/database/migrations/005_create_tables.sql",
+    "services/database/migrations/006_policies.sql",
+    "services/database/migrations/007_txid.sql",
+    "services/database/migrations/008_publication.sql",
+    "services/database/migrations/010_electric_login.sql",
+    "services/database/migrations/011_score_writes.sql"
+  ],
+  "pipelines": [],
+  "uniques": {
+    "score": [
+      [
+        "user_id",
+        "round"
+      ]
+    ]
+  }
 }

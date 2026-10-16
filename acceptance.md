@@ -11,3 +11,5 @@
 - [ ] Pressing the face, or New in the Game menu, starts a fresh game at that level. {#accept-new-game}
 - [ ] The Game menu switches between Beginner, Intermediate and Expert, each its own size and mine count, and each keeps its own game. {#accept-levels}
 - [ ] Best Times lists the fastest win at each level, and they are still there after a reload. {#accept-best-times}
+- [ ] After a win, a box asks for a name; OK posts the time to the Hall of Fame, and the box then says it is there. {#accept-post-score}
+- [ ] The Hall of Fame lists the ten fastest posted wins at each level, everyone's, fastest first; a level with none says so. {#accept-hall-of-fame}

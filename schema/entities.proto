@@ -5,6 +5,11 @@ import "google/protobuf/timestamp.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/struct.proto";
 
+message AppUser {
+  optional string id = 1 [json_name = "id"];
+  optional string handle = 2 [json_name = "handle"];
+}
+
 message Best {
   optional string id = 1 [json_name = "id"];
   optional string level = 2 [json_name = "level"];
@@ -33,11 +38,22 @@ message Game {
   optional int32 time = 9 [json_name = "time"];
   optional string time_led = 10 [json_name = "time_led"];
   optional int32 t0 = 11 [json_name = "t0"];
+  optional string round = 12 [json_name = "round"];
 }
 
 message RightButton {
   optional string id = 1 [json_name = "id"];
   optional string owner = 2 [json_name = "owner"];
+}
+
+message Score {
+  optional string id = 1 [json_name = "id"];
+  optional string user_id = 2 [json_name = "user_id"];
+  optional string level = 3 [json_name = "level"];
+  optional int32 time = 4 [json_name = "time"];
+  optional string name = 5 [json_name = "name"];
+  optional string round = 6 [json_name = "round"];
+  google.protobuf.Timestamp created = 7 [json_name = "created"];
 }
 
 message Tick {

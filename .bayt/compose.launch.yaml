@@ -1,44 +1,63 @@
 # generated from bayt.cue — do not edit
 services:
-  minesweeper-launch:
+  prontoweeper-launch:
     build:
       additional_contexts:
-        minesweeper-caddy: service:minesweeper-caddy
+        prontoweeper-caddy: service:prontoweeper-caddy
+        prontoweeper-database: service:prontoweeper-database
+        prontoweeper-crud: service:prontoweeper-crud
+        prontoweeper-electric: service:prontoweeper-electric
+        prontoweeper-auth: service:prontoweeper-auth
       context: ..
       dockerfile: .bayt/Dockerfile.launch
       target: launch
       tags:
-      - bayt-minesweeper-launch:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
-      - bayt-minesweeper-launch:latest
+      - bayt-prontoweeper-launch:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-prontoweeper-launch:latest
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
     depends_on:
-      minesweeper-caddy:
+      prontoweeper-caddy:
         condition: service_healthy
         restart: true
+      prontoweeper-database:
+        condition: service_healthy
+        restart: true
+      prontoweeper-crud:
+        condition: service_healthy
+        restart: true
+      prontoweeper-electric:
+        condition: service_healthy
+        restart: true
+      prontoweeper-auth:
+        condition: service_started
     healthcheck:
       test:
       - CMD
       - echo
-      - minesweeper is healthy
+      - prontoweeper is healthy
       interval: 5s
       timeout: 2s
       retries: 3
-    image: bayt-minesweeper-launch:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    image: bayt-prontoweeper-launch:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     networks:
       default:
         aliases:
         - launch
-  minesweeper-launch_bayt:
+  prontoweeper-launch_bayt:
     build:
       additional_contexts:
-        minesweeper-caddy_bayt: service:minesweeper-caddy_bayt
+        prontoweeper-caddy_bayt: service:prontoweeper-caddy_bayt
+        prontoweeper-database_bayt: service:prontoweeper-database_bayt
+        prontoweeper-crud_bayt: service:prontoweeper-crud_bayt
+        prontoweeper-electric_bayt: service:prontoweeper-electric_bayt
+        prontoweeper-auth_bayt: service:prontoweeper-auth_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.launch
       target: launch_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-minesweeper-launch_bayt:latest
+    image: bayt-prontoweeper-launch_bayt:latest
     scale: 0

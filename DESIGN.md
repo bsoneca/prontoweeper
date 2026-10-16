@@ -48,6 +48,10 @@ dark:
   n6: "#008080"
   n7: "#000000"
   n8: "#808080"
+shell:
+  bg: "neutral"
+  fg: "title-ink"
+  rule: "border"
 control:
   cell: "24px"
   led-w: "41px"
@@ -75,6 +79,12 @@ system grey `#C0C0C0` lit from the top left — a white edge above and left, a
   that 98 added, with white bold type.
 - **Squares are 24px**, one and a half times the original's 16, so a finger
   or a modern pointer finds them; every edge scales with them.
+
+## The terminal's own words
+
+Once a player is a guest, the terminal draws their handle and "sign out" on
+the desktop above the window. They are set in the title bar's white, the way
+Windows 95 labelled the icons on its desktop, so they read on both teals.
 
 ## The dark twin
 

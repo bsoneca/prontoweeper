@@ -255,7 +255,7 @@
       redir {uri} permanent
     }
     route {
-      @negotiable path / /expert /intermediate
+      @negotiable path / /expert /hall-of-fame /intermediate
       header @negotiable Vary Accept-Language
       @lang header_regexp lang Accept-Language (?i)(?:^|,)\s*(pt-BR|en|pt)\b
       handle @lang {
@@ -277,6 +277,12 @@
           vars_regexp {re.lang.1} (?i)^(pt-BR|pt)$
         }
         rewrite @expert_pt-br /pt-br/expert
+        @halloffame_pt-br {
+          path /hall-of-fame
+          not query lang=*
+          vars_regexp {re.lang.1} (?i)^(pt-BR|pt)$
+        }
+        rewrite @halloffame_pt-br /pt-br/hall-of-fame
       }
     }
     handle {
@@ -284,7 +290,7 @@
       header Cache-Control "no-cache"
       @file file {path} {path}/index.html
       rewrite @file {http.matchers.file.relative}
-      @route path / /expert /expert/ /intermediate /intermediate/ /pt-br /pt-br/ /pt-br/expert /pt-br/expert/ /pt-br/intermediate /pt-br/intermediate/
+      @route path / /expert /expert/ /hall-of-fame /hall-of-fame/ /intermediate /intermediate/ /pt-br /pt-br/ /pt-br/expert /pt-br/expert/ /pt-br/hall-of-fame /pt-br/hall-of-fame/ /pt-br/intermediate /pt-br/intermediate/
       rewrite @route /shell/index.html
       import files
     }

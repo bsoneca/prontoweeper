@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="pronto-ir-version" content="0.1.0">
   <meta name="pronto-source" content="brief.md">
-  <meta name="pronto-brief-sha256" content="634ef271aa4ecd1e632f5b853bf22c91f0945c1883f44ec70692ea97eda71efa">
+  <meta name="pronto-brief-sha256" content="ca19541e7d1476c9439b5aea54fafaff0ef49696ba4f95be32cf9da76e2fe2e7">
   <meta name="pronto-generated" content="2026-10-16T00:00:00Z">
   <meta name="pronto-compiler" content="claude-opus-5-5">
   <title>Minesweeper — IR</title>
@@ -12,9 +12,9 @@
 </head>
 <body>
   <h1>Minesweeper — IR</h1>
-  <p>Four <code>tab</code> entities and one <code>device</code> entity, read and written by three level screens in one browser tab.
+  <p>Four <code>tab</code> entities, one <code>device</code> entity and two <code>server</code> entities, read and written by three level screens and a Hall of Fame.
   The field, the games, the clock and the right button are <code>tab</code>: they are machine-checked and owe this document nothing.
-  <code>Best</code> is <code>device</code>, so a record survives a reload, and it is described here.</p>
+  <code>Best</code> is <code>device</code>, so a record survives a reload; <code>Score</code> and <code>AppUser</code> are <code>server</code>, the cluster every player shares. Those three are described here.</p>
 
   <h2>Overview</h2>
   <p>Every square of every level is a <code>Cell</code> row whose id is its name — <code>b0305</code> is Beginner's row 3, column 5 — so a click carries the square it landed on.
@@ -42,7 +42,7 @@
 <div class="strip"><span class="lbl">refers to</span><span class="rels"><span class="why">—</span></span></div>
 <div class="strip"><span class="lbl">validations</span><span class="why">none</span></div>
 </div>
-<div class="dline"><span class="lbl derived">derived</span><span class="chips"><span class="chip derived" data-tip="who writes rows here, each as kind:name and its ops — a screen's forms and what its markup writes past them, the terminal's charts, pipelines, computations, machines, a unit's memo" tabindex="0"><b>writers</b> —</span><span class="chip derived" data-tip="how the terminal reads a server entity's table: eager syncs it whole, lazy loads what a view asks; a browser tier has no mode" tabindex="0"><b>read</b> —</span><span class="chip derived" data-tip="the database roles that may touch the table, from durability and access" tabindex="0"><b>roles</b> anon</span><span class="chip derived" data-tip="whether ir.html carries an element for it — review by consequence: a row that reaches another device or the server does" tabindex="0"><b>ir</b> required</span></span>
+<div class="dline"><span class="lbl derived">derived</span><span class="chips"><span class="chip derived" data-tip="who writes rows here, each as kind:name and its ops — a screen's forms and what its markup writes past them, the terminal's charts, pipelines, computations, machines, a unit's memo" tabindex="0"><b>writers</b> —</span><span class="chip derived" data-tip="how the terminal reads a server entity's table: eager syncs it whole, lazy loads what a view asks; a browser tier has no mode" tabindex="0"><b>read</b> —</span><span class="chip derived" data-tip="the database roles that may touch the table, from durability and access" tabindex="0"><b>roles</b> anon · app_user · service</span><span class="chip derived" data-tip="whether ir.html carries an element for it — review by consequence: a row that reaches another device or the server does" tabindex="0"><b>ir</b> required</span></span>
 <details class="more"><summary>the platform’s columns</summary><p class="why"><code>created_by</code>, <code>updated_by</code> → app_user, stamped by the platform on every write; not the author’s.</p></details></div>
 
 </div><!-- /pronto:card -->
@@ -58,12 +58,79 @@
     </table>
   </section>
 
+  <section id="Score" data-kind="entity" data-durability="server" data-type-id="0xec8f14b4320f217c">
+    <h3>Score</h3>
+<!-- pronto:card --><div class="card dur-server">
+<header class="ehead">
+<span class="chips"><span class="chip" data-tip="where the row lives, the one word the author chooses: tab · device · offline · live · server" tabindex="0"><b>durability</b> server</span><span class="chip" data-tip="who may read and write the row; becomes the roles and the row-level policies" tabindex="0"><b>access</b> public</span><span class="chip" data-tip="the entity's type id, which a schema diff keys on across renames; each field keeps a gap-free ordinal, and a retired field stays as a tombstone" tabindex="0"><b>id</b> 0xec8f14b4320f217c</span><span class="chip derived" data-tip="3 of 5 — a write to a row only the cluster holds, inside the transaction; delivered twice it converges, out of order it commutes" tabindex="0"><b>level</b> replicated</span><span class="chip derived" data-tip="what a write here can claim when delivered twice — the level's word, and at level 4 the sink's: idempotent or reconciled is exactly-once, unknown at-most-once, repeat at-least-once; a hatch is unspecified" tabindex="0"><b>delivery</b> exactly-once</span></span>
+<span class="counts">7 fields · 0 referrers</span>
+</header>
+<div class="names"><span class="lbl">fields</span><span class="namelist"><span class="fname">id<i class="m">pk</i></span><span class="fname">user_id<i class="m">→</i></span><span class="fname">level</span><span class="fname">time</span><span class="fname">name</span><span class="fname">round</span><span class="fname">created</span></span>
+<details class="more"><summary>all fields, with their metadata</summary>
+<table class="fields"><tr><td class="o">1</td><td class="k">id</td><td class="t">uuid</td><td class="gl"><span class="g pk" data-tip="primary key" tabindex="0">pk</span></td><td class="x" title=""></td></tr><tr><td class="o">2</td><td class="k">user_id</td><td class="t">uuid</td><td class="gl"><a class="g fk" href="#AppUser" data-tip="references another entity; click to go there" tabindex="0">→ app_user</a></td><td class="x" title="= auth_uid()">= auth_uid()</td></tr><tr><td class="o">3</td><td class="k">level</td><td class="t">string</td><td class="gl"></td><td class="x" title="this in ['b', 'i', 'e']">this in ['b', 'i', 'e']</td></tr><tr><td class="o">4</td><td class="k">time</td><td class="t">int32</td><td class="gl"></td><td class="x" title="this &gt;= 1 &amp;&amp; this &lt;= 999">this &gt;= 1 &amp;&amp; this &lt;= 999</td></tr><tr><td class="o">5</td><td class="k">name</td><td class="t">string</td><td class="gl"></td><td class="x" title="this.size() &gt;= 1 &amp;&amp; this.size() &lt;= 20">this.size() &gt;= 1 &amp;&amp; this.size() &lt;= 20</td></tr><tr><td class="o">6</td><td class="k">round</td><td class="t">string</td><td class="gl"></td><td class="x" title="this.matches('^[0-9]{1,10}$')">this.matches('^[0-9]{1,10}$')</td></tr><tr><td class="o">7</td><td class="k">created</td><td class="t">timestamp</td><td class="gl"></td><td class="x" title="= now()">= now()</td></tr></table>
+<p class="legend">the first column is the field's ordinal, which a diff keys on · <span class="g pk">pk</span> primary key · <span class="g fk">→</span> references · <span class="g">◇</span> unique · <span class="g">≡</span> indexed · <span class="g">○</span> nullable · a rule or default in the last column</p>
+</details></div>
+<div class="strips">
+<div class="strip"><span class="lbl">referenced by</span><span class="rels"><span class="why">—</span></span></div>
+<div class="strip"><span class="lbl">refers to</span><span class="rels"><a class="rel out" href="#AppUser">app_user<span class="col"> via user_id</span></a></span></div>
+<div class="strip"><span class="lbl">validations</span><span class="why">none</span></div>
+</div>
+<div class="dline"><span class="lbl derived">derived</span><span class="chips"><span class="chip derived" data-tip="who writes rows here, each as kind:name and its ops — a screen's forms and what its markup writes past them, the terminal's charts, pipelines, computations, machines, a unit's memo" tabindex="0"><b>writers</b> screen:beginner create, screen:intermediate create, screen:expert create</span><span class="chip derived" data-tip="how the terminal reads a server entity's table: eager syncs it whole, lazy loads what a view asks; a browser tier has no mode" tabindex="0"><b>read</b> lazy</span><span class="chip derived" data-tip="the database roles that may touch the table, from durability and access" tabindex="0"><b>roles</b> anon · app_user · service</span><span class="chip derived" data-tip="whether ir.html carries an element for it — review by consequence: a row that reaches another device or the server does" tabindex="0"><b>ir</b> required</span></span>
+<details class="more"><summary>the platform’s columns</summary><p class="why"><code>created_by</code>, <code>updated_by</code> → app_user, stamped by the platform on every write; not the author’s.</p></details></div>
+
+</div><!-- /pronto:card -->
+    <p>One posted win, in the Hall of Fame every player shares. Anyone reads it, signed in or not; a player inserts only rows whose <code>user_id</code> is their own (<code>auth_uid()</code>, the column's default) and changes none. That is <a href="#decision-score-writes">decision-score-writes</a>. The <code>(user_id, round)</code> unique makes a repeated submit of one game's win the same row, never a second one.</p>
+    <p>A level screen's post form creates it from the won game's row: <code>level</code> is the game's id, <code>time</code> its timer, <code>round</code> the draw its field was laid from, and <code>name</code> what the player typed. The time is the client's word: a player who writes to <code>/crud</code> by hand can post any time from 1 to 999, which a homage with nothing at stake accepts.</p>
+    <table data-extract="fields">
+      <thead><tr><th>Field</th><th>Type</th><th>Constraint</th></tr></thead>
+      <tbody>
+        <tr data-ordinal="1"><td>id</td><td>uuid</td><td>minted by the create form</td></tr>
+        <tr data-ordinal="2"><td>user_id</td><td>uuid → app_user</td><td>default <code>auth_uid()</code></td></tr>
+        <tr data-ordinal="3"><td>level</td><td>string</td><td><code class="cel">this in ['b', 'i', 'e']</code></td></tr>
+        <tr data-ordinal="4"><td>time</td><td>int32</td><td><code class="cel">this &gt;= 1 &amp;&amp; this &lt;= 999</code></td></tr>
+        <tr data-ordinal="5"><td>name</td><td>string</td><td><code class="cel">this.size() &gt;= 1 &amp;&amp; this.size() &lt;= 20</code></td></tr>
+        <tr data-ordinal="6"><td>round</td><td>string</td><td><code class="cel">this.matches('^[0-9]{1,10}$')</code></td></tr>
+        <tr data-ordinal="7"><td>created</td><td>timestamp</td><td>default <code>now()</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+  <section id="AppUser" data-kind="entity" data-durability="server" data-type-id="0xcf5431bbdd3c2cc3">
+    <h3>AppUser</h3>
+<!-- pronto:card --><div class="card dur-server">
+<header class="ehead">
+<span class="chips"><span class="chip" data-tip="where the row lives, the one word the author chooses: tab · device · offline · live · server" tabindex="0"><b>durability</b> server</span><span class="chip" data-tip="who may read and write the row; becomes the roles and the row-level policies" tabindex="0"><b>access</b> internal</span><span class="chip" data-tip="the entity's type id, which a schema diff keys on across renames; each field keeps a gap-free ordinal, and a retired field stays as a tombstone" tabindex="0"><b>id</b> 0xcf5431bbdd3c2cc3</span><span class="chip derived" data-tip="3 of 5 — a write to a row only the cluster holds, inside the transaction; delivered twice it converges, out of order it commutes" tabindex="0"><b>level</b> replicated</span><span class="chip derived" data-tip="what a write here can claim when delivered twice — the level's word, and at level 4 the sink's: idempotent or reconciled is exactly-once, unknown at-most-once, repeat at-least-once; a hatch is unspecified" tabindex="0"><b>delivery</b> exactly-once</span></span>
+<span class="counts">2 fields · 1 referrers</span>
+</header>
+<div class="names"><span class="lbl">fields</span><span class="namelist"><span class="fname">id<i class="m">pk</i></span><span class="fname">handle</span></span>
+<details class="more"><summary>all fields, with their metadata</summary>
+<table class="fields"><tr><td class="o">1</td><td class="k">id</td><td class="t">uuid</td><td class="gl"><span class="g pk" data-tip="primary key" tabindex="0">pk</span></td><td class="x" title=""></td></tr><tr><td class="o">2</td><td class="k">handle</td><td class="t">string</td><td class="gl"><span class="g" data-tip="unique" tabindex="0">◇</span></td><td class="x" title="this.size() &gt; 0">this.size() &gt; 0</td></tr></table>
+<p class="legend">the first column is the field's ordinal, which a diff keys on · <span class="g pk">pk</span> primary key · <span class="g fk">→</span> references · <span class="g">◇</span> unique · <span class="g">≡</span> indexed · <span class="g">○</span> nullable · a rule or default in the last column</p>
+</details></div>
+<div class="strips">
+<div class="strip"><span class="lbl">referenced by</span><span class="rels"><a class="rel in" href="#Score">score<span class="col">.user_id</span></a></span></div>
+<div class="strip"><span class="lbl">refers to</span><span class="rels"><span class="why">—</span></span></div>
+<div class="strip"><span class="lbl">validations</span><span class="why">none</span></div>
+</div>
+<div class="dline"><span class="lbl derived">derived</span><span class="chips"><span class="chip derived" data-tip="who writes rows here, each as kind:name and its ops — a screen's forms and what its markup writes past them, the terminal's charts, pipelines, computations, machines, a unit's memo" tabindex="0"><b>writers</b> —</span><span class="chip derived" data-tip="how the terminal reads a server entity's table: eager syncs it whole, lazy loads what a view asks; a browser tier has no mode" tabindex="0"><b>read</b> eager</span><span class="chip derived" data-tip="the database roles that may touch the table, from durability and access" tabindex="0"><b>roles</b> anon · app_user · service</span><span class="chip derived" data-tip="whether ir.html carries an element for it — review by consequence: a row that reaches another device or the server does" tabindex="0"><b>ir</b> required</span></span>
+<details class="more"><summary>the platform’s columns</summary><p class="why"><code>created_by</code>, <code>updated_by</code> → app_user, stamped by the platform on every write; not the author’s.</p></details></div>
+
+</div><!-- /pronto:card -->
+    <p>The cluster's identities. The auth service inserts a guest's <code>(id, handle)</code> when the terminal signs one in at boot. Nothing in the app reads it, so its access is <code>internal</code>; a score names its player by the name they typed, never by the handle.</p>
+    <table data-extract="fields">
+      <thead><tr><th>Field</th><th>Type</th><th>Constraint</th></tr></thead>
+      <tbody>
+        <tr data-ordinal="1"><td>id</td><td>uuid</td><td>supplied by the auth service</td></tr>
+        <tr data-ordinal="2"><td>handle</td><td>string</td><td>unique, <code class="cel">this.size() &gt; 0</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
   <h2>Screens</h2>
   <p>The three screens are the same window over different rows: the cells whose <code>lv</code> is the level, and the game whose id is. Each holds <code>keep: 0</code>, so only the level on screen runs a metronome.</p>
-  <!-- pronto:app-neighbourhood --><details class="pronto-neighbourhood app-neighbourhood"><summary>App entity neighbourhood · 5 entities</summary><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="App entity diagram"><img src="ir/neighbourhood-app.svg" width="278" height="563" alt="App entity diagram"></div><p><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>RightButton</span>, <span>Tick</span></p></details><!-- /pronto:app-neighbourhood -->
+  <!-- pronto:app-neighbourhood --><details class="pronto-neighbourhood app-neighbourhood"><summary>App entity neighbourhood · 6 entities</summary><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="App entity diagram"><img src="ir/neighbourhood-app.svg" width="278" height="691" alt="App entity diagram"></div><p><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>RightButton</span>, <a href="#Score">Score</a>, <span>Tick</span></p></details><!-- /pronto:app-neighbourhood -->
 <section id="beginner" data-kind="screen" data-route="/">
     <h3>Beginner (/)</h3>
-<!-- pronto:neighbourhood --><figure class="pronto-neighbourhood" aria-label="Beginner entity neighbourhood"><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="Beginner entity diagram"><img src="ir/neighbourhood-beginner.svg" width="278" height="563" alt="Beginner entity diagram"></div><figcaption><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>RightButton</span>, <span>Tick</span></figcaption></figure><!-- /pronto:neighbourhood -->
+<!-- pronto:neighbourhood --><figure class="pronto-neighbourhood" aria-label="Beginner entity neighbourhood"><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="Beginner entity diagram"><img src="ir/neighbourhood-beginner.svg" width="278" height="691" alt="Beginner entity diagram"></div><figcaption><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>RightButton</span>, <a href="#Score">Score</a>, <span>Tick</span></figcaption></figure><!-- /pronto:neighbourhood -->
     <p>9 × 9 squares, 10 mines. The Game menu links the three levels, marking this one current, and opens Best Times; Help opens About.</p>
     <figure id="beginner-populated" data-kind="state" data-of="beginner" data-state="populated">
       <svg viewBox="0 0 120 140" width="120" height="140" role="img" aria-label="The Beginner window: title bar, menu, 010 · face · 000, a 9 by 9 field">
@@ -78,11 +145,11 @@
       </svg>
       <figcaption>010 · ☺ · 000 over a raised 9 × 9 field</figcaption>
     </figure>
-    <script type="application/json" data-kind="paths" data-of="beginner">{"play": {"states": ["populated", "populated"], "accepts": ["accept-ready", "accept-first-click", "accept-numbers", "accept-flag", "accept-chord", "accept-timer", "accept-lose", "accept-win", "accept-new-game"]}, "records": {"states": ["populated", "populated"], "accepts": ["accept-best-times", "accept-levels"]}}</script>
+    <script type="application/json" data-kind="paths" data-of="beginner">{"play": {"states": ["populated", "populated"], "accepts": ["accept-ready", "accept-first-click", "accept-numbers", "accept-flag", "accept-chord", "accept-timer", "accept-lose", "accept-win", "accept-new-game"]}, "post": {"states": ["populated", "populated"], "accepts": ["accept-post-score"]}, "records": {"states": ["populated", "populated"], "accepts": ["accept-best-times", "accept-levels"]}}</script>
   </section>
   <section id="intermediate" data-kind="screen" data-route="/intermediate">
     <h3>Intermediate (/intermediate)</h3>
-<!-- pronto:neighbourhood --><figure class="pronto-neighbourhood" aria-label="Intermediate entity neighbourhood"><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="Intermediate entity diagram"><img src="ir/neighbourhood-intermediate.svg" width="278" height="563" alt="Intermediate entity diagram"></div><figcaption><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>RightButton</span>, <span>Tick</span></figcaption></figure><!-- /pronto:neighbourhood -->
+<!-- pronto:neighbourhood --><figure class="pronto-neighbourhood" aria-label="Intermediate entity neighbourhood"><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="Intermediate entity diagram"><img src="ir/neighbourhood-intermediate.svg" width="278" height="691" alt="Intermediate entity diagram"></div><figcaption><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>RightButton</span>, <a href="#Score">Score</a>, <span>Tick</span></figcaption></figure><!-- /pronto:neighbourhood -->
     <p>16 × 16 squares, 40 mines; the same window.</p>
     <figure id="intermediate-populated" data-kind="state" data-of="intermediate" data-state="populated">
       <svg viewBox="0 0 120 140" width="120" height="140" role="img" aria-label="The Intermediate window: 040 · face · 000, a 16 by 16 field">
@@ -97,7 +164,7 @@
   </section>
   <section id="expert" data-kind="screen" data-route="/expert">
     <h3>Expert (/expert)</h3>
-<!-- pronto:neighbourhood --><figure class="pronto-neighbourhood" aria-label="Expert entity neighbourhood"><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="Expert entity diagram"><img src="ir/neighbourhood-expert.svg" width="278" height="563" alt="Expert entity diagram"></div><figcaption><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>RightButton</span>, <span>Tick</span></figcaption></figure><!-- /pronto:neighbourhood -->
+<!-- pronto:neighbourhood --><figure class="pronto-neighbourhood" aria-label="Expert entity neighbourhood"><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="Expert entity diagram"><img src="ir/neighbourhood-expert.svg" width="278" height="691" alt="Expert entity diagram"></div><figcaption><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>RightButton</span>, <a href="#Score">Score</a>, <span>Tick</span></figcaption></figure><!-- /pronto:neighbourhood -->
     <p>30 × 16 squares, 99 mines; the same window, wider.</p>
     <figure id="expert-populated" data-kind="state" data-of="expert" data-state="populated">
       <svg viewBox="0 0 200 110" width="200" height="110" role="img" aria-label="The Expert window: 099 · face · 000, a 30 by 16 field">
@@ -111,13 +178,36 @@
     <script type="application/json" data-kind="paths" data-of="expert">{"play": {"states": ["populated", "populated"], "accepts": ["accept-levels"]}}</script>
   </section>
 
+  <section id="halloffame" data-kind="screen" data-route="/hall-of-fame">
+    <h3>Hall of Fame (/hall-of-fame)</h3>
+<!-- pronto:neighbourhood --><figure class="pronto-neighbourhood" aria-label="Hall of Fame entity neighbourhood"><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="Hall of Fame entity diagram"><img src="ir/neighbourhood-halloffame.svg" width="278" height="270" alt="Hall of Fame entity diagram"></div><figcaption><b>entities:</b> <span>RightButton</span>, <a href="#Score">Score</a></figcaption></figure><!-- /pronto:neighbourhood -->
+    <p>Three boards, one per level: the ten fastest posted wins, by <code>time</code> and then by who posted first, each numbered by its place (<code>data-project</code> <code>index</code>). The menu bar leads back to each level. Reached from the Game menu's Hall of Fame item and from the note a posted win leaves.</p>
+    <figure id="halloffame-populated" data-kind="state" data-of="halloffame" data-state="populated">
+      <svg viewBox="0 0 200 90" width="200" height="90" role="img" aria-label="Three boards: Beginner, Intermediate, Expert, each a numbered list of names and seconds">
+        <rect x="1" y="1" width="198" height="88" fill="none" stroke="currentColor"/>
+        <rect x="1" y="1" width="198" height="12" fill="currentColor" opacity=".25"/>
+        <text x="6" y="10" font-size="7">Hall of Fame</text>
+        <rect x="6" y="20" width="60" height="64" fill="none" stroke="currentColor"/><text x="10" y="30" font-size="6">Beginner</text><text x="10" y="42" font-size="6">1 Ana · 7</text>
+        <rect x="70" y="20" width="60" height="64" fill="none" stroke="currentColor"/><text x="74" y="30" font-size="6">Intermediate</text>
+        <rect x="134" y="20" width="60" height="64" fill="none" stroke="currentColor"/><text x="138" y="30" font-size="6">Expert</text>
+      </svg>
+      <figcaption>Three boards of names and seconds; a level with none says "No times yet."</figcaption>
+    </figure>
+    <script type="application/json" data-kind="paths" data-of="halloffame">{"browse": {"states": ["populated", "populated"], "accepts": ["accept-hall-of-fame"]}}</script>
+  </section>
+
   <h2>Invariants</h2>
   <p>A fresh field is laid so the first square is safe: after the draw, <code class="cel">output.cell[input.first].mine == 'no'</code> and exactly <code class="cel">game.mines</code> cells of the level carry <code class="cel">mine == 'yes'</code>. Each cell's <code>n</code> is the count of its up-to-eight neighbours with a mine.</p>
   <p>The counter is <code class="cel">game.left == game.mines - size(flags)</code>, written as <code>left_led</code>: three digits, or a minus and two when negative.</p>
   <p>The game is won exactly when every cell with <code class="cel">mine == 'no'</code> has <code class="cel">look == 'open'</code>; it is lost when a cell with a mine is opened, which becomes <code>boom</code>. A won or lost game ignores every square until reset.</p>
 
+  <p>A won game's post panel shows its form until a score with that game's <code>round</code> exists, then a note instead: <code class="cel">size(score.filter(s, s.round == game.round)) &gt; 0</code> hides the form. The unique on <code>(user_id, round)</code> holds the same on the server.</p>
+
   <h2>Decisions</h2>
   <p id="decision-escape-hatches" data-kind="decision"><strong>Escape hatches: none.</strong> No container, WASM unit, vendored component or external endpoint; every line of app code is a handler the terminal runs in a compartment.</p>
+  <p id="decision-guests" data-kind="decision"><strong>Sign-in: guests, minted silently.</strong> The brief asked for Google sign-in through Firebase. The terminal offers passkey and guest and nothing else (Firebase is its planned third mode), and pronto refuses a program that demands a mode the terminal lacks. The edge tier, where this app is released, signs in guests only: passkeys need the auth service's ceremonies, which the edge does not run. So <code>auth.required</code> is false, the terminal mints a guest at boot, and a guest's session lives as long as the tab. A winner types a name with each post, as the original's record box asked for one.</p>
+  <p id="decision-score-writes" data-kind="decision"><strong>Score: everyone reads, the owner inserts.</strong> <code>#Access</code> has no such mode, so <code>Score</code> is declared <code>public</code> and <code>011_score_writes.sql</code> adds one permissive INSERT arm, <code>WITH CHECK (user_id = auth_uid())</code>, as realworld's owner writes do. There is no UPDATE and no DELETE arm. Declaring it <code>private</code> and widening SELECT in SQL would make the browser believe "mine" where the server means "everyone's".</p>
+  <p id="decision-hosting" data-kind="decision"><strong>Released to Cloudflare, not Pages.</strong> A ranking every player shares needs a cluster every player reaches. The Pages target runs a whole cluster inside each tab, so its Hall of Fame would hold one player's wins. The edge target runs one cluster in a Durable Object behind a Worker, and serves guests.</p>
   <p id="decision-durability" data-kind="decision"><strong>Durability: the game is <code>tab</code>, the records <code>device</code>.</strong> A game in progress lives as long as the tab, as it did in the original's window; only Best Times was ever kept, and here it survives a reload in this browser.
   Levels are three routes rather than a resize of one field: each level keeps its own rows and its own game, the field is seeded by CUE for all three, and no reduce ever has to add or remove squares.</p>
 </body>

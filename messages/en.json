@@ -32,5 +32,15 @@
   "ready": "Click any square to start.",
   "playing": "",
   "won": "You win!",
-  "lost": "Game over. Press the face to play again."
+  "lost": "Game over. Press the face to play again.",
+  "nav_halloffame": "Hall of Fame",
+  "menu_hall": "Hall of Fame...",
+  "hall_title": "Hall of Fame",
+  "nobody": "No times yet.",
+  "posted": "Your time is in the Hall of Fame.",
+  "see_hall": "See it",
+  "post_before": "You won in",
+  "post_after": "seconds. Type your name for the Hall of Fame:",
+  "your_name": "Your name",
+  "chrome_signout": "sign out"
 }

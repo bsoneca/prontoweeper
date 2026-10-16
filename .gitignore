@@ -3,3 +3,5 @@
 # Task's local run stamps.
 /.task/
 .DS_Store
+# Local TLS pair minted by sayt launch: a private key, never committed.
+/.certs/

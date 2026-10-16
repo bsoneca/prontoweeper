@@ -17,7 +17,8 @@ window with a navy title bar, a menu bar reading **Game** and **Help**, two red
 counters on black either side of a yellow face, and a field of raised grey
 squares hiding the mines.
 
-Nobody signs in, and nothing leaves the browser.
+Nobody signs in to play. A win can be posted, under a name the player types,
+to a Hall of Fame every player shares.
 
 ## Data
 
@@ -30,6 +31,8 @@ Nobody signs in, and nothing leaves the browser.
   for the first click, being played, won or lost, the face, how many mines are
   left to flag and how many seconds have passed.
 - **Best times** — the fastest win at each level, kept in this browser.
+- **The Hall of Fame** — every win posted by anyone: the level, the seconds
+  and the name the player typed for it.
 - **The clock** — one number counting seconds, which the timer reads.
 
 ## Screens
@@ -41,8 +44,8 @@ One window, three sizes, as the original's Game menu offered them:
 - **Expert** — 30 × 16 squares, 99 mines.
 
 Each is the same window. The **Game** menu starts a new game, switches level
-with a check beside the current one, and opens **Best Times**. The **Help**
-menu opens **About Minesweeper**.
+with a check beside the current one, and opens **Best Times**. It also opens the **Hall of Fame**: the ten fastest posted wins at each
+level, side by side. The **Help** menu opens **About Minesweeper**.
 
 Above the field sit the mine counter on the left, the face in the middle and
 the timer on the right, each counter three red digits on black. Pressing the
@@ -72,6 +75,9 @@ face starts a new game.
 - **Winning** is opening every square without a mine: the remaining mines are
   flagged, the counter reads zero, the face puts on sunglasses, and a time
   better than the best at that level becomes the new best.
+- **A win can join the Hall of Fame.** After a win, a box under the field
+  asks for a name, as the original's record box did; OK posts the time, and
+  the box then says it is there. A game is posted once.
 - **Every level keeps its own game**: switching level and coming back finds the
   game where it was left.
 
@@ -79,6 +85,7 @@ face starts a new game.
 
 ## Out of scope
 
-Custom field sizes, the "Marks (?)" and "Color" toggles of the Game menu,
+Signing in with Google or any other account: a player is the browser tab
+they play in, and a name is typed with each post. Custom field sizes, the "Marks (?)" and "Color" toggles of the Game menu,
 entering a name for a best time (it is kept as "Anonymous", as it was until
 someone typed one), sound, and playing on a phone by long-press.

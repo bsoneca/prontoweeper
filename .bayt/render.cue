@@ -1,5 +1,5 @@
 // generated from bayt.cue — do not edit
-package minesweeper
+package prontoweeper
 
 import bayt_ "github.com/bonisoft3/bayt/core:bayt"
 

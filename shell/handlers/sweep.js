@@ -96,6 +96,9 @@
 
   let next = status;
   let start = t0;
+  // The draw this field was laid from: it names the game, so a posted win
+  // can be told from the next one.
+  let round = String(game.round ?? "").match(/^[0-9]{0,10}$/) ? String(game.round ?? "") : "";
   const isGame = id === lv;
 
   if (isGame) {
@@ -108,6 +111,7 @@
     }
     next = "ready";
     start = 0;
+    round = "";
   } else {
     const sq = field.get(id);
     if (sq === undefined || status === "won" || status === "lost") return none;
@@ -122,6 +126,7 @@
       // Lay the mines anywhere but the square that was clicked, then count.
       const first = id;
       let a = Number(event.seed) >>> 0;
+      round = String(a);
       const draw = () => {
         a = (a + 0x6d2b79f5) >>> 0;
         let t = a;
@@ -184,7 +189,7 @@
   const left = Math.max(-999, mines - flags);
   const time = next === "ready" ? 0 : Math.max(1, Math.min(999, tickN - start + 1));
   const face = { ready: "smile", playing: "smile", won: "cool", lost: "dead" }[next];
-  const want = { status: next, face, left, left_led: led(left), time, time_led: led(time), t0: start };
+  const want = { status: next, face, left, left_led: led(left), time, time_led: led(time), t0: start, round };
   const diff = {};
   for (const f of Object.keys(want)) if (String(game[f]) !== String(want[f])) diff[f] = want[f];
   if (Object.keys(diff).length > 0) updates.push({ op: "patch", entity: "game", id: lv, row: diff });

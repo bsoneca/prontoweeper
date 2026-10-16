@@ -32,5 +32,15 @@
   "ready": "Clique em qualquer quadrado para começar.",
   "playing": "",
   "won": "Você venceu!",
-  "lost": "Fim de jogo. Clique na carinha para jogar de novo."
+  "lost": "Fim de jogo. Clique na carinha para jogar de novo.",
+  "nav_halloffame": "Hall da Fama",
+  "menu_hall": "Hall da Fama...",
+  "hall_title": "Hall da Fama",
+  "nobody": "Nenhum tempo ainda.",
+  "posted": "Seu tempo está no Hall da Fama.",
+  "see_hall": "Ver",
+  "post_before": "Você venceu em",
+  "post_after": "segundos. Digite seu nome para o Hall da Fama:",
+  "your_name": "Seu nome",
+  "chrome_signout": "sair"
 }

@@ -18,3 +18,11 @@ include:
   required: false
 - path: ./compose.ci-visual.yaml
   required: false
+- path: ./compose.database.yaml
+  required: false
+- path: ./compose.crud.yaml
+  required: false
+- path: ./compose.auth.yaml
+  required: false
+- path: ./compose.electric.yaml
+  required: false

@@ -1,8 +1,9 @@
 # generated from bayt.cue — do not edit
 services:
-  minesweeper-caddy:
+  prontoweeper-caddy:
     build:
       additional_contexts:
+        prontoweeper-crud: service:prontoweeper-crud
         root: ..
         plugins_omnishell-runtime-image: >-
           ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.11.0@sha256:0aef8200da75e08564b2373dd06db20797975e4c932222bd00d0bf7a575e685e}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
@@ -10,11 +11,15 @@ services:
       dockerfile: .bayt/Dockerfile.caddy
       target: caddy
       tags:
-      - bayt-minesweeper-caddy:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
-      - bayt-minesweeper-caddy:latest
+      - bayt-prontoweeper-caddy:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-prontoweeper-caddy:latest
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      prontoweeper-crud:
+        condition: service_healthy
+        restart: true
     develop:
       watch:
       - action: sync+restart
@@ -63,6 +68,12 @@ services:
         path: ../shell/screens/expert.css
         target: /srv/shell/screens/expert.css
       - action: sync+restart
+        path: ../shell/screens/halloffame.html
+        target: /srv/shell/screens/halloffame.html
+      - action: sync+restart
+        path: ../shell/screens/halloffame.css
+        target: /srv/shell/screens/halloffame.css
+      - action: sync+restart
         path: ../shell/handlers/bump.js
         target: /srv/shell/handlers/bump.js
       - action: sync+restart
@@ -103,7 +114,7 @@ services:
         target: /srv/sitemap.xml
     environment:
       ELECTRIC_SECRET: ${ELECTRIC_SECRET:-dev-electric-secret}
-      ORIGIN: ${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-15181}}
+      ORIGIN: ${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-24894}}
     healthcheck:
       test:
       - CMD
@@ -114,22 +125,24 @@ services:
       retries: 30
       start_period: 10s
       start_interval: 500ms
-    image: bayt-minesweeper-caddy:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    image: bayt-prontoweeper-caddy:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     networks:
       default:
         aliases:
         - caddy
-  minesweeper-caddy_bayt:
+  prontoweeper-caddy_bayt:
     build:
+      additional_contexts:
+        prontoweeper-crud_bayt: service:prontoweeper-crud_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.caddy
       target: caddy_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-minesweeper-caddy_bayt:latest
+    image: bayt-prontoweeper-caddy_bayt:latest
     scale: 0
-  minesweeper-caddy_srcs:
+  prontoweeper-caddy_srcs:
     build:
       context: ..
       dockerfile: .bayt/Dockerfile.caddy
@@ -137,5 +150,5 @@ services:
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-minesweeper-caddy_srcs:latest
+    image: bayt-prontoweeper-caddy_srcs:latest
     scale: 0

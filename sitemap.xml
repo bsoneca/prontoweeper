@@ -38,4 +38,16 @@
     <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/pt-br/expert"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/expert"/>
   </url>
+  <url>
+    <loc>{{$o}}/hall-of-fame</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="{{$o}}/hall-of-fame"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/pt-br/hall-of-fame"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/hall-of-fame"/>
+  </url>
+  <url>
+    <loc>{{$o}}/pt-br/hall-of-fame</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="{{$o}}/hall-of-fame"/>
+    <xhtml:link rel="alternate" hreflang="pt-BR" href="{{$o}}/pt-br/hall-of-fame"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="{{$o}}/hall-of-fame"/>
+  </url>
 </urlset>

@@ -1,0 +1,44 @@
+# generated from bayt.cue — do not edit
+services:
+  prontoweeper-auth:
+    build:
+      additional_contexts:
+        prontoweeper-database: service:prontoweeper-database
+        libraries_mecha-auth-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.11.0@sha256:301d656e3f61f87c537b431bf2459114c6b3bec706accfd15b7b17b5d9782416}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}
+      context: ..
+      dockerfile: .bayt/Dockerfile.auth
+      target: auth
+      tags:
+      - bayt-prontoweeper-auth:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-prontoweeper-auth:latest
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    depends_on:
+      prontoweeper-database:
+        condition: service_healthy
+        restart: true
+    environment:
+      DATABASE_URL: >-
+        postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-prontoweeper}
+      PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+      WEBAUTHN_RP_ID: ${WEBAUTHN_RP_ID:-localhost}
+      WEBAUTHN_ORIGIN: ${WEBAUTHN_ORIGIN:-https://localhost:*}
+    image: bayt-prontoweeper-auth:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    networks:
+      default:
+        aliases:
+        - auth
+  prontoweeper-auth_bayt:
+    build:
+      additional_contexts:
+        prontoweeper-database_bayt: service:prontoweeper-database_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.auth
+      target: auth_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-prontoweeper-auth_bayt:latest
+    scale: 0

@@ -1,43 +1,43 @@
 # generated from bayt.cue — do not edit
 services:
-  minesweeper-build:
+  prontoweeper-build:
     build:
       additional_contexts:
-        minesweeper-generate: service:minesweeper-generate
+        prontoweeper-generate: service:prontoweeper-generate
       context: ..
       dockerfile: .bayt/Dockerfile.build
       target: build
       tags:
-      - bayt-minesweeper-build:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
-      - bayt-minesweeper-build:latest
+      - bayt-prontoweeper-build:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-prontoweeper-build:latest
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-minesweeper-build:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    image: bayt-prontoweeper-build:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     scale: 0
-  minesweeper-build_bayt:
+  prontoweeper-build_bayt:
     build:
       additional_contexts:
-        minesweeper-generate_bayt: service:minesweeper-generate_bayt
-        minesweeper-setup_bayt: service:minesweeper-setup_bayt
+        prontoweeper-generate_bayt: service:prontoweeper-generate_bayt
+        prontoweeper-setup_bayt: service:prontoweeper-setup_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.build
       target: build_bayt
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-minesweeper-build_bayt:latest
+    image: bayt-prontoweeper-build_bayt:latest
     scale: 0
-  minesweeper-build_srcs:
+  prontoweeper-build_srcs:
     build:
       additional_contexts:
-        minesweeper-generate_srcs: service:minesweeper-generate_srcs
-        minesweeper-setup_srcs: service:minesweeper-setup_srcs
+        prontoweeper-generate_srcs: service:prontoweeper-generate_srcs
+        prontoweeper-setup_srcs: service:prontoweeper-setup_srcs
       context: ..
       dockerfile: .bayt/Dockerfile.build
       target: build_srcs
       args:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
-    image: bayt-minesweeper-build_srcs:latest
+    image: bayt-prontoweeper-build_srcs:latest
     scale: 0

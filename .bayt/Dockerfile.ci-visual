@@ -76,13 +76,14 @@ BKID_LOCK
 COPY --from=bayt . /monorepo/plugins/bayt/runtime
 RUN cd /opt/bkid && mise trust -y && mise install && mise exec -- sh -c 'cp "$(mise which task)" /usr/local/bin/task && cp "$(mise which depot)" /usr/local/bin/depot'
 ENV PATH=/monorepo/plugins/bayt/runtime:${PATH}
-COPY --from=minesweeper-integrate_srcs --parents /monorepo/shell/shell.yaml /monorepo/shell/screens/** /
-COPY --from=minesweeper-integrate_bayt --link /monorepo /monorepo
-COPY --from=minesweeper-caddy_srcs --parents /monorepo/docker/Caddyfile /monorepo/shell/index.html /monorepo/shell/shell.css /monorepo/shell/boot.js /monorepo/offline-first-sw.js /monorepo/shell/shell.yaml /monorepo/shell/shell.json /monorepo/shell/design.css /monorepo/shell/screens/beginner.html /monorepo/shell/screens/beginner.css /monorepo/shell/screens/intermediate.html /monorepo/shell/screens/intermediate.css /monorepo/shell/screens/expert.html /monorepo/shell/screens/expert.css /monorepo/shell/handlers/bump.js /monorepo/shell/handlers/clock.js /monorepo/shell/handlers/sweep.js /monorepo/shell/shared/window.css /monorepo/messages/en.json /monorepo/messages/pt-BR.json /monorepo/brief.html /monorepo/ir.html /monorepo/ir/card.css /monorepo/acceptance.md /monorepo/DESIGN.md /monorepo/robots.txt /monorepo/sitemap.xml /
+COPY --from=prontoweeper-integrate_srcs --parents /monorepo/shell/shell.yaml /monorepo/shell/screens/** /
+COPY --from=prontoweeper-integrate_bayt --link /monorepo /monorepo
+COPY --from=prontoweeper-database_srcs --parents /monorepo/services/database/migrations/000_extensions.sql /monorepo/services/database/migrations/001_roles.sql /monorepo/services/database/migrations/002_grants.sql /monorepo/services/database/migrations/004_types.sql /monorepo/services/database/migrations/005_create_tables.sql /monorepo/services/database/migrations/006_policies.sql /monorepo/services/database/migrations/007_txid.sql /monorepo/services/database/migrations/008_publication.sql /monorepo/services/database/migrations/010_electric_login.sql /monorepo/services/database/migrations/011_score_writes.sql /
+COPY --from=prontoweeper-caddy_srcs --parents /monorepo/docker/Caddyfile /monorepo/shell/index.html /monorepo/shell/shell.css /monorepo/shell/boot.js /monorepo/offline-first-sw.js /monorepo/shell/shell.yaml /monorepo/shell/shell.json /monorepo/shell/design.css /monorepo/shell/screens/beginner.html /monorepo/shell/screens/beginner.css /monorepo/shell/screens/intermediate.html /monorepo/shell/screens/intermediate.css /monorepo/shell/screens/expert.html /monorepo/shell/screens/expert.css /monorepo/shell/screens/halloffame.html /monorepo/shell/screens/halloffame.css /monorepo/shell/handlers/bump.js /monorepo/shell/handlers/clock.js /monorepo/shell/handlers/sweep.js /monorepo/shell/shared/window.css /monorepo/messages/en.json /monorepo/messages/pt-BR.json /monorepo/brief.html /monorepo/ir.html /monorepo/ir/card.css /monorepo/acceptance.md /monorepo/DESIGN.md /monorepo/robots.txt /monorepo/sitemap.xml /
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/Taskfile.ci-visual.yaml .bayt/bayt.ci-visual.json ./.bayt/
 ENV BUILDX_BAKE_ENTITLEMENTS_FS=0
 ENV COMPOSE_BAKE=true
-RUN --mount=type=secret,id=docker_host --mount=type=secret,id=buildx_builder --mount=type=secret,id=testcontainers_host --mount=type=secret,id=cache_scope --mount=type=secret,id=cache_scope_fallback --mount=type=secret,id=sayt_buildkit_syntax --mount=type=secret,id=sayt_no_cache --mount=type=secret,id=bayt_image_tag --mount=type=secret,id=bayt_pull_policy --mount=type=secret,id=sayt_no_cache_from --mount=type=secret,id=sayt_no_cache_to --mount=type=secret,id=depot_token --mount=type=secret,id=depot_project_id --mount=type=secret,id=depot_org_id --mount=type=secret,id=depot_disable_otel --mount=type=secret,id=actions_results_url --mount=type=secret,id=actions_runtime_token --mount=type=secret,id=bkid_project --mount=type=secret,id=buildx_instance --mount=type=secret,id=docker_config,mode=0600 --mount=type=cache,target=/root/.cache/bayt,id=minesweeper-ci-visual:/root/.cache/bayt,sharing=locked <<BAYT_INJECT
+RUN --mount=type=secret,id=docker_host --mount=type=secret,id=buildx_builder --mount=type=secret,id=testcontainers_host --mount=type=secret,id=cache_scope --mount=type=secret,id=cache_scope_fallback --mount=type=secret,id=sayt_buildkit_syntax --mount=type=secret,id=sayt_no_cache --mount=type=secret,id=bayt_image_tag --mount=type=secret,id=bayt_pull_policy --mount=type=secret,id=sayt_no_cache_from --mount=type=secret,id=sayt_no_cache_to --mount=type=secret,id=depot_token --mount=type=secret,id=depot_project_id --mount=type=secret,id=depot_org_id --mount=type=secret,id=depot_disable_otel --mount=type=secret,id=actions_results_url --mount=type=secret,id=actions_runtime_token --mount=type=secret,id=bkid_project --mount=type=secret,id=buildx_instance --mount=type=secret,id=docker_config,mode=0600 --mount=type=cache,target=/root/.cache/bayt,id=prontoweeper-ci-visual:/root/.cache/bayt,sharing=locked <<BAYT_INJECT
 set -e
 export DOCKER_HOST="$(cat /run/secrets/docker_host)"
 export BUILDX_BUILDER="$(cat /run/secrets/buildx_builder)"
@@ -126,8 +127,9 @@ BAYT_INJECT
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS ci-visual_bayt_ctxs
 WORKDIR /monorepo/.
 COPY --parents .bayt/compose.ci-visual.yaml .bayt/Dockerfile.ci-visual .bayt/bayt.ci-visual.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/Taskfile.ci-visual.yaml .bayt/process-compose.yaml ./
-COPY --from=minesweeper-integrate_bayt /monorepo /monorepo
-COPY --from=minesweeper-caddy_bayt /monorepo /monorepo
+COPY --from=prontoweeper-integrate_bayt /monorepo /monorepo
+COPY --from=prontoweeper-database_bayt /monorepo /monorepo
+COPY --from=prontoweeper-caddy_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/. -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo; fi

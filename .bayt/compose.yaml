@@ -8,57 +8,85 @@ services:
   caddy:
     extends:
       file: ./compose.caddy.yaml
-      service: minesweeper-caddy
+      service: prontoweeper-caddy
     profiles:
     - caddy
     scale: 1
   setup:
     extends:
       file: ./compose.setup.yaml
-      service: minesweeper-setup
+      service: prontoweeper-setup
     profiles:
     - setup
   lint:
     extends:
       file: ./compose.lint.yaml
-      service: minesweeper-lint
+      service: prontoweeper-lint
     profiles:
     - lint
   generate:
     extends:
       file: ./compose.generate.yaml
-      service: minesweeper-generate
+      service: prontoweeper-generate
     profiles:
     - generate
   build:
     extends:
       file: ./compose.build.yaml
-      service: minesweeper-build
+      service: prontoweeper-build
     profiles:
     - build
   test:
     extends:
       file: ./compose.test.yaml
-      service: minesweeper-test
+      service: prontoweeper-test
     profiles:
     - test
   launch:
     extends:
       file: ./compose.launch.yaml
-      service: minesweeper-launch
+      service: prontoweeper-launch
     profiles:
     - launch
     scale: 1
   integrate:
     extends:
       file: ./compose.integrate.yaml
-      service: minesweeper-integrate
+      service: prontoweeper-integrate
     profiles:
     - integrate
     scale: 1
   ci-visual:
     extends:
       file: ./compose.ci-visual.yaml
-      service: minesweeper-ci-visual
+      service: prontoweeper-ci-visual
     profiles:
     - ci-visual
+  database:
+    extends:
+      file: ./compose.database.yaml
+      service: prontoweeper-database
+    profiles:
+    - database
+    scale: 1
+  crud:
+    extends:
+      file: ./compose.crud.yaml
+      service: prontoweeper-crud
+    profiles:
+    - crud
+    scale: 1
+  auth:
+    extends:
+      file: ./compose.auth.yaml
+      service: prontoweeper-auth
+    profiles:
+    - auth
+    scale: 1
+  electric:
+    extends:
+      file: ./compose.electric.yaml
+      service: prontoweeper-electric
+    profiles:
+    - electric
+    scale: 1

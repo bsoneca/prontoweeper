@@ -2,6 +2,10 @@
 include:
 - path: .././.bayt/compose.caddy.yaml
   required: false
+- path: .././.bayt/compose.crud.yaml
+  required: false
+- path: .././.bayt/compose.database.yaml
+  required: false
 - path: .././.bayt/compose.setup.yaml
   required: false
 - path: .././.bayt/compose.lint.yaml
@@ -14,6 +18,10 @@ include:
   required: false
 - path: .././.bayt/compose.launch.yaml
   required: false
+- path: .././.bayt/compose.electric.yaml
+  required: false
+- path: .././.bayt/compose.auth.yaml
+  required: false
 - path: .././.bayt/compose.integrate.yaml
   required: false
 - path: ../mecha/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
@@ -24,5 +32,5 @@ services:
   bayt:
     extends:
       file: ./compose.integrate.yaml
-      service: minesweeper-integrate
+      service: prontoweeper-integrate
     scale: 1
