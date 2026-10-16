@@ -1,0 +1,5 @@
+# generated from bayt.cue — do not edit
+services:
+  minesweeper-caddy:
+    ports:
+    - ${CADDY_TLS_HOST_PORT:-15181}:8443

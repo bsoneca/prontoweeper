@@ -1,0 +1,41 @@
+# generated from bayt.cue — do not edit
+services:
+  minesweeper-generate:
+    build:
+      additional_contexts:
+        minesweeper-setup: service:minesweeper-setup
+      context: ..
+      dockerfile: .bayt/Dockerfile.generate
+      target: generate
+      tags:
+      - bayt-minesweeper-generate:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-minesweeper-generate:latest
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-minesweeper-generate:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    scale: 0
+  minesweeper-generate_bayt:
+    build:
+      additional_contexts:
+        minesweeper-setup_bayt: service:minesweeper-setup_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.generate
+      target: generate_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-minesweeper-generate_bayt:latest
+    scale: 0
+  minesweeper-generate_srcs:
+    build:
+      additional_contexts:
+        minesweeper-setup_srcs: service:minesweeper-setup_srcs
+      context: ..
+      dockerfile: .bayt/Dockerfile.generate
+      target: generate_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-minesweeper-generate_srcs:latest
+    scale: 0

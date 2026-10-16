@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="pronto-ir-version" content="0.1.0">
+  <meta name="pronto-source" content="brief.md">
+  <meta name="pronto-brief-sha256" content="634ef271aa4ecd1e632f5b853bf22c91f0945c1883f44ec70692ea97eda71efa">
+  <meta name="pronto-generated" content="2026-10-16T00:00:00Z">
+  <meta name="pronto-compiler" content="claude-opus-5-5">
+  <title>Minesweeper — IR</title>
+<link rel="stylesheet" href="ir/card.css">
+</head>
+<body>
+  <h1>Minesweeper — IR</h1>
+  <p>Three <code>tab</code> entities and one <code>device</code> entity, read and written by three level screens in one browser tab.
+  The field, the games and the clock are <code>tab</code>: they are machine-checked and owe this document nothing.
+  <code>Best</code> is <code>device</code>, so a record survives a reload, and it is described here.</p>
+
+  <h2>Overview</h2>
+  <p>Every square of every level is a <code>Cell</code> row whose id is its name — <code>b0305</code> is Beginner's row 3, column 5 — so a click carries the square it landed on.
+  One reduce, <code>sweep</code>, plays every gesture: a left click opens, a right click (<code>data-on-contextmenu</code>, which the terminal cancels so no browser menu opens) cycles flag → question mark → raised, a click on an opened number chords, and a click on the face or on New resets the level.
+  It rebuilds the level's field from its rows, plays the gesture, and writes back only the squares and game columns that changed.</p>
+  <p>The first click on a fresh field returns <code>then: {seed: true}</code>: the terminal draws a <code>uint32</code> and re-wakes <code>sweep</code> with it, and the mines are laid from that draw anywhere but the clicked square. <code>?seed=</code> replays the same field.</p>
+  <p>Time is a <code>Tick</code> row advanced by a one-state machine every second on the terminal's clock (<code>?clock=manual</code> holds it). The <code>clock</code> fold hears each beat and sets each game being played to the seconds since its first click, capped at 999, writing only a timer that moved.</p>
+
+  <h2>Entities</h2>
+  <section id="Best" data-kind="entity" data-durability="device" data-type-id="0xda7be0dea7ec91f6">
+    <h3>Best</h3>
+<!-- pronto:card --><div class="card dur-device">
+<header class="ehead">
+<span class="chips"><span class="chip" data-tip="where the row lives, the one word the author chooses: tab · device · offline · live · server" tabindex="0"><b>durability</b> device</span><span class="chip" data-tip="who may read and write the row; becomes the roles and the row-level policies" tabindex="0"><b>access</b> —</span><span class="chip" data-tip="the entity's type id, which a schema diff keys on across renames; each field keeps a gap-free ordinal, and a retired field stays as a tombstone" tabindex="0"><b>id</b> 0xda7be0dea7ec91f6</span><span class="chip derived" data-tip="1 of 5 — a register this tab or device alone writes" tabindex="0"><b>level</b> ephemeral</span><span class="chip derived" data-tip="what a write here can claim when delivered twice — the level's word, and at level 4 the sink's: idempotent or reconciled is exactly-once, unknown at-most-once, repeat at-least-once; a hatch is unspecified" tabindex="0"><b>delivery</b> exactly-once</span></span>
+<span class="counts">4 fields · 0 referrers</span>
+</header>
+<div class="names"><span class="lbl">fields</span><span class="namelist"><span class="fname">id<i class="m">pk</i></span><span class="fname">level</span><span class="fname">time</span><span class="fname">who</span></span>
+<details class="more"><summary>all fields, with their metadata</summary>
+<table class="fields"><tr><td class="o">1</td><td class="k">id</td><td class="t">string</td><td class="gl"><span class="g pk" data-tip="primary key" tabindex="0">pk</span></td><td class="x" title="this in ['b', 'i', 'e']">this in ['b', 'i', 'e']</td></tr><tr><td class="o">2</td><td class="k">level</td><td class="t">string</td><td class="gl"></td><td class="x" title="this in ['beginner', 'intermediate', 'expert']">this in ['beginner', 'intermediate', 'expert']</td></tr><tr><td class="o">3</td><td class="k">time</td><td class="t">int32</td><td class="gl"></td><td class="x" title="this &gt;= 0 &amp;&amp; this &lt;= 999">this &gt;= 0 &amp;&amp; this &lt;= 999</td></tr><tr><td class="o">4</td><td class="k">who</td><td class="t">string</td><td class="gl"></td><td class="x" title="this.size() &gt;= 1 &amp;&amp; this.size() &lt;= 32">this.size() &gt;= 1 &amp;&amp; this.size() &lt;= 32</td></tr></table>
+<p class="legend">the first column is the field's ordinal, which a diff keys on · <span class="g pk">pk</span> primary key · <span class="g fk">→</span> references · <span class="g">◇</span> unique · <span class="g">≡</span> indexed · <span class="g">○</span> nullable · a rule or default in the last column</p>
+</details></div>
+<div class="strips">
+<div class="strip"><span class="lbl">referenced by</span><span class="rels"><span class="why">—</span></span></div>
+<div class="strip"><span class="lbl">refers to</span><span class="rels"><span class="why">—</span></span></div>
+<div class="strip"><span class="lbl">validations</span><span class="why">none</span></div>
+</div>
+<div class="dline"><span class="lbl derived">derived</span><span class="chips"><span class="chip derived" data-tip="who writes rows here, each as kind:name and its ops — a screen's forms and what its markup writes past them, the terminal's charts, pipelines, computations, machines, a unit's memo" tabindex="0"><b>writers</b> —</span><span class="chip derived" data-tip="how the terminal reads a server entity's table: eager syncs it whole, lazy loads what a view asks; a browser tier has no mode" tabindex="0"><b>read</b> —</span><span class="chip derived" data-tip="the database roles that may touch the table, from durability and access" tabindex="0"><b>roles</b> anon</span><span class="chip derived" data-tip="whether ir.html carries an element for it — review by consequence: a row that reaches another device or the server does" tabindex="0"><b>ir</b> required</span></span>
+<details class="more"><summary>the platform’s columns</summary><p class="why"><code>created_by</code>, <code>updated_by</code> → app_user, stamped by the platform on every write; not the author’s.</p></details></div>
+
+</div><!-- /pronto:card -->
+    <p>The fastest win at each level, at most one row per level. It is the player's own record, so the program seeds none: <code>sweep</code> puts the row on the first win at a level and patches <code>time</code> when a later win beats it; nothing else writes it. Until a row exists, each Best Times line binds a <code>data-empty-row</code> reading 999 seconds by "Anonymous", as the original's did.</p>
+    <table data-extract="fields">
+      <thead><tr><th>Field</th><th>Type</th><th>Constraint</th></tr></thead>
+      <tbody>
+        <tr data-ordinal="1"><td>id</td><td>string</td><td><code class="cel">this in ['b', 'i', 'e']</code></td></tr>
+        <tr data-ordinal="2"><td>level</td><td>string</td><td><code class="cel">this in ['beginner', 'intermediate', 'expert']</code></td></tr>
+        <tr data-ordinal="3"><td>time</td><td>int32</td><td><code class="cel">this &gt;= 0 &amp;&amp; this &lt;= 999</code></td></tr>
+        <tr data-ordinal="4"><td>who</td><td>string</td><td><code class="cel">this.size() &gt;= 1 &amp;&amp; this.size() &lt;= 32</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <h2>Screens</h2>
+  <p>The three screens are the same window over different rows: the cells whose <code>lv</code> is the level, and the game whose id is. Each holds <code>keep: 0</code>, so only the level on screen runs a metronome.</p>
+  <!-- pronto:app-neighbourhood --><details class="pronto-neighbourhood app-neighbourhood"><summary>App entity neighbourhood · 4 entities</summary><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="App entity diagram"><img src="ir/neighbourhood-app.svg" width="262" height="435" alt="App entity diagram"></div><p><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>Tick</span></p></details><!-- /pronto:app-neighbourhood -->
+<section id="beginner" data-kind="screen" data-route="/">
+    <h3>Beginner (/)</h3>
+<!-- pronto:neighbourhood --><figure class="pronto-neighbourhood" aria-label="Beginner entity neighbourhood"><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="Beginner entity diagram"><img src="ir/neighbourhood-beginner.svg" width="262" height="435" alt="Beginner entity diagram"></div><figcaption><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>Tick</span></figcaption></figure><!-- /pronto:neighbourhood -->
+    <p>9 × 9 squares, 10 mines. The Game menu links the three levels, marking this one current, and opens Best Times; Help opens About.</p>
+    <figure id="beginner-populated" data-kind="state" data-of="beginner" data-state="populated">
+      <svg viewBox="0 0 120 140" width="120" height="140" role="img" aria-label="The Beginner window: title bar, menu, 010 · face · 000, a 9 by 9 field">
+        <rect x="1" y="1" width="118" height="138" fill="none" stroke="currentColor"/>
+        <rect x="1" y="1" width="118" height="12" fill="currentColor" opacity=".25"/>
+        <text x="6" y="10" font-size="7">Minesweeper</text>
+        <text x="6" y="22" font-size="6">Game  Help</text>
+        <rect x="8" y="27" width="104" height="18" fill="none" stroke="currentColor"/>
+        <text x="12" y="39" font-size="8">010</text><circle cx="60" cy="36" r="6" fill="none" stroke="currentColor"/><text x="92" y="39" font-size="8">000</text>
+        <rect x="15" y="50" width="90" height="85" fill="none" stroke="currentColor"/>
+        <path d="M15 60h90M15 70h90M15 80h90M15 90h90M15 100h90M15 110h90M15 120h90M25 50v85M35 50v85M45 50v85M55 50v85M65 50v85M75 50v85M85 50v85M95 50v85" stroke="currentColor" stroke-width=".3"/>
+      </svg>
+      <figcaption>010 · ☺ · 000 over a raised 9 × 9 field</figcaption>
+    </figure>
+    <script type="application/json" data-kind="paths" data-of="beginner">{"play": {"states": ["populated", "populated"], "accepts": ["accept-ready", "accept-first-click", "accept-numbers", "accept-flag", "accept-chord", "accept-timer", "accept-lose", "accept-win", "accept-new-game"]}, "records": {"states": ["populated", "populated"], "accepts": ["accept-best-times", "accept-levels"]}}</script>
+  </section>
+  <section id="intermediate" data-kind="screen" data-route="/intermediate">
+    <h3>Intermediate (/intermediate)</h3>
+<!-- pronto:neighbourhood --><figure class="pronto-neighbourhood" aria-label="Intermediate entity neighbourhood"><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="Intermediate entity diagram"><img src="ir/neighbourhood-intermediate.svg" width="262" height="435" alt="Intermediate entity diagram"></div><figcaption><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>Tick</span></figcaption></figure><!-- /pronto:neighbourhood -->
+    <p>16 × 16 squares, 40 mines; the same window.</p>
+    <figure id="intermediate-populated" data-kind="state" data-of="intermediate" data-state="populated">
+      <svg viewBox="0 0 120 140" width="120" height="140" role="img" aria-label="The Intermediate window: 040 · face · 000, a 16 by 16 field">
+        <rect x="1" y="1" width="118" height="138" fill="none" stroke="currentColor"/>
+        <rect x="1" y="1" width="118" height="12" fill="currentColor" opacity=".25"/>
+        <text x="12" y="39" font-size="8">040</text><circle cx="60" cy="36" r="6" fill="none" stroke="currentColor"/><text x="92" y="39" font-size="8">000</text>
+        <rect x="12" y="50" width="96" height="85" fill="none" stroke="currentColor"/>
+      </svg>
+      <figcaption>040 · ☺ · 000 over a raised 16 × 16 field</figcaption>
+    </figure>
+    <script type="application/json" data-kind="paths" data-of="intermediate">{"play": {"states": ["populated", "populated"], "accepts": ["accept-levels"]}}</script>
+  </section>
+  <section id="expert" data-kind="screen" data-route="/expert">
+    <h3>Expert (/expert)</h3>
+<!-- pronto:neighbourhood --><figure class="pronto-neighbourhood" aria-label="Expert entity neighbourhood"><div class="neighbourhood-canvas" role="region" tabindex="0" aria-label="Expert entity diagram"><img src="ir/neighbourhood-expert.svg" width="262" height="435" alt="Expert entity diagram"></div><figcaption><b>entities:</b> <a href="#Best">Best</a>, <span>Cell</span>, <span>Game</span>, <span>Tick</span></figcaption></figure><!-- /pronto:neighbourhood -->
+    <p>30 × 16 squares, 99 mines; the same window, wider.</p>
+    <figure id="expert-populated" data-kind="state" data-of="expert" data-state="populated">
+      <svg viewBox="0 0 200 110" width="200" height="110" role="img" aria-label="The Expert window: 099 · face · 000, a 30 by 16 field">
+        <rect x="1" y="1" width="198" height="108" fill="none" stroke="currentColor"/>
+        <rect x="1" y="1" width="198" height="12" fill="currentColor" opacity=".25"/>
+        <text x="12" y="39" font-size="8">099</text><circle cx="100" cy="36" r="6" fill="none" stroke="currentColor"/><text x="170" y="39" font-size="8">000</text>
+        <rect x="10" y="50" width="180" height="55" fill="none" stroke="currentColor"/>
+      </svg>
+      <figcaption>099 · ☺ · 000 over a raised 30 × 16 field</figcaption>
+    </figure>
+    <script type="application/json" data-kind="paths" data-of="expert">{"play": {"states": ["populated", "populated"], "accepts": ["accept-levels"]}}</script>
+  </section>
+
+  <h2>Invariants</h2>
+  <p>A fresh field is laid so the first square is safe: after the draw, <code class="cel">output.cell[input.first].mine == 'no'</code> and exactly <code class="cel">game.mines</code> cells of the level carry <code class="cel">mine == 'yes'</code>. Each cell's <code>n</code> is the count of its up-to-eight neighbours with a mine.</p>
+  <p>The counter is <code class="cel">game.left == game.mines - size(flags)</code>, written as <code>left_led</code>: three digits, or a minus and two when negative.</p>
+  <p>The game is won exactly when every cell with <code class="cel">mine == 'no'</code> has <code class="cel">look == 'open'</code>; it is lost when a cell with a mine is opened, which becomes <code>boom</code>. A won or lost game ignores every square until reset.</p>
+
+  <h2>Decisions</h2>
+  <p id="decision-escape-hatches" data-kind="decision"><strong>Escape hatches: none.</strong> No container, WASM unit, vendored component or external endpoint; every line of app code is a handler the terminal runs in a compartment.</p>
+  <p id="decision-durability" data-kind="decision"><strong>Durability: the game is <code>tab</code>, the records <code>device</code>.</strong> A game in progress lives as long as the tab, as it did in the original's window; only Best Times was ever kept, and here it survives a reload in this browser.
+  Levels are three routes rather than a resize of one field: each level keeps its own rows and its own game, the field is seeded by CUE for all three, and no reduce ever has to add or remove squares.</p>
+</body>
+</html>

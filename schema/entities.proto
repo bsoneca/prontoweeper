@@ -1,0 +1,42 @@
+syntax = "proto3";
+package pronto.entities;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/struct.proto";
+
+message Best {
+  optional string id = 1 [json_name = "id"];
+  optional string level = 2 [json_name = "level"];
+  optional int32 time = 3 [json_name = "time"];
+  optional string who = 4 [json_name = "who"];
+}
+
+message Cell {
+  optional string id = 1 [json_name = "id"];
+  optional string lv = 2 [json_name = "lv"];
+  optional string mine = 3 [json_name = "mine"];
+  optional string look = 4 [json_name = "look"];
+  optional int32 n = 5 [json_name = "n"];
+  optional string shown = 6 [json_name = "shown"];
+}
+
+message Game {
+  optional string id = 1 [json_name = "id"];
+  optional int32 rows = 2 [json_name = "rows"];
+  optional int32 cols = 3 [json_name = "cols"];
+  optional int32 mines = 4 [json_name = "mines"];
+  optional string status = 5 [json_name = "status"];
+  optional string face = 6 [json_name = "face"];
+  optional int32 left = 7 [json_name = "left"];
+  optional string left_led = 8 [json_name = "left_led"];
+  optional int32 time = 9 [json_name = "time"];
+  optional string time_led = 10 [json_name = "time_led"];
+  optional int32 t0 = 11 [json_name = "t0"];
+}
+
+message Tick {
+  optional string id = 1 [json_name = "id"];
+  optional int32 n = 2 [json_name = "n"];
+  optional string beat = 3 [json_name = "beat"];
+}

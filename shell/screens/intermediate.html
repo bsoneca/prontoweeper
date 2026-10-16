@@ -1,0 +1,74 @@
+<!-- The Minesweeper window at intermediate, over the i rows. -->
+<section class="screen" data-screen="intermediate">
+  <!-- The metronome: one machine advancing tick.n each second on the
+       terminal's clock, and a fold that hears each beat and moves the timer
+       of whichever game is being played. -->
+  <div class="metronome" data-live="tick" data-filter="id=eq.tick"
+       data-machine='{"field":"beat","initial":"on","states":{"on":{"after":{"1000":{"assign":{"n":"bump"},"target":"on"}}}}}'></div>
+  <div class="metronome" data-live="tick" data-filter="id=eq.tick" data-on-mutation="clock" data-reads="game"></div>
+
+  <div class="window">
+    <header class="titlebar">
+      <span class="icon" aria-hidden="true"></span>
+      <h1 data-text="{msg.app_title}">Minesweeper</h1>
+      <span class="caps" aria-hidden="true"><span class="cap min"></span><span class="cap max"></span><span class="cap shut"></span></span>
+    </header>
+
+    <nav class="menubar">
+      <button type="button" class="menu-title" popovertarget="game-menu-i" data-text="{msg.menu_game}">Game</button>
+      <button type="button" class="menu-title" popovertarget="help-i" data-text="{msg.menu_help}">Help</button>
+    </nav>
+    <!-- The Game menu: New is the face's click, the levels are routes. -->
+    <div id="game-menu-i" class="menu" popover="auto" data-live="game" data-filter="id=eq.i" data-reads="cell,game,tick,best">
+      <button type="button" id="new" class="item" data-on-click="sweep"><span data-text="{msg.menu_new}">New</span></button>
+      <hr>
+      <a class="item level" data-route="beginner" data-text="{msg.beginner}">Beginner</a>
+      <a class="item level" aria-current="page" data-route="intermediate" data-text="{msg.intermediate}">Intermediate</a>
+      <a class="item level" data-route="expert" data-text="{msg.expert}">Expert</a>
+      <hr>
+      <button type="button" class="item" commandfor="best-i" command="show-modal" data-text="{msg.menu_best}">Best Times...</button>
+    </div>
+    <div id="help-i" class="menu help" popover="auto">
+      <button type="button" class="item" commandfor="about-i" command="show-modal" data-text="{msg.menu_about}">About Minesweeper...</button>
+    </div>
+
+    <div class="body raised">
+      <!-- Counter, face, timer: one slot over this level's game row. -->
+      <div class="status-panel sunk" data-live="game" data-filter="id=eq.i" data-reads="cell,game,tick,best">
+        <div class="status" data-status="{status}">
+          <output class="led" aria-label="{msg.mines_left}" data-text="{left_led}">000</output>
+          <button type="button" id="face" class="face" data-face="{face}" data-on-click="sweep" aria-label="{msg.new_game}"><span class="smiley" aria-hidden="true"></span></button>
+          <output class="led" aria-label="{msg.seconds_elapsed}" data-text="{time_led}">000</output>
+          <p class="say" role="status" data-text="{msg[status]}"></p>
+        </div>
+      </div>
+      <!-- The field. A click and a right-click both wake sweep with the
+           square's id, which is the square's name. -->
+      <div class="field sunk" role="group" aria-label="{msg.field}" data-live="cell" data-filter="lv=eq.i" data-order="id.asc" data-reads="cell,game,tick,best">
+        <template data-item>
+          <button type="button" class="cell" data-look="{look}" data-n="{shown}" data-on-click="sweep" data-on-contextmenu="sweep" aria-label="{msg[look]}" data-text="{shown}"></button>
+        </template>
+      </div>
+    </div>
+  </div>
+
+  <!-- Best Times: the record at each level, kept in this browser. A modal
+       dialog, so opening it closes the menu it was chosen from. -->
+  <dialog id="best-i" class="dialog" closedby="any">
+    <header class="titlebar"><h2 data-text="{msg.best_title}">Fastest Mine Sweepers</h2></header>
+    <div class="dialog-body">
+      <p class="best" data-live="best" data-filter="id=eq.b" data-empty-row='{"id":"b","level":"beginner","time":999,"who":"Anonymous"}'><span data-text="{msg[level]}"></span><span class="secs"><b data-text="{time}">999</b> <span data-text="{msg.seconds}">seconds</span></span><span data-text="{who}"></span></p>
+      <p class="best" data-live="best" data-filter="id=eq.i" data-empty-row='{"id":"i","level":"intermediate","time":999,"who":"Anonymous"}'><span data-text="{msg[level]}"></span><span class="secs"><b data-text="{time}">999</b> <span data-text="{msg.seconds}">seconds</span></span><span data-text="{who}"></span></p>
+      <p class="best" data-live="best" data-filter="id=eq.e" data-empty-row='{"id":"e","level":"expert","time":999,"who":"Anonymous"}'><span data-text="{msg[level]}"></span><span class="secs"><b data-text="{time}">999</b> <span data-text="{msg.seconds}">seconds</span></span><span data-text="{who}"></span></p>
+      <button type="button" class="push" commandfor="best-i" command="close" data-text="{msg.ok}">OK</button>
+    </div>
+  </div>
+  <dialog id="about-i" class="dialog" closedby="any">
+    <header class="titlebar"><h2 data-text="{msg.menu_about}">About Minesweeper</h2></header>
+    <div class="dialog-body">
+      <p class="about"><span class="icon big" aria-hidden="true"></span><span data-text="{msg.about_line}"></span></p>
+      <p data-text="{msg.about_how}"></p>
+      <button type="button" class="push" commandfor="about-i" command="close" data-text="{msg.ok}">OK</button>
+    </div>
+  </dialog>
+</section>

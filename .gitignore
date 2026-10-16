@@ -1,0 +1,5 @@
+# Build output: the workflow rebuilds the page from source on every tag.
+/dist/
+# Task's local run stamps.
+/.task/
+.DS_Store

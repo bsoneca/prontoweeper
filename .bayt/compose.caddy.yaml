@@ -1,0 +1,141 @@
+# generated from bayt.cue — do not edit
+services:
+  minesweeper-caddy:
+    build:
+      additional_contexts:
+        root: ..
+        plugins_omnishell-runtime-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.11.0@sha256:0aef8200da75e08564b2373dd06db20797975e4c932222bd00d0bf7a575e685e}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
+      context: ..
+      dockerfile: .bayt/Dockerfile.caddy
+      target: caddy
+      tags:
+      - bayt-minesweeper-caddy:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-minesweeper-caddy:latest
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    develop:
+      watch:
+      - action: sync+restart
+        path: ../docker/Caddyfile
+        target: /etc/caddy/Caddyfile
+      - action: sync+restart
+        path: ../.certs
+        target: /certs
+      - action: sync+restart
+        path: ../shell/index.html
+        target: /srv/shell/index.html
+      - action: sync+restart
+        path: ../shell/shell.css
+        target: /srv/shell/shell.css
+      - action: sync+restart
+        path: ../shell/boot.js
+        target: /srv/shell/boot.js
+      - action: sync+restart
+        path: ../offline-first-sw.js
+        target: /srv/offline-first-sw.js
+      - action: sync+restart
+        path: ../shell/shell.yaml
+        target: /srv/shell/shell.yaml
+      - action: sync+restart
+        path: ../shell/shell.json
+        target: /srv/shell/shell.json
+      - action: sync+restart
+        path: ../shell/design.css
+        target: /srv/shell/design.css
+      - action: sync+restart
+        path: ../shell/screens/beginner.html
+        target: /srv/shell/screens/beginner.html
+      - action: sync+restart
+        path: ../shell/screens/beginner.css
+        target: /srv/shell/screens/beginner.css
+      - action: sync+restart
+        path: ../shell/screens/intermediate.html
+        target: /srv/shell/screens/intermediate.html
+      - action: sync+restart
+        path: ../shell/screens/intermediate.css
+        target: /srv/shell/screens/intermediate.css
+      - action: sync+restart
+        path: ../shell/screens/expert.html
+        target: /srv/shell/screens/expert.html
+      - action: sync+restart
+        path: ../shell/screens/expert.css
+        target: /srv/shell/screens/expert.css
+      - action: sync+restart
+        path: ../shell/handlers/bump.js
+        target: /srv/shell/handlers/bump.js
+      - action: sync+restart
+        path: ../shell/handlers/clock.js
+        target: /srv/shell/handlers/clock.js
+      - action: sync+restart
+        path: ../shell/handlers/sweep.js
+        target: /srv/shell/handlers/sweep.js
+      - action: sync+restart
+        path: ../shell/shared/window.css
+        target: /srv/shell/shared/window.css
+      - action: sync+restart
+        path: ../messages/en.json
+        target: /srv/messages/en.json
+      - action: sync+restart
+        path: ../messages/pt-BR.json
+        target: /srv/messages/pt-BR.json
+      - action: sync+restart
+        path: ../brief.html
+        target: /srv/docs/brief.html
+      - action: sync+restart
+        path: ../ir.html
+        target: /srv/docs/ir.html
+      - action: sync+restart
+        path: ../ir/card.css
+        target: /srv/docs/ir/card.css
+      - action: sync+restart
+        path: ../acceptance.md
+        target: /srv/docs/acceptance.md
+      - action: sync+restart
+        path: ../DESIGN.md
+        target: /srv/docs/DESIGN.md
+      - action: sync+restart
+        path: ../robots.txt
+        target: /srv/robots.txt
+      - action: sync+restart
+        path: ../sitemap.xml
+        target: /srv/sitemap.xml
+    environment:
+      ELECTRIC_SECRET: ${ELECTRIC_SECRET:-dev-electric-secret}
+      ORIGIN: ${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-15181}}
+    healthcheck:
+      test:
+      - CMD
+      - httpcheck
+      - http://127.0.0.1:8080/health
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 10s
+      start_interval: 500ms
+    image: bayt-minesweeper-caddy:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    networks:
+      default:
+        aliases:
+        - caddy
+  minesweeper-caddy_bayt:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.caddy
+      target: caddy_bayt
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-minesweeper-caddy_bayt:latest
+    scale: 0
+  minesweeper-caddy_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.caddy
+      target: caddy_srcs
+      args:
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+    image: bayt-minesweeper-caddy_srcs:latest
+    scale: 0

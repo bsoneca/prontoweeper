@@ -1,0 +1,64 @@
+# generated from bayt.cue — do not edit
+include:
+- path:
+  - ./compose.bayt.yaml
+  - ./compose.bayt.ports.yaml
+  required: false
+services:
+  caddy:
+    extends:
+      file: ./compose.caddy.yaml
+      service: minesweeper-caddy
+    profiles:
+    - caddy
+    scale: 1
+  setup:
+    extends:
+      file: ./compose.setup.yaml
+      service: minesweeper-setup
+    profiles:
+    - setup
+  lint:
+    extends:
+      file: ./compose.lint.yaml
+      service: minesweeper-lint
+    profiles:
+    - lint
+  generate:
+    extends:
+      file: ./compose.generate.yaml
+      service: minesweeper-generate
+    profiles:
+    - generate
+  build:
+    extends:
+      file: ./compose.build.yaml
+      service: minesweeper-build
+    profiles:
+    - build
+  test:
+    extends:
+      file: ./compose.test.yaml
+      service: minesweeper-test
+    profiles:
+    - test
+  launch:
+    extends:
+      file: ./compose.launch.yaml
+      service: minesweeper-launch
+    profiles:
+    - launch
+    scale: 1
+  integrate:
+    extends:
+      file: ./compose.integrate.yaml
+      service: minesweeper-integrate
+    profiles:
+    - integrate
+    scale: 1
+  ci-visual:
+    extends:
+      file: ./compose.ci-visual.yaml
+      service: minesweeper-ci-visual
+    profiles:
+    - ci-visual

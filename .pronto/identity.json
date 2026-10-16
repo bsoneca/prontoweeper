@@ -1,0 +1,142 @@
+{
+  "0xaf63c2b72fcfda24": {
+    "name": "cell",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "lv",
+        "type": "string",
+        "retired": false
+      },
+      "3": {
+        "name": "mine",
+        "type": "string",
+        "retired": false
+      },
+      "4": {
+        "name": "look",
+        "type": "string",
+        "retired": false
+      },
+      "5": {
+        "name": "n",
+        "type": "int32",
+        "retired": false
+      },
+      "6": {
+        "name": "shown",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xb2576b51a1a375de": {
+    "name": "game",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "rows",
+        "type": "int32",
+        "retired": false
+      },
+      "3": {
+        "name": "cols",
+        "type": "int32",
+        "retired": false
+      },
+      "4": {
+        "name": "mines",
+        "type": "int32",
+        "retired": false
+      },
+      "5": {
+        "name": "status",
+        "type": "string",
+        "retired": false
+      },
+      "6": {
+        "name": "face",
+        "type": "string",
+        "retired": false
+      },
+      "7": {
+        "name": "left",
+        "type": "int32",
+        "retired": false
+      },
+      "8": {
+        "name": "left_led",
+        "type": "string",
+        "retired": false
+      },
+      "9": {
+        "name": "time",
+        "type": "int32",
+        "retired": false
+      },
+      "10": {
+        "name": "time_led",
+        "type": "string",
+        "retired": false
+      },
+      "11": {
+        "name": "t0",
+        "type": "int32",
+        "retired": false
+      }
+    }
+  },
+  "0xda7be0dea7ec91f6": {
+    "name": "best",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "level",
+        "type": "string",
+        "retired": false
+      },
+      "3": {
+        "name": "time",
+        "type": "int32",
+        "retired": false
+      },
+      "4": {
+        "name": "who",
+        "type": "string",
+        "retired": false
+      }
+    }
+  },
+  "0xa4af84ac49cc02cb": {
+    "name": "tick",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "string",
+        "retired": false
+      },
+      "2": {
+        "name": "n",
+        "type": "int32",
+        "retired": false
+      },
+      "3": {
+        "name": "beat",
+        "type": "string",
+        "retired": false
+      }
+    }
+  }
+}
