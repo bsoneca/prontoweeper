@@ -4,7 +4,7 @@
     "up": false,
     "manual": false,
     "environment": {
-      "PGRST_DB_URI": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-prontoweeper}",
+      "PGRST_DB_URI": "postgres://authenticator:${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}@database:5432/${POSTGRES_DB:-prontoweeper}",
       "PGRST_DB_SCHEMA": "public",
       "PGRST_DB_ANON_ROLE": "anon",
       "PGRST_DB_PRE_REQUEST": "public.app_pre_request",
@@ -44,7 +44,7 @@
     "preamble": [],
     "preambleCopyContexts": [],
     "from": {
-      "name": "postgrest/postgrest:v12.2.3@sha256:0a46780309a604cdc8b56c776c6e5e15788ce58174d709e40459ab5a2d44d228"
+      "name": "postgrest/postgrest:v16.4@sha256:d155c6718ed9a9f990d159a2ab7c0a3f16944dbb6d0a0344557421042acfe0df"
     },
     "add": [],
     "mounts": [],
@@ -83,17 +83,19 @@
     "cmd": null
   },
   "entrypoint": {
-    "do": "postgrest",
-    "shell": "exec",
+    "do": "DYLD_FALLBACK_LIBRARY_PATH=\"$(pg_config --libdir)\" exec postgrest",
+    "dockerfile": {
+      "do": "postgrest",
+      "shell": "exec"
+    },
+    "shell": "sh",
     "env": {
-      "PGRST_DB_URI": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-prontoweeper}",
+      "PGRST_DB_URI": "postgres://authenticator:${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}@database:5432/${POSTGRES_DB:-prontoweeper}",
       "PGRST_DB_SCHEMA": "public",
       "PGRST_DB_ANON_ROLE": "anon",
       "PGRST_DB_PRE_REQUEST": "public.app_pre_request",
-      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}",
       "PGRST_SERVER_HOST": "*",
-      "PGRST_SERVER_PORT": "3000",
-      "PGRST_ADMIN_SERVER_PORT": "3001"
+      "PGRST_JWT_SECRET": "${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}"
     },
     "after": {
       "database": "healthy"
@@ -102,15 +104,19 @@
   },
   "expose": {
     "http": {
-      "port": 3000
+      "port": 3000,
+      "env": "PGRST_SERVER_PORT"
     },
     "admin": {
-      "port": 3001
+      "port": 3001,
+      "env": "PGRST_ADMIN_SERVER_PORT"
     }
   },
   "healthcheck": {
     "template": "http",
     "url": "http://127.0.0.1:3001/ready",
+    "authorization": null,
+    "headers": [],
     "interval": "5s",
     "start_interval": "500ms",
     "timeout": "5s",
@@ -118,6 +124,9 @@
     "start_period": "30s"
   },
   "name": "crud",
+  "process-compose": {
+    "activate": "mise x --"
+  },
   "project": "prontoweeper",
   "dir": ".",
   "activate": "",

@@ -5,8 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "root": "..",
-        "plugins_omnishell-runtime-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.11.0@sha256:0aef8200da75e08564b2373dd06db20797975e4c932222bd00d0bf7a575e685e}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}"
+        "root": ".."
       },
       "secrets": [],
       "args": {}
@@ -54,142 +53,142 @@
           "target": "/certs"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/index.html",
           "target": "/srv/shell/index.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shell.css",
           "target": "/srv/shell/shell.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/boot.js",
           "target": "/srv/shell/boot.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../offline-first-sw.js",
           "target": "/srv/offline-first-sw.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shell.yaml",
           "target": "/srv/shell/shell.yaml"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shell.json",
           "target": "/srv/shell/shell.json"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/design.css",
           "target": "/srv/shell/design.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/beginner.html",
           "target": "/srv/shell/screens/beginner.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/beginner.css",
           "target": "/srv/shell/screens/beginner.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/intermediate.html",
           "target": "/srv/shell/screens/intermediate.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/intermediate.css",
           "target": "/srv/shell/screens/intermediate.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/expert.html",
           "target": "/srv/shell/screens/expert.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/expert.css",
           "target": "/srv/shell/screens/expert.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/halloffame.html",
           "target": "/srv/shell/screens/halloffame.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/screens/halloffame.css",
           "target": "/srv/shell/screens/halloffame.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/bump.js",
           "target": "/srv/shell/handlers/bump.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/clock.js",
           "target": "/srv/shell/handlers/clock.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/handlers/sweep.js",
           "target": "/srv/shell/handlers/sweep.js"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../shell/shared/window.css",
           "target": "/srv/shell/shared/window.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../messages/en.json",
           "target": "/srv/messages/en.json"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../messages/pt-BR.json",
           "target": "/srv/messages/pt-BR.json"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../brief.html",
           "target": "/srv/docs/brief.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../ir.html",
           "target": "/srv/docs/ir.html"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../ir/card.css",
           "target": "/srv/docs/ir/card.css"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../acceptance.md",
           "target": "/srv/docs/acceptance.md"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../DESIGN.md",
           "target": "/srv/docs/DESIGN.md"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../robots.txt",
           "target": "/srv/robots.txt"
         },
         {
-          "action": "sync+restart",
+          "action": "rebuild",
           "path": "../sitemap.xml",
           "target": "/srv/sitemap.xml"
         }
@@ -200,7 +199,7 @@
     "preamble": [],
     "preambleCopyContexts": [],
     "from": {
-      "name": "caddy:2.9-alpine@sha256:b4e3952384eb9524a887633ce65c752dd7c71314d2c2acf98cd5c715aaa534f0"
+      "name": "caddy:2.11.7-alpine@sha256:d8542f48d34a9cf4e4c11a478865229840e87e4c96ea3f439101f31a5d35f75f"
     },
     "add": [],
     "mounts": [],
@@ -208,366 +207,6 @@
     "extra_hosts": [],
     "epilogue": [],
     "copy": [
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "components/wallclock.js"
-        ],
-        "dst": "/omnishell/components/wallclock.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/chrome.js"
-        ],
-        "dst": "/omnishell/interpreter/chrome.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/cortex-command.js"
-        ],
-        "dst": "/omnishell/interpreter/cortex-command.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/cortex-session.js"
-        ],
-        "dst": "/omnishell/interpreter/cortex-session.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/data-sync.js"
-        ],
-        "dst": "/omnishell/interpreter/data-sync.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/deferred-boot.js"
-        ],
-        "dst": "/omnishell/interpreter/deferred-boot.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/fragment.js"
-        ],
-        "dst": "/omnishell/interpreter/fragment.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/hatch-worker.js"
-        ],
-        "dst": "/omnishell/interpreter/hatch-worker.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/hatch.js"
-        ],
-        "dst": "/omnishell/interpreter/hatch.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/host-dom.js"
-        ],
-        "dst": "/omnishell/interpreter/host-dom.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/hybrid-client.js"
-        ],
-        "dst": "/omnishell/interpreter/hybrid-client.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/jessie.js"
-        ],
-        "dst": "/omnishell/interpreter/jessie.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/kinetic.js"
-        ],
-        "dst": "/omnishell/interpreter/kinetic.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/markup.js"
-        ],
-        "dst": "/omnishell/interpreter/markup.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/preloads.js"
-        ],
-        "dst": "/omnishell/interpreter/preloads.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/prng.js"
-        ],
-        "dst": "/omnishell/interpreter/prng.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/release-assets.js"
-        ],
-        "dst": "/omnishell/interpreter/release-assets.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/release-plan.js"
-        ],
-        "dst": "/omnishell/interpreter/release-plan.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/render.js"
-        ],
-        "dst": "/omnishell/interpreter/render.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/screen.js"
-        ],
-        "dst": "/omnishell/interpreter/screen.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/script-url.js"
-        ],
-        "dst": "/omnishell/interpreter/script-url.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/shell.js"
-        ],
-        "dst": "/omnishell/interpreter/shell.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/storybook.js"
-        ],
-        "dst": "/omnishell/interpreter/storybook.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/validate.js"
-        ],
-        "dst": "/omnishell/interpreter/validate.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/game-inputs.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/game-inputs.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/js-yaml.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/js-yaml.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/mecha-client.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/mecha-client.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/messages.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/messages.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/morphlex.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/morphlex.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
-      {
-        "from": {
-          "name": "plugins_omnishell-runtime-image"
-        },
-        "srcs": [
-          "interpreter/vendor/ses.umd.min.js"
-        ],
-        "dst": "/omnishell/interpreter/vendor/ses.umd.min.js",
-        "link": true,
-        "parents": false,
-        "exclude": []
-      },
       {
         "from": {
           "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
@@ -602,58 +241,42 @@
         "exclude": []
       },
       {
-        "from": null,
+        "from": {
+          "ref": ":served",
+          "name": "prontoweeper-served"
+        },
         "srcs": [
-          "shell/index.html",
-          "shell/shell.css",
-          "shell/boot.js",
-          "offline-first-sw.js",
-          "shell/shell.yaml",
-          "shell/shell.json",
-          "shell/design.css",
-          "shell/screens/beginner.html",
-          "shell/screens/beginner.css",
-          "shell/screens/intermediate.html",
-          "shell/screens/intermediate.css",
-          "shell/screens/expert.html",
-          "shell/screens/expert.css",
-          "shell/screens/halloffame.html",
-          "shell/screens/halloffame.css",
-          "shell/handlers/bump.js",
-          "shell/handlers/clock.js",
-          "shell/handlers/sweep.js",
-          "shell/shared/window.css",
-          "messages/en.json",
-          "messages/pt-BR.json"
+          "/served/omnishell/"
         ],
-        "dst": "/srv/",
+        "dst": "/omnishell/",
         "link": true,
-        "parents": true,
+        "parents": false,
         "exclude": []
       },
       {
-        "from": null,
+        "from": {
+          "ref": ":served",
+          "name": "prontoweeper-served"
+        },
         "srcs": [
-          "brief.html",
-          "ir.html",
-          "ir/card.css",
-          "acceptance.md",
-          "DESIGN.md"
-        ],
-        "dst": "/srv/docs/",
-        "link": true,
-        "parents": true,
-        "exclude": []
-      },
-      {
-        "from": null,
-        "srcs": [
-          "robots.txt",
-          "sitemap.xml"
+          "/served/"
         ],
         "dst": "/srv/",
         "link": true,
-        "parents": true,
+        "parents": false,
+        "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":served",
+          "name": "prontoweeper-served"
+        },
+        "srcs": [
+          "/served.scripts"
+        ],
+        "dst": "/etc/caddy/release-scripts",
+        "link": true,
+        "parents": false,
         "exclude": []
       }
     ],
@@ -674,11 +297,16 @@
     "cmd": null
   },
   "entrypoint": {
-    "do": "case \"${ORIGIN#http://}\" in \"$ORIGIN\") h=${ORIGIN#https://};; *) h=${ORIGIN#http://};; esac; case \"$h\" in \"$ORIGIN\"|\"\"|*[!A-Za-z0-9.:-]*) echo \"ORIGIN '$ORIGIN' is no origin: set it to the scheme and host readers reach the door at, as https://app.example\" >&2; exit 1;; esac; set -e -o pipefail; roots=$(caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile | tr , '\\n' | grep -o '\"root\":\"[^\"]*\"' | cut -d'\"' -f4 | sort -u); if [ -n \"$roots\" ]; then find $roots -type f ! -name '*.etag' -exec sh -c 'set -e; q=$1; shift; for f do h=$(sha256sum < \"$f\"); printf \"$q%s$q\" \"${h%% *}\" > \"$f.etag\"; done' sh '\"' {} +; fi; if [ -f /certs/localhost.pem ]; then export CADDY_TLS='/certs/localhost.pem /certs/localhost-key.pem'; fi; exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile",
+    "do": "exec deno run --allow-all \"$(mise where github:bonisoft3/mecha)\"/services/proxy/host.ts 'docker/Caddyfile' --door 8443 --health 8080 --peers 'crud=3000,electric=3000,auth=9999,render=8090' '/srv/shell/index.html' 'shell/index.html' '/srv/shell/shell.css' 'shell/shell.css' '/srv/shell/boot.js' 'shell/boot.js' '/srv/offline-first-sw.js' 'offline-first-sw.js' '/srv/shell/shell.yaml' 'shell/shell.yaml' '/srv/shell/shell.json' 'shell/shell.json' '/srv/shell/design.css' 'shell/design.css' '/srv/shell/screens/beginner.html' 'shell/screens/beginner.html' '/srv/shell/screens/beginner.css' 'shell/screens/beginner.css' '/srv/shell/screens/intermediate.html' 'shell/screens/intermediate.html' '/srv/shell/screens/intermediate.css' 'shell/screens/intermediate.css' '/srv/shell/screens/expert.html' 'shell/screens/expert.html' '/srv/shell/screens/expert.css' 'shell/screens/expert.css' '/srv/shell/screens/halloffame.html' 'shell/screens/halloffame.html' '/srv/shell/screens/halloffame.css' 'shell/screens/halloffame.css' '/srv/shell/handlers/bump.js' 'shell/handlers/bump.js' '/srv/shell/handlers/clock.js' 'shell/handlers/clock.js' '/srv/shell/handlers/sweep.js' 'shell/handlers/sweep.js' '/srv/shell/shared/window.css' 'shell/shared/window.css' '/srv/messages/en.json' 'messages/en.json' '/srv/messages/pt-BR.json' 'messages/pt-BR.json' '/srv/docs/brief.html' 'brief.html' '/srv/docs/ir.html' 'ir.html' '/srv/docs/ir/card.css' 'ir/card.css' '/srv/docs/acceptance.md' 'acceptance.md' '/srv/docs/DESIGN.md' 'DESIGN.md' '/srv/robots.txt' 'robots.txt' '/srv/sitemap.xml' 'sitemap.xml' '/omnishell/interpreter/shell.js' '{github:bonisoft3/omnishell}/interpreter/shell.js' '/omnishell/interpreter/chrome.js' '{github:bonisoft3/omnishell}/interpreter/chrome.js' '/omnishell/interpreter/screen.js' '{github:bonisoft3/omnishell}/interpreter/screen.js' '/omnishell/interpreter/fragment.js' '{github:bonisoft3/omnishell}/interpreter/fragment.js' '/omnishell/interpreter/data-sync.js' '{github:bonisoft3/omnishell}/interpreter/data-sync.js' '/omnishell/interpreter/validate.js' '{github:bonisoft3/omnishell}/interpreter/validate.js' '/omnishell/interpreter/render.js' '{github:bonisoft3/omnishell}/interpreter/render.js' '/omnishell/interpreter/release-plan.js' '{github:bonisoft3/omnishell}/interpreter/release-plan.js' '/omnishell/interpreter/preloads.js' '{github:bonisoft3/omnishell}/interpreter/preloads.js' '/omnishell/interpreter/link-prefetch.js' '{github:bonisoft3/omnishell}/interpreter/link-prefetch.js' '/omnishell/interpreter/markup.js' '{github:bonisoft3/omnishell}/interpreter/markup.js' '/omnishell/interpreter/script-url.js' '{github:bonisoft3/omnishell}/interpreter/script-url.js' '/omnishell/interpreter/deferred-boot.js' '{github:bonisoft3/omnishell}/interpreter/deferred-boot.js' '/omnishell/interpreter/host-dom.js' '{github:bonisoft3/omnishell}/interpreter/host-dom.js' '/omnishell/interpreter/hatch.js' '{github:bonisoft3/omnishell}/interpreter/hatch.js' '/omnishell/interpreter/hatch-worker.js' '{github:bonisoft3/omnishell}/interpreter/hatch-worker.js' '/omnishell/interpreter/hatch-presenter.js' '{github:bonisoft3/omnishell}/interpreter/hatch-presenter.js' '/omnishell/interpreter/presenter-realm.js' '{github:bonisoft3/omnishell}/interpreter/presenter-realm.js' '/omnishell/interpreter/presenter.js' '{github:bonisoft3/omnishell}/interpreter/presenter.js' '/omnishell/interpreter/storybook.js' '{github:bonisoft3/omnishell}/interpreter/storybook.js' '/omnishell/interpreter/jessie.js' '{github:bonisoft3/omnishell}/interpreter/jessie.js' '/omnishell/interpreter/kinetic.js' '{github:bonisoft3/omnishell}/interpreter/kinetic.js' '/omnishell/interpreter/kinetic-milestones.js' '{github:bonisoft3/omnishell}/interpreter/kinetic-milestones.js' '/omnishell/interpreter/kinetic-session.js' '{github:bonisoft3/omnishell}/interpreter/kinetic-session.js' '/omnishell/interpreter/kinetic-sound.js' '{github:bonisoft3/omnishell}/interpreter/kinetic-sound.js' '/omnishell/interpreter/kinetic-mount.js' '{github:bonisoft3/omnishell}/interpreter/kinetic-mount.js' '/omnishell/interpreter/rtc-channel.js' '{github:bonisoft3/omnishell}/interpreter/rtc-channel.js' '/omnishell/interpreter/prng.js' '{github:bonisoft3/omnishell}/interpreter/prng.js' '/omnishell/interpreter/vendor/mecha-client.js' '{github:bonisoft3/omnishell}/interpreter/vendor/mecha-client.js' '/omnishell/interpreter/vendor/js-yaml.js' '{github:bonisoft3/omnishell}/interpreter/vendor/js-yaml.js' '/omnishell/interpreter/vendor/ses.umd.min.js' '{github:bonisoft3/omnishell}/interpreter/vendor/ses.umd.min.js' '/omnishell/interpreter/vendor/morphlex.js' '{github:bonisoft3/omnishell}/interpreter/vendor/morphlex.js' '/omnishell/interpreter/vendor/messages.js' '{github:bonisoft3/omnishell}/interpreter/vendor/messages.js' '/omnishell/interpreter/vendor/game-inputs.js' '{github:bonisoft3/omnishell}/interpreter/vendor/game-inputs.js' '/omnishell/interpreter/vendor/ggrs/ggrs_wasm.js' '{github:bonisoft3/omnishell}/interpreter/vendor/ggrs/ggrs_wasm.js' '/omnishell/interpreter/vendor/ggrs/ggrs_wasm_bg.wasm' '{github:bonisoft3/omnishell}/interpreter/vendor/ggrs/ggrs_wasm_bg.wasm' '/omnishell/components/wallclock.js' '{github:bonisoft3/omnishell}/components/wallclock.js'",
+    "dockerfile": {
+      "do": "case \"${ORIGIN#http://}\" in \"$ORIGIN\") h=${ORIGIN#https://};; *) h=${ORIGIN#http://};; esac; case \"$h\" in \"$ORIGIN\"|\"\"|*[!A-Za-z0-9.:-]*) echo \"ORIGIN '$ORIGIN' is no origin: set it to the scheme and host readers reach the door at, as https://app.example\" >&2; exit 1;; esac; set -e -o pipefail; roots=$(caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile | tr , '\\n' | grep -o '\"root\":\"[^\"]*\"' | cut -d'\"' -f4 | sort -u); if [ -n \"$roots\" ]; then find $roots -type f ! -name '*.etag' -exec sh -c 'set -e; q=$1; shift; for f do h=$(sha256sum < \"$f\"); printf \"$q%s$q\" \"${h%% *}\" > \"$f.etag\"; done' sh '\"' {} +; fi; PRONTO_RELEASE_SCRIPTS=$(cat /etc/caddy/release-scripts 2>/dev/null || true); export PRONTO_RELEASE_SCRIPTS; if [ -f /certs/localhost.pem ]; then export CADDY_TLS='/certs/localhost.pem /certs/localhost-key.pem'; fi; exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile",
+      "shell": "sh"
+    },
     "shell": "sh",
     "env": {
-      "ELECTRIC_SECRET": "${ELECTRIC_SECRET:-dev-electric-secret}",
-      "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}"
+      "DOOR_ORIGIN": "${ORIGIN:-https://localhost:8443}",
+      "DOOR_PEERS": "crud:3000 electric:3000 auth:9999 render:8090",
+      "ELECTRIC_SECRET": "${ELECTRIC_SECRET:-dev-electric-secret}"
     },
     "after": {
       "crud": "healthy"
@@ -688,14 +316,21 @@
   "expose": {
     "door": {
       "port": 8443,
+      "env": "DOOR_PORT",
       "publish": {
         "environment": "CADDY_TLS_HOST_PORT"
       }
+    },
+    "health": {
+      "port": 8080,
+      "env": "HEALTH_PORT"
     }
   },
   "healthcheck": {
     "template": "http",
     "url": "http://127.0.0.1:8080/health",
+    "authorization": null,
+    "headers": [],
     "interval": "5s",
     "start_interval": "500ms",
     "timeout": "5s",
@@ -703,40 +338,15 @@
     "start_period": "10s"
   },
   "name": "caddy",
+  "process-compose": {
+    "activate": "mise x --"
+  },
   "project": "prontoweeper",
   "dir": ".",
   "activate": "",
   "srcs": {
     "globs": [
-      "docker/Caddyfile",
-      "shell/index.html",
-      "shell/shell.css",
-      "shell/boot.js",
-      "offline-first-sw.js",
-      "shell/shell.yaml",
-      "shell/shell.json",
-      "shell/design.css",
-      "shell/screens/beginner.html",
-      "shell/screens/beginner.css",
-      "shell/screens/intermediate.html",
-      "shell/screens/intermediate.css",
-      "shell/screens/expert.html",
-      "shell/screens/expert.css",
-      "shell/screens/halloffame.html",
-      "shell/screens/halloffame.css",
-      "shell/handlers/bump.js",
-      "shell/handlers/clock.js",
-      "shell/handlers/sweep.js",
-      "shell/shared/window.css",
-      "messages/en.json",
-      "messages/pt-BR.json",
-      "brief.html",
-      "ir.html",
-      "ir/card.css",
-      "acceptance.md",
-      "DESIGN.md",
-      "robots.txt",
-      "sitemap.xml"
+      "docker/Caddyfile"
     ],
     "exclude": []
   },
@@ -783,7 +393,8 @@
       "upClosure": [
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.crud.yaml",
-        "./.bayt/compose.database.yaml"
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.served.yaml"
       ]
     },
     "outs": {
@@ -813,7 +424,8 @@
       "upClosure": [
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.crud.yaml",
-        "./.bayt/compose.database.yaml"
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.served.yaml"
       ]
     },
     "srcs": {
@@ -827,35 +439,7 @@
       },
       "outs": {
         "globs": [
-          "docker/Caddyfile",
-          "shell/index.html",
-          "shell/shell.css",
-          "shell/boot.js",
-          "offline-first-sw.js",
-          "shell/shell.yaml",
-          "shell/shell.json",
-          "shell/design.css",
-          "shell/screens/beginner.html",
-          "shell/screens/beginner.css",
-          "shell/screens/intermediate.html",
-          "shell/screens/intermediate.css",
-          "shell/screens/expert.html",
-          "shell/screens/expert.css",
-          "shell/screens/halloffame.html",
-          "shell/screens/halloffame.css",
-          "shell/handlers/bump.js",
-          "shell/handlers/clock.js",
-          "shell/handlers/sweep.js",
-          "shell/shared/window.css",
-          "messages/en.json",
-          "messages/pt-BR.json",
-          "brief.html",
-          "ir.html",
-          "ir/card.css",
-          "acceptance.md",
-          "DESIGN.md",
-          "robots.txt",
-          "sitemap.xml"
+          "docker/Caddyfile"
         ],
         "exclude": []
       },
@@ -863,7 +447,8 @@
       "visibility": "internal",
       "deps": [],
       "transitiveDeps": [
-        "crud_outs_srcs"
+        "crud_outs_srcs",
+        "served_outs_srcs"
       ],
       "transitiveCrossDeps": [],
       "chainedDeps": [],
@@ -875,30 +460,44 @@
       "upClosure": [
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.crud.yaml",
-        "./.bayt/compose.database.yaml"
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.served.yaml"
       ]
     }
   },
   "visibility": "internal",
   "emitsSrcs": true,
   "deps": [
-    "crud_outs"
+    "crud_outs",
+    "served_outs"
   ],
   "sameProjectDeps": [
-    "crud_outs"
+    "crud_outs",
+    "served_outs"
   ],
   "transitiveDeps": [
-    "crud_outs"
+    "crud_outs",
+    "served_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
     "./.bayt/compose.caddy.yaml",
     "./.bayt/compose.crud.yaml",
-    "./.bayt/compose.database.yaml"
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.served.yaml"
   ],
   "chainedDeps": [
     {
       "name": "crud_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "served_outs",
       "project": "prontoweeper",
       "dir": ".",
       "outs": {

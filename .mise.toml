@@ -1,3 +1,6 @@
+[env]
+CUE_REGISTRY = 'github.com/bonisoft3/pronto=ghcr.io/bsoneca/cue-modules,github.com/bonisoft3/mecha=ghcr.io/bsoneca/cue-modules,registry.cue.works'
+
 [settings]
 github_attestations = false
 locked = true
@@ -15,24 +18,29 @@ github_attestations = false
 slsa = false
 
 [tools]
+'aqua:xataio/pgroll' = '0.16.3'
+'github:F1bonacc1/process-compose' = 'v1.122.0'
 'github:FiloSottile/mkcert' = 'v1.4.4'
-'github:bonisoft3/bayt' = '0.60.0'
-'github:bonisoft3/mecha' = '0.11.0'
-'github:bonisoft3/omnishell' = '0.11.0'
-'github:bonisoft3/pronto' = '0.13.4'
-'github:bonisoft3/sayt' = '0.44.1'
-'github:bufbuild/buf' = '1.73.0'
-'github:caddyserver/caddy' = '2.10.0'
+'github:Kitware/CMake' = 'v4.1.2'
+'github:PostgREST/postgrest' = 'v16.4'
+'github:bonisoft3/bayt' = '0.66.0'
+'github:bonisoft3/mecha' = '0.17.1-host.1'
+'github:bonisoft3/omnishell' = '0.19.0'
+'github:bonisoft3/pronto' = '0.24.1-gcp.13'
+'github:bonisoft3/sayt' = '0.45.0'
+'github:bufbuild/buf' = '1.74.0'
+'github:caddyserver/caddy' = '2.11.7'
 'github:cue-lang/cue' = '0.16.1'
 'github:denoland/deno' = 'v2.9.7'
-'github:go-task/task' = 'v3.49.1'
-'github:nushell/nushell' = '0.115.1'
-'github:redpanda-data/connect' = '4.112.0'
+'github:go-task/task' = 'v3.54.0'
+'github:nushell/nushell' = '0.116.1'
+'github:redpanda-data/connect' = '4.114.0'
 'github:sbdchd/squawk' = '2.66.0'
 'github:terrastruct/d2' = 'v0.9.0'
+'github:theseus-rs/postgresql-binaries' = '18.6.1'
 
 [tools.'http:duckdb']
-version = '1.5.5'
+version = '1.5.6'
 
 [tools.'http:duckdb'.platforms]
 [tools.'http:duckdb'.platforms.linux-arm64]

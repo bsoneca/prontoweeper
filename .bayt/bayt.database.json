@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.11.0@sha256:5f79ccb12f43ad4e9881fcfb0d376d57ae81c62394d66e24a636e80e00ef3b4c}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.17.0@sha256:72dc57321816141cf21744244afee9e09448790365e178ab607bc83b8e71f738}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
       },
       "secrets": [],
       "args": {}
@@ -14,6 +14,8 @@
       "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
       "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
       "POSTGRES_DB": "${POSTGRES_DB:-prontoweeper}",
+      "ELECTRIC_PASSWORD": "${ELECTRIC_PASSWORD:-dev-electric-password}",
+      "AUTHENTICATOR_PASSWORD": "${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}",
       "POSTGRES_INITDB_ARGS": "--no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C"
     },
     "ports": [
@@ -132,6 +134,18 @@
         "link": true,
         "parents": false,
         "exclude": []
+      },
+      {
+        "from": {
+          "name": "libraries_mecha-database-image"
+        },
+        "srcs": [
+          "/usr/share/mecha/initdb/899_role_passwords.sh"
+        ],
+        "dst": "/docker-entrypoint-initdb.d/899_role_passwords.sh",
+        "link": true,
+        "parents": false,
+        "exclude": []
       }
     ],
     "healthcheck": {
@@ -158,15 +172,27 @@
     "cmd": null
   },
   "entrypoint": {
-    "do": "docker-entrypoint.sh postgres -c wal_level=logical -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200",
-    "shell": "exec",
-    "env": {},
+    "do": "exec bash \"$(mise where github:bonisoft3/mecha)\"/services/database/host.sh 000_extensions.sql 'services/database/migrations/000_extensions.sql' 001_roles.sql 'services/database/migrations/001_roles.sql' 002_grants.sql 'services/database/migrations/002_grants.sql' 003_rls.sql '{mecha}/services/database/rls/rls.sql' 004_types.sql 'services/database/migrations/004_types.sql' 005_create_tables.sql 'services/database/migrations/005_create_tables.sql' 006_policies.sql 'services/database/migrations/006_policies.sql' 007_txid.sql 'services/database/migrations/007_txid.sql' 008_publication.sql 'services/database/migrations/008_publication.sql' 010_electric_login.sql 'services/database/migrations/010_electric_login.sql' 011_score_writes.sql 'services/database/migrations/011_score_writes.sql' 899_role_passwords.sh '{mecha}/services/database/role_passwords.sh' -- -c wal_level=logical -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200",
+    "dockerfile": {
+      "do": "docker-entrypoint.sh postgres -c wal_level=logical -c fsync=off -c synchronous_commit=off -c full_page_writes=off -c shared_buffers=32MB -c max_connections=200",
+      "shell": "exec"
+    },
+    "shell": "sh",
+    "env": {
+      "POSTGRES_USER": "${POSTGRES_USER:-postgres}",
+      "POSTGRES_PASSWORD": "${POSTGRES_PASSWORD:-postgres}",
+      "POSTGRES_DB": "${POSTGRES_DB:-prontoweeper}",
+      "ELECTRIC_PASSWORD": "${ELECTRIC_PASSWORD:-dev-electric-password}",
+      "AUTHENTICATOR_PASSWORD": "${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}",
+      "POSTGRES_INITDB_ARGS": "--no-sync --encoding=UTF8 --auth=trust --locale-provider=icu --icu-locale=und --locale=C"
+    },
     "after": {},
     "host": true
   },
   "expose": {
     "pg": {
-      "port": 5432
+      "port": 5432,
+      "env": "PGPORT"
     }
   },
   "healthcheck": {
@@ -182,6 +208,9 @@
     "start_period": "5m"
   },
   "name": "database",
+  "process-compose": {
+    "activate": "mise x --"
+  },
   "project": "prontoweeper",
   "dir": ".",
   "activate": "",

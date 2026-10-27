@@ -21,6 +21,9 @@
       },
       "prontoweeper-auth": {
         "condition": "service_started"
+      },
+      "prontoweeper-render": {
+        "condition": "service_healthy"
       }
     },
     "networks": {
@@ -141,8 +144,7 @@
           ".bayt/Dockerfile.*",
           ".bayt/bayt.*.json",
           ".bayt/Taskfile.*.yaml",
-          "mecha/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml",
-          "omnishell/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml"
+          "monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml"
         ],
         "exclude": []
       },
@@ -162,8 +164,10 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
+        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
-        "./.bayt/compose.auth.yaml"
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.render.yaml"
       ]
     },
     "outs": {
@@ -195,8 +199,10 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
+        "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
-        "./.bayt/compose.auth.yaml"
+        "./.bayt/compose.auth.yaml",
+        "./.bayt/compose.render.yaml"
       ]
     }
   },
@@ -207,21 +213,24 @@
     "database_outs",
     "crud_outs",
     "electric_outs",
-    "auth_outs"
+    "auth_outs",
+    "render_outs"
   ],
   "sameProjectDeps": [
     "caddy_outs",
     "database_outs",
     "crud_outs",
     "electric_outs",
-    "auth_outs"
+    "auth_outs",
+    "render_outs"
   ],
   "transitiveDeps": [
     "caddy_outs",
     "database_outs",
     "crud_outs",
     "electric_outs",
-    "auth_outs"
+    "auth_outs",
+    "render_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
@@ -229,8 +238,10 @@
     "./.bayt/compose.caddy.yaml",
     "./.bayt/compose.crud.yaml",
     "./.bayt/compose.database.yaml",
+    "./.bayt/compose.served.yaml",
     "./.bayt/compose.electric.yaml",
-    "./.bayt/compose.auth.yaml"
+    "./.bayt/compose.auth.yaml",
+    "./.bayt/compose.render.yaml"
   ],
   "chainedDeps": [
     {
@@ -271,6 +282,15 @@
     },
     {
       "name": "auth_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "render_outs",
       "project": "prontoweeper",
       "dir": ".",
       "outs": {

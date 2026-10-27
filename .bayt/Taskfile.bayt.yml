@@ -1,5 +1,9 @@
 # generated from bayt.cue — do not edit
 includes:
+  ci-replay:
+    taskfile: ./Taskfile.ci-replay.yaml
+    dir: ../
+    optional: true
   setup:
     taskfile: ./Taskfile.setup.yaml
     dir: ../
@@ -30,6 +34,10 @@ includes:
     optional: true
   ci-visual:
     taskfile: ./Taskfile.ci-visual.yaml
+    dir: ../
+    optional: true
+  ci:
+    taskfile: ./Taskfile.ci.yaml
     dir: ../
     optional: true
   launch-action:

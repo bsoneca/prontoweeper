@@ -1,0 +1,17 @@
+{
+  "schema": {
+    "target": "database",
+    "initdb": "/docker-entrypoint-initdb.d"
+  },
+  "server": true,
+  "tokenRoles": [
+    "anon",
+    "app_user",
+    "service"
+  ],
+  "replays": [
+    "010_electric_login.sql",
+    "011_score_writes.sql"
+  ],
+  "drains": []
+}

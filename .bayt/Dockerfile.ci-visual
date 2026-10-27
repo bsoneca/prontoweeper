@@ -1,9 +1,10 @@
 # generated from bayt.cue — do not edit
-FROM docker:29.7.1-cli@sha256:27a51d5ab1cd38d9eeaba7b415b8c07bc10c31e1cf1ec8d78f6413fcfab3f44f AS ci-visual
-WORKDIR /monorepo/.
-COPY --from=bonitao/lazybox:0.8.3@sha256:c896a6836673d8fd217f6021a2522351fd82d580ed985159feb2f10373018e73 /lazybox/ /root/.local/share/lazybox/
-COPY --from=mirror.gcr.io/alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8 /usr/bin/socat1 /usr/local/bin/socat
-COPY --from=mirror.gcr.io/alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8 /usr/lib/libreadline.so.8 /usr/lib/libncursesw.so.6 /usr/lib/
+FROM docker:29.9.1-cli@sha256:6fae2214c3121a28d5aa639d09032f61310b7c9c75ffbad1025f261a1b621800 AS ci-visual
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --from=bonitao/lazybox:0.8.5@sha256:091a3b63ba222777000acc3bf8327faebfea4870e23ee07c6eb42431dadb2ac6 /lazybox/ /root/.local/share/lazybox/
+COPY --from=alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8 /usr/bin/socat1 /usr/local/bin/socat
+COPY --from=alpine/socat:1.8.0.0@sha256:a6be4c0262b339c53ddad723cdd178a1a13271e1137c65e27f90a08c16de02b8 /usr/lib/libreadline.so.8 /usr/lib/libncursesw.so.6 /usr/lib/
 ENV PATH=$PATH:/root/.local/bin:/root/.local/share/lazybox/bin
 COPY <<'BKID_MISE' /opt/bkid/mise.toml
 [settings]
@@ -18,68 +19,94 @@ github_attestations = false
 slsa = false
 
 [tools]
-'github:depot/cli' = '2.101.78'
-'github:go-task/task' = 'v3.49.1'
+'github:depot/cli' = '2.102.25'
+'github:go-task/task' = 'v3.54.0'
 BKID_MISE
 COPY <<'BKID_LOCK' /opt/bkid/mise.lock
 [tools]
 [[tools.'github:depot/cli']]
 backend = 'github:depot/cli'
-version = '2.101.78'
+version = '2.102.25'
 
 [tools.'github:depot/cli'.platforms]
 [tools.'github:depot/cli'.platforms.linux-arm64]
-checksum = 'sha256:985308b4e9b124c9d8ca712b30b84ea613e7de2f9bb3bb193a710e45e254ea87'
-url = 'https://github.com/depot/cli/releases/download/v2.101.78/depot_2.101.78_linux_arm64.tar.gz'
-url_api = 'https://api.github.com/repos/depot/cli/releases/assets/501083092'
+checksum = 'sha256:52abe04ef24cd06f2ed37e15dbaa1d52d282db26ead04ff2493faf181347d6eb'
+url = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_arm64.tar.gz'
+url_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782767'
 
 [tools.'github:depot/cli'.platforms.linux-arm64-musl]
-checksum = 'sha256:985308b4e9b124c9d8ca712b30b84ea613e7de2f9bb3bb193a710e45e254ea87'
-url = 'https://github.com/depot/cli/releases/download/v2.101.78/depot_2.101.78_linux_arm64.tar.gz'
-url_api = 'https://api.github.com/repos/depot/cli/releases/assets/501083092'
+checksum = 'sha256:52abe04ef24cd06f2ed37e15dbaa1d52d282db26ead04ff2493faf181347d6eb'
+url = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_arm64.tar.gz'
+url_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782767'
 
 [tools.'github:depot/cli'.platforms.linux-x64]
-checksum = 'sha256:15d066413b99c4fdd399d5fc79a64e50b2e266b509642995935bb96c01d28f1b'
-url = 'https://github.com/depot/cli/releases/download/v2.101.78/depot_2.101.78_linux_amd64.tar.gz'
-url_api = 'https://api.github.com/repos/depot/cli/releases/assets/501083086'
+checksum = 'sha256:b62952f5951a0bcd4f48597b59fe29a4b7d84cac4e82710ee19d79262bf271af'
+url = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_amd64.tar.gz'
+url_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782770'
 
 [tools.'github:depot/cli'.platforms.linux-x64-musl]
-checksum = 'sha256:15d066413b99c4fdd399d5fc79a64e50b2e266b509642995935bb96c01d28f1b'
-url = 'https://github.com/depot/cli/releases/download/v2.101.78/depot_2.101.78_linux_amd64.tar.gz'
-url_api = 'https://api.github.com/repos/depot/cli/releases/assets/501083086'
+checksum = 'sha256:b62952f5951a0bcd4f48597b59fe29a4b7d84cac4e82710ee19d79262bf271af'
+url = 'https://github.com/depot/cli/releases/download/v2.102.25/depot_2.102.25_linux_amd64.tar.gz'
+url_api = 'https://api.github.com/repos/depot/cli/releases/assets/660782770'
 
 [[tools.'github:go-task/task']]
 backend = 'github:go-task/task'
-version = 'v3.49.1'
+version = 'v3.54.0'
 
 [tools.'github:go-task/task'.platforms]
 [tools.'github:go-task/task'.platforms.linux-arm64]
-checksum = 'sha256:aa6732c9c66397c5380ec2b60c070fd599075b2a8538dba03f3a21edc99ab0cb'
-url = 'https://github.com/go-task/task/releases/download/v3.49.1/task_linux_arm64.tar.gz'
-url_api = 'https://api.github.com/repos/go-task/task/releases/assets/369609773'
+checksum = 'sha256:d7189d439d4a6058e39e1b2acd7c8b27acd4856691b408f23b242e4294e1df5b'
+url = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_arm64.tar.gz'
+url_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090041'
 
 [tools.'github:go-task/task'.platforms.linux-arm64-musl]
-checksum = 'sha256:aa6732c9c66397c5380ec2b60c070fd599075b2a8538dba03f3a21edc99ab0cb'
-url = 'https://github.com/go-task/task/releases/download/v3.49.1/task_linux_arm64.tar.gz'
-url_api = 'https://api.github.com/repos/go-task/task/releases/assets/369609773'
+checksum = 'sha256:d7189d439d4a6058e39e1b2acd7c8b27acd4856691b408f23b242e4294e1df5b'
+url = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_arm64.tar.gz'
+url_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090041'
 
 [tools.'github:go-task/task'.platforms.linux-x64]
-checksum = 'sha256:4e7d24f1bf38218aec8f244eb7ba671f898830f9f87b3c9b30ff1c09e3135576'
-url = 'https://github.com/go-task/task/releases/download/v3.49.1/task_linux_amd64.tar.gz'
-url_api = 'https://api.github.com/repos/go-task/task/releases/assets/369609772'
+checksum = 'sha256:680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb'
+url = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_amd64.tar.gz'
+url_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090073'
 
 [tools.'github:go-task/task'.platforms.linux-x64-musl]
-checksum = 'sha256:4e7d24f1bf38218aec8f244eb7ba671f898830f9f87b3c9b30ff1c09e3135576'
-url = 'https://github.com/go-task/task/releases/download/v3.49.1/task_linux_amd64.tar.gz'
-url_api = 'https://api.github.com/repos/go-task/task/releases/assets/369609772'
+checksum = 'sha256:680859dbb4d881a9c72d4d9a8f510825450849af8567deacd7302c01124416fb'
+url = 'https://github.com/go-task/task/releases/download/v3.54.0/task_linux_amd64.tar.gz'
+url_api = 'https://api.github.com/repos/go-task/task/releases/assets/604090073'
 BKID_LOCK
 COPY --from=bayt . /monorepo/plugins/bayt/runtime
 RUN cd /opt/bkid && mise trust -y && mise install && mise exec -- sh -c 'cp "$(mise which task)" /usr/local/bin/task && cp "$(mise which depot)" /usr/local/bin/depot'
 ENV PATH=/monorepo/plugins/bayt/runtime:${PATH}
-COPY --from=prontoweeper-integrate_srcs --parents /monorepo/shell/shell.yaml /monorepo/shell/screens/** /
+ARG MONOREPO_COMPOSE_MODE
+ENV MONOREPO_COMPOSE_MODE=$MONOREPO_COMPOSE_MODE
+ARG BAYT_RUNTIME
+ENV BAYT_RUNTIME=$BAYT_RUNTIME
+COPY --from=libraries_mecha-airlock-image_bayt /monorep[o] /monorepo/
+COPY --from=libraries_mecha-airlock-image_srcs /monorep[o] /monorepo/
+COPY --from=libraries_mecha-auth-image_bayt /monorep[o] /monorepo/
+COPY --from=libraries_mecha-auth-image_srcs /monorep[o] /monorepo/
+COPY --from=libraries_mecha-clock-image_bayt /monorep[o] /monorepo/
+COPY --from=libraries_mecha-clock-image_srcs /monorep[o] /monorepo/
+COPY --from=libraries_mecha-compute-image_bayt /monorep[o] /monorepo/
+COPY --from=libraries_mecha-compute-image_srcs /monorep[o] /monorepo/
+COPY --from=libraries_mecha-conduit-image_bayt /monorep[o] /monorepo/
+COPY --from=libraries_mecha-database-image_bayt /monorep[o] /monorepo/
+COPY --from=libraries_mecha-database-image_srcs /monorep[o] /monorepo/
+COPY --from=libraries_mecha-mesh-image_bayt /monorep[o] /monorepo/
+COPY --from=libraries_mecha-mesh-image_srcs /monorep[o] /monorepo/
+COPY --from=libraries_mecha-ticker-image_bayt /monorep[o] /monorepo/
+COPY --from=libraries_mecha-ticker-image_srcs /monorep[o] /monorepo/
+COPY --from=plugins_omnishell-runtime-image_bayt /monorep[o] /monorepo/
+COPY --from=plugins_omnishell-runtime-image_srcs /monorep[o] /monorepo/
+COPY --from=workspaceroot-pronto-sources_bayt /monorep[o] /monorepo/
+COPY --from=workspaceroot-pronto-sources_srcs /monorep[o] /monorepo/
+COPY --parents monorepo/*.yaml ./
+COPY --from=prontoweeper-integrate_srcs --parents /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/shell.yaml /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/** /
 COPY --from=prontoweeper-integrate_bayt --link /monorepo /monorepo
-COPY --from=prontoweeper-database_srcs --parents /monorepo/services/database/migrations/000_extensions.sql /monorepo/services/database/migrations/001_roles.sql /monorepo/services/database/migrations/002_grants.sql /monorepo/services/database/migrations/004_types.sql /monorepo/services/database/migrations/005_create_tables.sql /monorepo/services/database/migrations/006_policies.sql /monorepo/services/database/migrations/007_txid.sql /monorepo/services/database/migrations/008_publication.sql /monorepo/services/database/migrations/010_electric_login.sql /monorepo/services/database/migrations/011_score_writes.sql /
-COPY --from=prontoweeper-caddy_srcs --parents /monorepo/docker/Caddyfile /monorepo/shell/index.html /monorepo/shell/shell.css /monorepo/shell/boot.js /monorepo/offline-first-sw.js /monorepo/shell/shell.yaml /monorepo/shell/shell.json /monorepo/shell/design.css /monorepo/shell/screens/beginner.html /monorepo/shell/screens/beginner.css /monorepo/shell/screens/intermediate.html /monorepo/shell/screens/intermediate.css /monorepo/shell/screens/expert.html /monorepo/shell/screens/expert.css /monorepo/shell/screens/halloffame.html /monorepo/shell/screens/halloffame.css /monorepo/shell/handlers/bump.js /monorepo/shell/handlers/clock.js /monorepo/shell/handlers/sweep.js /monorepo/shell/shared/window.css /monorepo/messages/en.json /monorepo/messages/pt-BR.json /monorepo/brief.html /monorepo/ir.html /monorepo/ir/card.css /monorepo/acceptance.md /monorepo/DESIGN.md /monorepo/robots.txt /monorepo/sitemap.xml /
+COPY --from=prontoweeper-database_srcs --parents /monorepo/${BAYT_DIR:+${BAYT_DIR}/}services/database/migrations/000_extensions.sql /monorepo/${BAYT_DIR:+${BAYT_DIR}/}services/database/migrations/001_roles.sql /monorepo/${BAYT_DIR:+${BAYT_DIR}/}services/database/migrations/002_grants.sql /monorepo/${BAYT_DIR:+${BAYT_DIR}/}services/database/migrations/004_types.sql /monorepo/${BAYT_DIR:+${BAYT_DIR}/}services/database/migrations/005_create_tables.sql /monorepo/${BAYT_DIR:+${BAYT_DIR}/}services/database/migrations/006_policies.sql /monorepo/${BAYT_DIR:+${BAYT_DIR}/}services/database/migrations/007_txid.sql /monorepo/${BAYT_DIR:+${BAYT_DIR}/}services/database/migrations/008_publication.sql /monorepo/${BAYT_DIR:+${BAYT_DIR}/}services/database/migrations/010_electric_login.sql /monorepo/${BAYT_DIR:+${BAYT_DIR}/}services/database/migrations/011_score_writes.sql /
+COPY --from=prontoweeper-caddy_srcs --parents /monorepo/${BAYT_DIR:+${BAYT_DIR}/}docker/Caddyfile /
+COPY --from=prontoweeper-served_srcs --parents /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/index.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/shell.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/boot.js /monorepo/${BAYT_DIR:+${BAYT_DIR}/}offline-first-sw.js /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/shell.yaml /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/shell.json /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/design.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/beginner.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/beginner.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/intermediate.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/intermediate.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/expert.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/expert.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/halloffame.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/halloffame.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/handlers/bump.js /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/handlers/clock.js /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/handlers/sweep.js /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/shared/window.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}messages/en.json /monorepo/${BAYT_DIR:+${BAYT_DIR}/}messages/pt-BR.json /monorepo/${BAYT_DIR:+${BAYT_DIR}/}brief.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}ir.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}ir/card.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}acceptance.md /monorepo/${BAYT_DIR:+${BAYT_DIR}/}DESIGN.md /monorepo/${BAYT_DIR:+${BAYT_DIR}/}robots.txt /monorepo/${BAYT_DIR:+${BAYT_DIR}/}sitemap.xml /
+COPY --from=prontoweeper-render_srcs --parents /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/index.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/shell.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/boot.js /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/shell.yaml /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/shell.json /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/design.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/beginner.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/beginner.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/intermediate.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/intermediate.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/expert.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/expert.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/halloffame.html /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/screens/halloffame.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/handlers/bump.js /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/handlers/clock.js /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/handlers/sweep.js /monorepo/${BAYT_DIR:+${BAYT_DIR}/}shell/shared/window.css /monorepo/${BAYT_DIR:+${BAYT_DIR}/}messages/en.json /monorepo/${BAYT_DIR:+${BAYT_DIR}/}messages/pt-BR.json /
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/Taskfile.ci-visual.yaml .bayt/bayt.ci-visual.json ./.bayt/
 ENV BUILDX_BAKE_ENTITLEMENTS_FS=0
 ENV COMPOSE_BAKE=true
@@ -110,7 +137,7 @@ if [ -n "$DOCKER_HOST" ] && [ ! -e /var/run/docker.sock ]; then
   ulimit -n 1048576 2>/dev/null || true
   addr=${DOCKER_HOST#tcp://}
   [ -n "$addr" ] || { echo "bkid: DOCKER_HOST=$DOCKER_HOST has no tcp:// address" >&2; exit 1; }
-  socat -d0 UNIX-LISTEN:/var/run/docker.sock,fork,backlog=1024,reuseaddr "TCP:$addr,keepalive,keepidle=30,keepintvl=15,keepcnt=4" &
+  socat -d0 -t 86400 UNIX-LISTEN:/var/run/docker.sock,fork,backlog=1024,reuseaddr "TCP:$addr,keepalive,keepidle=30,keepintvl=15,keepcnt=4" &
   SOCAT_PID=$!
   trap 'kill $SOCAT_PID 2>/dev/null || true' EXIT INT TERM
   socat -u OPEN:/dev/null UNIX-CONNECT:/var/run/docker.sock,retry=20,interval=0.2 >/dev/null 2>&1 \
@@ -125,13 +152,16 @@ task -t .bayt/Taskfile.yml bayt:ci-visual
 BAYT_INJECT
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS ci-visual_bayt_ctxs
-WORKDIR /monorepo/.
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
 COPY --parents .bayt/compose.ci-visual.yaml .bayt/Dockerfile.ci-visual .bayt/bayt.ci-visual.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/Taskfile.ci-visual.yaml .bayt/process-compose.yaml ./
 COPY --from=prontoweeper-integrate_bayt /monorepo /monorepo
 COPY --from=prontoweeper-database_bayt /monorepo /monorepo
 COPY --from=prontoweeper-caddy_bayt /monorepo /monorepo
+COPY --from=prontoweeper-served_bayt /monorepo /monorepo
+COPY --from=prontoweeper-render_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
-RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/. -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && touch -hd @${SOURCE_DATE_EPOCH:-0} /monorepo; fi
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
 FROM scratch AS ci-visual_bayt
 COPY --from=ci-visual_bayt_ctxs /monorepo /monorepo

@@ -4992,7 +4992,7 @@ routes:
       adapters: []
       shared:
         - shell/shared/window.css
-    ssr: spa
+    ssr: ssr
     states:
       - populated
   - keep: 0
@@ -5012,7 +5012,7 @@ routes:
       adapters: []
       shared:
         - shell/shared/window.css
-    ssr: spa
+    ssr: ssr
     states:
       - populated
   - keep: 0
@@ -5032,7 +5032,7 @@ routes:
       adapters: []
       shared:
         - shell/shared/window.css
-    ssr: spa
+    ssr: ssr
     states:
       - populated
   - keep: 0
@@ -5049,7 +5049,7 @@ routes:
       adapters: []
       shared:
         - shell/shared/window.css
-    ssr: spa
+    ssr: ssr
     states:
       - populated
 tables:

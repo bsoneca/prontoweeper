@@ -1,0 +1,90 @@
+# generated from bayt.cue — do not edit
+services:
+  prontoweeper-render:
+    build:
+      additional_contexts:
+        prontoweeper-caddy: service:prontoweeper-caddy
+        prontoweeper-crud: service:prontoweeper-crud
+        prontoweeper-electric: service:prontoweeper-electric
+        prontoweeper-auth: service:prontoweeper-auth
+        prontoweeper-served: service:prontoweeper-served
+        plugins_omnishell-runtime-image: >-
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/omnishell:0.19.0@sha256:c29f0e6ba82bcf2872ede2b21c871adfe1106f6d02d3bbaf6f421b0614e0d071}${MONOREPO_COMPOSE_MODE:+:plugins_omnishell-runtime-image}
+      context: ..
+      dockerfile: .bayt/Dockerfile.render
+      target: render
+      tags:
+      - bayt-prontoweeper-render:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-prontoweeper-render:latest
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/prontoweeper}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    depends_on:
+      prontoweeper-caddy:
+        condition: service_healthy
+        restart: true
+      prontoweeper-crud:
+        condition: service_healthy
+        restart: true
+      prontoweeper-electric:
+        condition: service_healthy
+        restart: true
+      prontoweeper-auth:
+        condition: service_started
+    develop:
+      watch:
+      - action: sync+restart
+        path: ../shell/index.html
+        target: /render/entry.html
+    environment:
+      DOOR: http://caddy:8080
+      DOOR_TIMEOUT_MS: "41000"
+      ENTRY: /render/entry.html
+      ORIGIN: ${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-24894}}
+      PORT: "8090"
+      HOST_DOOR: caddy:8443
+    healthcheck:
+      test:
+      - CMD
+      - httpcheck
+      - http://127.0.0.1:8090/health
+      interval: 1s
+      timeout: 5s
+      retries: 30
+      start_period: 120s
+      start_interval: 200ms
+    image: bayt-prontoweeper-render:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    networks:
+      default:
+        aliases:
+        - render
+    restart: on-failure
+  prontoweeper-render_bayt:
+    build:
+      additional_contexts:
+        prontoweeper-caddy_bayt: service:prontoweeper-caddy_bayt
+        prontoweeper-crud_bayt: service:prontoweeper-crud_bayt
+        prontoweeper-electric_bayt: service:prontoweeper-electric_bayt
+        prontoweeper-auth_bayt: service:prontoweeper-auth_bayt
+        prontoweeper-served_bayt: service:prontoweeper-served_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.render
+      target: render_bayt
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/prontoweeper}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-prontoweeper-render_bayt:latest
+    scale: 0
+  prontoweeper-render_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.render
+      target: render_srcs
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/prontoweeper}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-prontoweeper-render_srcs:latest
+    scale: 0

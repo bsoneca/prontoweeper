@@ -42,7 +42,7 @@
   "artifact": [
     {"path":"program.cue","sha256":"071dc20dc3ee6ee1d0fcec522df420c290c93f9ee71012d58f7a7a76f33a8f80","derived":false},
     {"path":"DESIGN.md","sha256":"d63f976da28882e771bdda8717419c74485b90afd0489074504988090c33a615","derived":false},
-    {"path":"ir.html","sha256":"5f8d8fece5099f80c6c1cb55a9564bd360ae1d4ea8fe3339affc9e350703819a","derived":false},
+    {"path":"ir.html","sha256":"e929d0d551772d31ddaa093e01f6e4872175eab9543b9bcc9b7d202705f10205","derived":false},
     {"path":"acceptance.md","sha256":"9df0e4ddf17ce702b84f0894d3e4f07e3ab679430f8e7a98d2a4496f0c072fe2","derived":false},
     {"path":".pronto/cel.json","sha256":"1aa6a86aad6200a0a1519915353b601a9a6c048c02687eff4f5a06eb3eeec2c7","derived":true},
     {"path":"program_cel.cue","sha256":"a096d823492d64b7115f13cfa042b20f090385d4fafd90c6320692939ec28d66","derived":true},
@@ -52,7 +52,7 @@
     {"path":"shell/screens/halloffame.css","sha256":"ca7abf12666a29ab12fcb63f20ea03073651a5b4c13cfa43fa02b35cd72979b3","derived":false},
     {"path":"shell/screens/intermediate.css","sha256":"7466021e1184c4142c044250bcb7fc87069e33acf859bac51397ac45b8e3844a","derived":false},
     {"path":"shell/shared/window.css","sha256":"994943a8092973d2a827942844a572de7150427ac219755abb16bc3c5a38828b","derived":false},
-    {"path":"shell/design.css","sha256":"61aa7e2db02a35daf6609af90464f4c753b58e95a02e28b16b90251345e22d45","derived":true}
+    {"path":"shell/design.css","sha256":"58bfb6ec83865f789d4045cfae881335e56ef9de1a5002609ed516dd6339f436","derived":true}
   ],
   "cel_ir": [
     {"cel":"this == 'right'"},
@@ -1366,6 +1366,13 @@
     {"name":"expert"},
     {"name":"halloffame"},
     {"name":"intermediate"}
+  ],
+  "script_declared": [
+
+  ],
+  "script_platform": [
+    {"path":"offline-first-sw.js"},
+    {"path":"shell/boot.js"}
   ],
   "served_file": [
     {"file":"shell/index.html","target":"/srv/shell/index.html"},

@@ -5,7 +5,7 @@ services:
       additional_contexts:
         prontoweeper-database: service:prontoweeper-database
         libraries_mecha-auth-image: >-
-          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.11.0@sha256:301d656e3f61f87c537b431bf2459114c6b3bec706accfd15b7b17b5d9782416}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}
+          ${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.17.0@sha256:6d2486a7018d10d1f9d68a4a5d689d9e1e23ebe0f16e47355c902a84b4814380}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}
       context: ..
       dockerfile: .bayt/Dockerfile.auth
       target: auth
@@ -13,8 +13,9 @@ services:
       - bayt-prontoweeper-auth:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
       - bayt-prontoweeper-auth:latest
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/prontoweeper}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     depends_on:
       prontoweeper-database:
         condition: service_healthy
@@ -22,9 +23,12 @@ services:
     environment:
       DATABASE_URL: >-
         postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-prontoweeper}
+      AUTH_STATEMENT_TIMEOUT_MS: "5000"
       PGRST_JWT_SECRET: ${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
       WEBAUTHN_RP_ID: ${WEBAUTHN_RP_ID:-localhost}
       WEBAUTHN_ORIGIN: ${WEBAUTHN_ORIGIN:-https://localhost:*}
+      OIDC_PROVIDERS: ""
+      AUTH_PORT: "9999"
     image: bayt-prontoweeper-auth:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
     networks:
       default:
@@ -38,7 +42,8 @@ services:
       dockerfile: .bayt/Dockerfile.auth
       target: auth_bayt
       args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/prontoweeper}
         BUILDKIT_SYNTAX: >-
-          docker/dockerfile:1.26@sha256:ecfaec9ed6d810b56388c508f4121597bfbba70d41a6dfeee4d8cad5f295fc32
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     image: bayt-prontoweeper-auth_bayt:latest
     scale: 0

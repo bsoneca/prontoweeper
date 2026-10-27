@@ -1,8 +1,6 @@
 # generated from bayt.cue — do not edit
 include:
-- path: .././.bayt/compose.caddy.yaml
-  required: false
-- path: .././.bayt/compose.crud.yaml
+- path: .././.bayt/compose.ci-replay.yaml
   required: false
 - path: .././.bayt/compose.database.yaml
   required: false
@@ -18,15 +16,21 @@ include:
   required: false
 - path: .././.bayt/compose.launch.yaml
   required: false
+- path: .././.bayt/compose.caddy.yaml
+  required: false
+- path: .././.bayt/compose.crud.yaml
+  required: false
+- path: .././.bayt/compose.served.yaml
+  required: false
 - path: .././.bayt/compose.electric.yaml
   required: false
 - path: .././.bayt/compose.auth.yaml
   required: false
+- path: .././.bayt/compose.render.yaml
+  required: false
 - path: .././.bayt/compose.integrate.yaml
   required: false
-- path: ../mecha/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
-  required: false
-- path: ../omnishell/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
+- path: ../monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
   required: false
 services:
   bayt:

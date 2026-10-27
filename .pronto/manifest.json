@@ -1,6 +1,8 @@
 {
   "written": [
+    ".goreleaser.yaml",
     ".pronto/check-inputs.json",
+    ".pronto/cluster.json",
     ".say.yaml",
     ".vscode/tasks.json",
     "bayt.cue",
@@ -8,11 +10,8 @@
     "buf.yaml",
     "compose.yaml",
     "docker/Caddyfile",
-    "mecha/docker-image.yaml",
-    "mecha/service.yaml",
+    "monorepo/docker-image.yaml",
     "offline-first-sw.js",
-    "omnishell/docker-image.yaml",
-    "omnishell/service.yaml",
     "robots.txt",
     "schema/entities.proto",
     "services/database/migrations/000_extensions.sql",

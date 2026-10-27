@@ -5,19 +5,19 @@ include:
   - ./compose.bayt.ports.yaml
   required: false
 services:
-  caddy:
+  ci-replay:
     extends:
-      file: ./compose.caddy.yaml
-      service: prontoweeper-caddy
+      file: ./compose.ci-replay.yaml
+      service: prontoweeper-ci-replay
     profiles:
-    - caddy
-    scale: 1
+    - ci-replay
   setup:
     extends:
       file: ./compose.setup.yaml
       service: prontoweeper-setup
     profiles:
     - setup
+    scale: 1
   lint:
     extends:
       file: ./compose.lint.yaml
@@ -62,19 +62,27 @@ services:
       service: prontoweeper-ci-visual
     profiles:
     - ci-visual
-  database:
-    extends:
-      file: ./compose.database.yaml
-      service: prontoweeper-database
-    profiles:
-    - database
     scale: 1
-  crud:
+  ci:
     extends:
-      file: ./compose.crud.yaml
-      service: prontoweeper-crud
+      file: ./compose.ci.yaml
+      service: prontoweeper-ci
     profiles:
-    - crud
+    - ci
+    scale: 1
+  served:
+    extends:
+      file: ./compose.served.yaml
+      service: prontoweeper-served
+    profiles:
+    - served
+    scale: 1
+  render:
+    extends:
+      file: ./compose.render.yaml
+      service: prontoweeper-render
+    profiles:
+    - render
     scale: 1
   auth:
     extends:
@@ -82,6 +90,27 @@ services:
       service: prontoweeper-auth
     profiles:
     - auth
+    scale: 1
+  database:
+    extends:
+      file: ./compose.database.yaml
+      service: prontoweeper-database
+    profiles:
+    - database
+    scale: 1
+  caddy:
+    extends:
+      file: ./compose.caddy.yaml
+      service: prontoweeper-caddy
+    profiles:
+    - caddy
+    scale: 1
+  crud:
+    extends:
+      file: ./compose.crud.yaml
+      service: prontoweeper-crud
+    profiles:
+    - crud
     scale: 1
   electric:
     extends:

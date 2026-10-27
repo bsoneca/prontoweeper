@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS app_user (
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('user:' || "id") STORED NOT NULL
 );
+ALTER TABLE app_user ADD COLUMN IF NOT EXISTS "handle" text NOT NULL UNIQUE CHECK (char_length(handle) > 0);
 
 CREATE TABLE IF NOT EXISTS score (
   "id" uuid PRIMARY KEY,
@@ -22,6 +23,12 @@ CREATE TABLE IF NOT EXISTS score (
   "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
   "scope_id" TEXT GENERATED ALWAYS AS ('public:') STORED NOT NULL
 );
+ALTER TABLE score ADD COLUMN IF NOT EXISTS "user_id" uuid DEFAULT auth_uid() NOT NULL REFERENCES app_user(id) ON DELETE CASCADE;
+ALTER TABLE score ADD COLUMN IF NOT EXISTS "level" text NOT NULL CHECK (level IN ('b', 'i', 'e'));
+ALTER TABLE score ADD COLUMN IF NOT EXISTS "time" integer NOT NULL CHECK (time >= 1 AND time <= 999);
+ALTER TABLE score ADD COLUMN IF NOT EXISTS "name" text NOT NULL CHECK (char_length(name) >= 1 AND char_length(name) <= 20);
+ALTER TABLE score ADD COLUMN IF NOT EXISTS "round" text NOT NULL CHECK (round ~ '^[0-9]{1,10}$');
+ALTER TABLE score ADD COLUMN IF NOT EXISTS "created" portable_timestamp DEFAULT now() NOT NULL;
 
 CREATE UNIQUE INDEX IF NOT EXISTS uq_score_round ON score (user_id, round);
 

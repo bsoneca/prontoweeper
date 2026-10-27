@@ -4,7 +4,7 @@
     "up": false,
     "manual": false,
     "environment": {
-      "DATABASE_URL": "postgresql://electric:electric@database:5432/${POSTGRES_DB:-prontoweeper}?sslmode=disable",
+      "DATABASE_URL": "postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@database:5432/${POSTGRES_DB:-prontoweeper}?sslmode=disable",
       "ELECTRIC_SECRET": "${ELECTRIC_SECRET:-dev-electric-secret}",
       "ELECTRIC_MANUAL_TABLE_PUBLISHING": "true"
     },
@@ -26,9 +26,8 @@
     "healthcheck": {
       "test": [
         "CMD",
-        "curl",
-        "-f",
-        "http://localhost:3000/v1/health"
+        "httpcheck",
+        "http://127.0.0.1:3000/v1/health"
       ],
       "interval": "5s",
       "timeout": "5s",
@@ -52,14 +51,75 @@
     "epilogue": [
       "RUN DATABASE_URL=postgresql://compile:compile@localhost/compile ELECTRIC_SECRET=compile-only /app/bin/entrypoint eval 'Code.eval_file(\"/tmp/electric-patch.exs\")' && rm /tmp/electric-patch.exs"
     ],
-    "copy": [],
-    "healthcheck": null,
+    "copy": [
+      {
+        "from": {
+          "name": "tarampampam/microcheck:1@sha256:79c187c05bfa67518078bf4db117771942fa8fe107dc79a905861c75ddf28dfa"
+        },
+        "srcs": [
+          "/bin/httpcheck"
+        ],
+        "dst": "/usr/local/bin/httpcheck",
+        "chmod": "755",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "healthcheck": {
+      "test": [
+        "CMD",
+        "httpcheck",
+        "http://127.0.0.1:3000/v1/health"
+      ],
+      "interval": "5s",
+      "timeout": "5s",
+      "retries": 12,
+      "start_period": "60s"
+    },
     "expose": [],
     "entrypoint": null,
     "incremental": false,
     "cmd": null
   },
+  "entrypoint": {
+    "do": "exec bash \"$(mise where github:bonisoft3/mecha)\"/services/electric/host.sh run 1.8.1 0f404200402f918a4b1596bc5c8a53479a435349 29.0.2 1.20.2-otp-29",
+    "dockerfile": {
+      "do": "/app/bin/entrypoint start",
+      "shell": "exec"
+    },
+    "shell": "sh",
+    "env": {
+      "DATABASE_URL": "postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@database:5432/${POSTGRES_DB:-prontoweeper}?sslmode=disable",
+      "ELECTRIC_SECRET": "${ELECTRIC_SECRET:-dev-electric-secret}",
+      "ELECTRIC_MANUAL_TABLE_PUBLISHING": "true"
+    },
+    "after": {
+      "database": "healthy"
+    },
+    "host": true
+  },
+  "expose": {
+    "http": {
+      "port": 3000,
+      "env": "ELECTRIC_PORT"
+    }
+  },
+  "healthcheck": {
+    "template": "http",
+    "url": "http://127.0.0.1:3000/v1/health",
+    "authorization": null,
+    "headers": [],
+    "interval": "5s",
+    "start_interval": "500ms",
+    "timeout": "5s",
+    "retries": 12,
+    "start_period": "60s"
+  },
   "name": "electric",
+  "process-compose": {
+    "activate": "mise x --"
+  },
   "project": "prontoweeper",
   "dir": ".",
   "activate": "",

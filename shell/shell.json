@@ -6656,7 +6656,7 @@
           "shell/shared/window.css"
         ]
       },
-      "ssr": "spa",
+      "ssr": "ssr",
       "states": [
         "populated"
       ]
@@ -6683,7 +6683,7 @@
           "shell/shared/window.css"
         ]
       },
-      "ssr": "spa",
+      "ssr": "ssr",
       "states": [
         "populated"
       ]
@@ -6710,7 +6710,7 @@
           "shell/shared/window.css"
         ]
       },
-      "ssr": "spa",
+      "ssr": "ssr",
       "states": [
         "populated"
       ]
@@ -6733,7 +6733,7 @@
           "shell/shared/window.css"
         ]
       },
-      "ssr": "spa",
+      "ssr": "ssr",
       "states": [
         "populated"
       ]

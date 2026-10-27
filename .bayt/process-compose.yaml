@@ -10,6 +10,131 @@ processes:
     - microcheck
     - httpcheck
     - --help
+  replay:
+    depends_on:
+      database:
+        condition: process_healthy
+    entrypoint:
+    - mise
+    - x
+    - --
+    - sh
+    - -c
+    - >-
+      deno run --config "$$(mise where github:bonisoft3/pronto)/deno.json"
+      --allow-read --allow-write --allow-run --allow-env "$$(mise where
+      github:bonisoft3/pronto)/check-replay.ts" .
+    availability:
+      exit_on_skipped: true
+    environment:
+    - AUTHENTICATOR_PASSWORD=${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}
+    - ELECTRIC_PASSWORD=${ELECTRIC_PASSWORD:-dev-electric-password}
+    - POSTGRES_DB=${POSTGRES_DB:-prontoweeper}
+    - >-
+      POSTGRES_INITDB_ARGS=--no-sync --encoding=UTF8 --auth=trust
+      --locale-provider=icu --icu-locale=und --locale=C
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+    - POSTGRES_USER=${POSTGRES_USER:-postgres}
+  render:
+    depends_on:
+      caddy:
+        condition: process_healthy
+      crud:
+        condition: process_healthy
+      electric:
+        condition: process_healthy
+      "bayt:httpcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - sh
+    - -c
+    - >-
+      entry="$$PWD/shell/index.html"; cd "$$(mise where github:bonisoft3/omnishell)"
+      && ENTRY="$$entry" ORIGIN="$${ORIGIN:-https://localhost:$${HOST_DOOR##*:}}" exec
+      deno run --frozen --config server/deno.json --allow-net --allow-env --allow-read
+      server/render.ts
+    availability:
+      exit_on_skipped: true
+    environment:
+    - DOOR=http://127.0.0.1:${CADDY_HEALTH_PORT:-21183}
+    - DOOR_TIMEOUT_MS=41000
+    - HOST_DOOR=127.0.0.1:${CADDY_DOOR_PORT:-24894}
+    - PORT=${RENDER_HTTP_PORT:-13058}
+    readiness_probe:
+      exec:
+        command: bayt microcheck httpcheck http://127.0.0.1:${RENDER_HTTP_PORT:-13058}/health
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 150
+  auth:
+    depends_on:
+      database:
+        condition: process_healthy
+    entrypoint:
+    - mise
+    - x
+    - --
+    - sh
+    - -c
+    - >-
+      exec deno run --allow-net --allow-env --config "$$(mise where
+      github:bonisoft3/mecha)"/services/auth/deno.json "$$(mise where
+      github:bonisoft3/mecha)"/services/auth/main.ts
+    availability:
+      exit_on_skipped: true
+    environment:
+    - AUTH_PORT=${AUTH_HTTP_PORT:-13923}
+    - AUTH_STATEMENT_TIMEOUT_MS=5000
+    - >-
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-29796}/${POSTGRES_DB:-prontoweeper}
+    - OIDC_PROVIDERS=
+    - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
+    - WEBAUTHN_ORIGIN=${WEBAUTHN_ORIGIN:-https://localhost:*}
+    - WEBAUTHN_RP_ID=${WEBAUTHN_RP_ID:-localhost}
+  database:
+    entrypoint:
+    - mise
+    - x
+    - --
+    - sh
+    - -c
+    - >-
+      exec bash "$$(mise where github:bonisoft3/mecha)"/services/database/host.sh
+      000_extensions.sql 'services/database/migrations/000_extensions.sql' 001_roles.sql
+      'services/database/migrations/001_roles.sql' 002_grants.sql
+      'services/database/migrations/002_grants.sql' 003_rls.sql '{mecha}/services/database/rls/rls.sql'
+      004_types.sql 'services/database/migrations/004_types.sql' 005_create_tables.sql
+      'services/database/migrations/005_create_tables.sql' 006_policies.sql
+      'services/database/migrations/006_policies.sql' 007_txid.sql
+      'services/database/migrations/007_txid.sql' 008_publication.sql 'services/database/migrations/008_publication.sql'
+      010_electric_login.sql 'services/database/migrations/010_electric_login.sql'
+      011_score_writes.sql 'services/database/migrations/011_score_writes.sql'
+      899_role_passwords.sh '{mecha}/services/database/role_passwords.sh' -- -c wal_level=logical -c
+      fsync=off -c synchronous_commit=off -c full_page_writes=off -c
+      shared_buffers=32MB -c max_connections=200
+    availability:
+      exit_on_skipped: true
+    environment:
+    - AUTHENTICATOR_PASSWORD=${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}
+    - ELECTRIC_PASSWORD=${ELECTRIC_PASSWORD:-dev-electric-password}
+    - PGPORT=${DATABASE_PG_PORT:-29796}
+    - POSTGRES_DB=${POSTGRES_DB:-prontoweeper}
+    - >-
+      POSTGRES_INITDB_ARGS=--no-sync --encoding=UTF8 --auth=trust
+      --locale-provider=icu --icu-locale=und --locale=C
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-postgres}
+    - POSTGRES_USER=${POSTGRES_USER:-postgres}
+    readiness_probe:
+      exec:
+        command: >-
+          mise x -- pg_isready -h localhost -p ${DATABASE_PG_PORT:-29796} -d
+          ${POSTGRES_DB:-prontoweeper} -U ${POSTGRES_USER:-postgres}
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 330
   caddy:
     depends_on:
       crud:
@@ -17,46 +142,93 @@ processes:
       "bayt:httpcheck":
         condition: process_completed_successfully
     entrypoint:
+    - mise
+    - x
+    - --
     - sh
     - -c
-    - "case \"$${ORIGIN#http://}\" in \"$$ORIGIN\") h=$${ORIGIN#https://};; *) h=$${ORIGIN#http://};; esac; case \"$$h\" in \"$$ORIGIN\"|\"\"|*[!A-Za-z0-9.:-]*) echo \"ORIGIN '$$ORIGIN' is no origin: set it to the scheme and host readers reach the door at, as https://app.example\" >&2; exit 1;; esac; set -e -o pipefail; roots=$$(caddy adapt --config /etc/caddy/Caddyfile --adapter caddyfile | tr , '\\n' | grep -o '\"root\":\"[^\"]*\"' | cut -d'\"' -f4 | sort -u); if [ -n \"$$roots\" ]; then find $$roots -type f ! -name '*.etag' -exec sh -c 'set -e; q=$$1; shift; for f do h=$$(sha256sum < \"$$f\"); printf \"$$q%s$$q\" \"$${h%% *}\" > \"$$f.etag\"; done' sh '\"' {} +; fi; if [ -f /certs/localhost.pem ]; then export CADDY_TLS='/certs/localhost.pem /certs/localhost-key.pem'; fi; exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile"
+    - >-
+      exec deno run --allow-all "$$(mise where
+      github:bonisoft3/mecha)"/services/proxy/host.ts 'docker/Caddyfile' --door 8443 --health 8080 --peers
+      'crud=3000,electric=3000,auth=9999,render=8090' '/srv/shell/index.html' 'shell/index.html'
+      '/srv/shell/shell.css' 'shell/shell.css' '/srv/shell/boot.js' 'shell/boot.js'
+      '/srv/offline-first-sw.js' 'offline-first-sw.js' '/srv/shell/shell.yaml' 'shell/shell.yaml'
+      '/srv/shell/shell.json' 'shell/shell.json' '/srv/shell/design.css'
+      'shell/design.css' '/srv/shell/screens/beginner.html' 'shell/screens/beginner.html'
+      '/srv/shell/screens/beginner.css' 'shell/screens/beginner.css'
+      '/srv/shell/screens/intermediate.html' 'shell/screens/intermediate.html' '/srv/shell/screens/intermediate.css'
+      'shell/screens/intermediate.css' '/srv/shell/screens/expert.html'
+      'shell/screens/expert.html' '/srv/shell/screens/expert.css' 'shell/screens/expert.css'
+      '/srv/shell/screens/halloffame.html' 'shell/screens/halloffame.html'
+      '/srv/shell/screens/halloffame.css' 'shell/screens/halloffame.css' '/srv/shell/handlers/bump.js'
+      'shell/handlers/bump.js' '/srv/shell/handlers/clock.js' 'shell/handlers/clock.js'
+      '/srv/shell/handlers/sweep.js' 'shell/handlers/sweep.js'
+      '/srv/shell/shared/window.css' 'shell/shared/window.css' '/srv/messages/en.json' 'messages/en.json'
+      '/srv/messages/pt-BR.json' 'messages/pt-BR.json' '/srv/docs/brief.html' 'brief.html'
+      '/srv/docs/ir.html' 'ir.html' '/srv/docs/ir/card.css' 'ir/card.css'
+      '/srv/docs/acceptance.md' 'acceptance.md' '/srv/docs/DESIGN.md' 'DESIGN.md' '/srv/robots.txt'
+      'robots.txt' '/srv/sitemap.xml' 'sitemap.xml' '/omnishell/interpreter/shell.js'
+      '{github:bonisoft3/omnishell}/interpreter/shell.js' '/omnishell/interpreter/chrome.js'
+      '{github:bonisoft3/omnishell}/interpreter/chrome.js'
+      '/omnishell/interpreter/screen.js' '{github:bonisoft3/omnishell}/interpreter/screen.js'
+      '/omnishell/interpreter/fragment.js' '{github:bonisoft3/omnishell}/interpreter/fragment.js'
+      '/omnishell/interpreter/data-sync.js'
+      '{github:bonisoft3/omnishell}/interpreter/data-sync.js' '/omnishell/interpreter/validate.js'
+      '{github:bonisoft3/omnishell}/interpreter/validate.js' '/omnishell/interpreter/render.js'
+      '{github:bonisoft3/omnishell}/interpreter/render.js' '/omnishell/interpreter/release-plan.js'
+      '{github:bonisoft3/omnishell}/interpreter/release-plan.js' '/omnishell/interpreter/preloads.js'
+      '{github:bonisoft3/omnishell}/interpreter/preloads.js'
+      '/omnishell/interpreter/link-prefetch.js' '{github:bonisoft3/omnishell}/interpreter/link-prefetch.js'
+      '/omnishell/interpreter/markup.js' '{github:bonisoft3/omnishell}/interpreter/markup.js'
+      '/omnishell/interpreter/script-url.js'
+      '{github:bonisoft3/omnishell}/interpreter/script-url.js' '/omnishell/interpreter/deferred-boot.js'
+      '{github:bonisoft3/omnishell}/interpreter/deferred-boot.js' '/omnishell/interpreter/host-dom.js'
+      '{github:bonisoft3/omnishell}/interpreter/host-dom.js' '/omnishell/interpreter/hatch.js'
+      '{github:bonisoft3/omnishell}/interpreter/hatch.js'
+      '/omnishell/interpreter/hatch-worker.js' '{github:bonisoft3/omnishell}/interpreter/hatch-worker.js'
+      '/omnishell/interpreter/hatch-presenter.js'
+      '{github:bonisoft3/omnishell}/interpreter/hatch-presenter.js' '/omnishell/interpreter/presenter-realm.js'
+      '{github:bonisoft3/omnishell}/interpreter/presenter-realm.js' '/omnishell/interpreter/presenter.js'
+      '{github:bonisoft3/omnishell}/interpreter/presenter.js'
+      '/omnishell/interpreter/storybook.js' '{github:bonisoft3/omnishell}/interpreter/storybook.js'
+      '/omnishell/interpreter/jessie.js' '{github:bonisoft3/omnishell}/interpreter/jessie.js'
+      '/omnishell/interpreter/kinetic.js' '{github:bonisoft3/omnishell}/interpreter/kinetic.js'
+      '/omnishell/interpreter/kinetic-milestones.js'
+      '{github:bonisoft3/omnishell}/interpreter/kinetic-milestones.js' '/omnishell/interpreter/kinetic-session.js'
+      '{github:bonisoft3/omnishell}/interpreter/kinetic-session.js'
+      '/omnishell/interpreter/kinetic-sound.js' '{github:bonisoft3/omnishell}/interpreter/kinetic-sound.js'
+      '/omnishell/interpreter/kinetic-mount.js'
+      '{github:bonisoft3/omnishell}/interpreter/kinetic-mount.js' '/omnishell/interpreter/rtc-channel.js'
+      '{github:bonisoft3/omnishell}/interpreter/rtc-channel.js' '/omnishell/interpreter/prng.js'
+      '{github:bonisoft3/omnishell}/interpreter/prng.js'
+      '/omnishell/interpreter/vendor/mecha-client.js' '{github:bonisoft3/omnishell}/interpreter/vendor/mecha-client.js'
+      '/omnishell/interpreter/vendor/js-yaml.js'
+      '{github:bonisoft3/omnishell}/interpreter/vendor/js-yaml.js' '/omnishell/interpreter/vendor/ses.umd.min.js'
+      '{github:bonisoft3/omnishell}/interpreter/vendor/ses.umd.min.js'
+      '/omnishell/interpreter/vendor/morphlex.js' '{github:bonisoft3/omnishell}/interpreter/vendor/morphlex.js'
+      '/omnishell/interpreter/vendor/messages.js'
+      '{github:bonisoft3/omnishell}/interpreter/vendor/messages.js' '/omnishell/interpreter/vendor/game-inputs.js'
+      '{github:bonisoft3/omnishell}/interpreter/vendor/game-inputs.js'
+      '/omnishell/interpreter/vendor/ggrs/ggrs_wasm.js' '{github:bonisoft3/omnishell}/interpreter/vendor/ggrs/ggrs_wasm.js'
+      '/omnishell/interpreter/vendor/ggrs/ggrs_wasm_bg.wasm'
+      '{github:bonisoft3/omnishell}/interpreter/vendor/ggrs/ggrs_wasm_bg.wasm'
+      '/omnishell/components/wallclock.js' '{github:bonisoft3/omnishell}/components/wallclock.js'
     availability:
       exit_on_skipped: true
     environment:
+    - DOOR_ORIGIN=${ORIGIN:-https://localhost:${CADDY_DOOR_PORT:-24894}}
+    - >-
+      DOOR_PEERS=127.0.0.1:${CRUD_HTTP_PORT:-15951}
+      127.0.0.1:${ELECTRIC_HTTP_PORT:-29624} 127.0.0.1:${AUTH_HTTP_PORT:-13923} 127.0.0.1:${RENDER_HTTP_PORT:-13058}
+    - DOOR_PORT=${CADDY_DOOR_PORT:-24894}
     - ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}
-    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT}}
+    - HEALTH_PORT=${CADDY_HEALTH_PORT:-21183}
     readiness_probe:
       exec:
-        command: bayt microcheck httpcheck http://127.0.0.1:8080/health
+        command: bayt microcheck httpcheck http://127.0.0.1:${CADDY_HEALTH_PORT:-21183}/health
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 32
-  database:
-    entrypoint:
-    - docker-entrypoint.sh
-    - postgres
-    - -c
-    - wal_level=logical
-    - -c
-    - fsync=off
-    - -c
-    - synchronous_commit=off
-    - -c
-    - full_page_writes=off
-    - -c
-    - shared_buffers=32MB
-    - -c
-    - max_connections=200
-    availability:
-      exit_on_skipped: true
-    readiness_probe:
-      exec:
-        command: >-
-          pg_isready -h localhost -p 5432 -d ${POSTGRES_DB:-prontoweeper} -U
-          ${POSTGRES_USER:-postgres}
-      period_seconds: 1
-      timeout_seconds: 5
-      failure_threshold: 330
   crud:
     depends_on:
       database:
@@ -64,40 +236,58 @@ processes:
       "bayt:httpcheck":
         condition: process_completed_successfully
     entrypoint:
-    - postgrest
+    - mise
+    - x
+    - --
+    - sh
+    - -c
+    - DYLD_FALLBACK_LIBRARY_PATH="$$(pg_config --libdir)" exec postgrest
     availability:
       exit_on_skipped: true
     environment:
-    - PGRST_ADMIN_SERVER_PORT=3001
+    - PGRST_ADMIN_SERVER_PORT=${CRUD_ADMIN_PORT:-28327}
     - PGRST_DB_ANON_ROLE=anon
     - PGRST_DB_PRE_REQUEST=public.app_pre_request
     - PGRST_DB_SCHEMA=public
     - >-
-      PGRST_DB_URI=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:5432/${POSTGRES_DB:-prontoweeper}
+      PGRST_DB_URI=postgres://authenticator:${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}@127.0.0.1:${DATABASE_PG_PORT:-29796}/${POSTGRES_DB:-prontoweeper}
     - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
     - PGRST_SERVER_HOST=*
-    - PGRST_SERVER_PORT=3000
+    - PGRST_SERVER_PORT=${CRUD_HTTP_PORT:-15951}
     readiness_probe:
       exec:
-        command: bayt microcheck httpcheck http://127.0.0.1:3001/ready
+        command: bayt microcheck httpcheck http://127.0.0.1:${CRUD_ADMIN_PORT:-28327}/ready
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 36
-  auth:
+  electric:
     depends_on:
       database:
         condition: process_healthy
+      "bayt:httpcheck":
+        condition: process_completed_successfully
     entrypoint:
-    - deno
-    - run
-    - --allow-net
-    - --allow-env
-    - main.ts
+    - mise
+    - x
+    - --
+    - sh
+    - -c
+    - >-
+      exec bash "$$(mise where github:bonisoft3/mecha)"/services/electric/host.sh run
+      1.8.1 0f404200402f918a4b1596bc5c8a53479a435349 29.0.2 1.20.2-otp-29
     availability:
       exit_on_skipped: true
     environment:
     - >-
-      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:5432/${POSTGRES_DB:-prontoweeper}
-    - PGRST_JWT_SECRET=${PGRST_JWT_SECRET:-mecha-dev-secret-please-override-32ch}
-    - WEBAUTHN_ORIGIN=${WEBAUTHN_ORIGIN:-https://localhost:*}
-    - WEBAUTHN_RP_ID=${WEBAUTHN_RP_ID:-localhost}
+      DATABASE_URL=postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@127.0.0.1:${DATABASE_PG_PORT:-29796}/${POSTGRES_DB:-prontoweeper}?sslmode=disable
+    - ELECTRIC_MANUAL_TABLE_PUBLISHING=true
+    - ELECTRIC_PORT=${ELECTRIC_HTTP_PORT:-29624}
+    - ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}
+    readiness_probe:
+      exec:
+        command: >-
+          bayt microcheck httpcheck
+          http://127.0.0.1:${ELECTRIC_HTTP_PORT:-29624}/v1/health
+      period_seconds: 5
+      timeout_seconds: 5
+      failure_threshold: 24

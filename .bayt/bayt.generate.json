@@ -30,6 +30,7 @@
     "exclude": [
       ".bayt/**",
       ".pronto/proto-baseline.json",
+      "mise.local.lock",
       "**/node_modules/**",
       ".task/**",
       "tests/**"
@@ -136,6 +137,7 @@
         "exclude": [
           ".bayt/**",
           ".pronto/proto-baseline.json",
+          "mise.local.lock",
           "**/node_modules/**",
           ".task/**",
           "tests/**"
@@ -216,6 +218,7 @@
         "exclude": [
           ".bayt/**",
           ".pronto/proto-baseline.json",
+          "mise.local.lock",
           "**/node_modules/**",
           ".task/**",
           "tests/**"
