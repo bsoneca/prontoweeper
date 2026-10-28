@@ -19,6 +19,8 @@ App: schema.#ReleaseSpec & {
 // as Apple Silicon is.
 Metal: envs.Metal & {
 	context:  "contabo"
+	// The node's API listens on it alone: each release tunnels to it over SSH.
+	access: ssh: "pronto@144.91.92.217"
 	registry: "us-central1-docker.pkg.dev/pronto-metal/pronto"
 	build: project: "pronto-metal"
 	ingress: id:    "45248135-7212-417a-af6d-b1bb2184e2d7"
