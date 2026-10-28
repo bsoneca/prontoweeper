@@ -444,6 +444,7 @@
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.auth.yaml",
         "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served-release.yaml",
         "./.bayt/compose.ci-replay.yaml",
         "./.bayt/compose.setup.yaml"
       ]
@@ -484,6 +485,7 @@
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.auth.yaml",
         "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served-release.yaml",
         "./.bayt/compose.ci-replay.yaml",
         "./.bayt/compose.setup.yaml"
       ]
@@ -517,6 +519,7 @@
         "caddy_srcs_srcs_srcs",
         "served_srcs_srcs_srcs",
         "render_srcs_srcs_srcs",
+        "served-release_srcs_srcs_srcs",
         "launch_outs_srcs_srcs_srcs",
         "crud_outs_srcs_srcs_srcs",
         "served_outs_srcs_srcs_srcs",
@@ -545,6 +548,7 @@
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.auth.yaml",
         "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served-release.yaml",
         "./.bayt/compose.ci-replay.yaml",
         "./.bayt/compose.setup.yaml"
       ]
@@ -580,6 +584,7 @@
     "caddy_srcs_srcs",
     "served_srcs_srcs",
     "render_srcs_srcs",
+    "served-release_srcs_srcs",
     "launch_outs_srcs_srcs",
     "crud_outs_srcs_srcs",
     "served_outs_srcs_srcs",
@@ -602,6 +607,7 @@
     "./.bayt/compose.electric.yaml",
     "./.bayt/compose.auth.yaml",
     "./.bayt/compose.render.yaml",
+    "./.bayt/compose.served-release.yaml",
     "./.bayt/compose.ci-replay.yaml",
     "./.bayt/compose.setup.yaml"
   ],

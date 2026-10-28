@@ -221,8 +221,9 @@ code: pronto.#App & {
 		description: "Minesweeper, a homage to the game that shipped with Windows."
 		ir: {sha256: "000b205795afa38a6b6bcad266ed5e19e9da4d19ba780570734d477a58eda222"}
 		// Cloudflare, not Pages: a ranking shared by everyone needs a cluster
-		// every player reaches, and Pages runs a cluster per tab.
-		targets: ["cloudflare"]
+		// every player reaches, and Pages runs a cluster per tab. k8s is the
+		// operator's own cluster behind NAT (release.cue).
+		targets: ["cloudflare", "k8s"]
 		i18n: {
 			default: "en"
 			locales: {

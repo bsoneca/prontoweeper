@@ -50,6 +50,7 @@ services:
         prontoweeper-caddy_srcs: service:prontoweeper-caddy_srcs
         prontoweeper-served_srcs: service:prontoweeper-served_srcs
         prontoweeper-render_srcs: service:prontoweeper-render_srcs
+        prontoweeper-served-release_srcs: service:prontoweeper-served-release_srcs
         bayt: >-
           ${BAYT_RUNTIME:-docker-image://bonitao/bayt-runtime:1.2.2@sha256:a2e08b0fd123349e30e28843665ab2a2fde9fe25fddf82919fe499f3f01f1b8f}
         workspaceroot-pronto-sources_srcs: >-
@@ -153,6 +154,7 @@ services:
         prontoweeper-caddy_bayt: service:prontoweeper-caddy_bayt
         prontoweeper-served_bayt: service:prontoweeper-served_bayt
         prontoweeper-render_bayt: service:prontoweeper-render_bayt
+        prontoweeper-served-release_bayt: service:prontoweeper-served-release_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.ci-visual
       target: ci-visual_bayt

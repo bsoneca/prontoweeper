@@ -440,7 +440,8 @@
         "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.auth.yaml",
-        "./.bayt/compose.render.yaml"
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served-release.yaml"
       ]
     },
     "outs": {
@@ -477,7 +478,8 @@
         "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.auth.yaml",
-        "./.bayt/compose.render.yaml"
+        "./.bayt/compose.render.yaml",
+        "./.bayt/compose.served-release.yaml"
       ]
     }
   },
@@ -494,7 +496,8 @@
     "database_srcs",
     "caddy_srcs",
     "served_srcs",
-    "render_srcs"
+    "render_srcs",
+    "served-release_srcs"
   ],
   "sameProjectDeps": [
     "integrate_srcs",
@@ -502,7 +505,8 @@
     "database_srcs",
     "caddy_srcs",
     "served_srcs",
-    "render_srcs"
+    "render_srcs",
+    "served-release_srcs"
   ],
   "transitiveDeps": [
     "integrate_srcs",
@@ -511,6 +515,7 @@
     "caddy_srcs",
     "served_srcs",
     "render_srcs",
+    "served-release_srcs",
     "launch_outs_srcs",
     "crud_outs_srcs",
     "served_outs_srcs",
@@ -529,7 +534,8 @@
     "./.bayt/compose.served.yaml",
     "./.bayt/compose.electric.yaml",
     "./.bayt/compose.auth.yaml",
-    "./.bayt/compose.render.yaml"
+    "./.bayt/compose.render.yaml",
+    "./.bayt/compose.served-release.yaml"
   ],
   "chainedDeps": [
     {
@@ -662,6 +668,44 @@
           "shell/shared/window.css",
           "messages/en.json",
           "messages/pt-BR.json"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "served-release_srcs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "shell/index.html",
+          "shell/shell.css",
+          "shell/boot.js",
+          "offline-first-sw.js",
+          "shell/shell.yaml",
+          "shell/shell.json",
+          "shell/design.css",
+          "shell/screens/beginner.html",
+          "shell/screens/beginner.css",
+          "shell/screens/intermediate.html",
+          "shell/screens/intermediate.css",
+          "shell/screens/expert.html",
+          "shell/screens/expert.css",
+          "shell/screens/halloffame.html",
+          "shell/screens/halloffame.css",
+          "shell/handlers/bump.js",
+          "shell/handlers/clock.js",
+          "shell/handlers/sweep.js",
+          "shell/shared/window.css",
+          "messages/en.json",
+          "messages/pt-BR.json",
+          "brief.html",
+          "ir.html",
+          "ir/card.css",
+          "acceptance.md",
+          "DESIGN.md",
+          "robots.txt",
+          "sitemap.xml"
         ],
         "exclude": []
       }

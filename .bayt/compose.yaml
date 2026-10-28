@@ -84,6 +84,13 @@ services:
     profiles:
     - render
     scale: 1
+  served-release:
+    extends:
+      file: ./compose.served-release.yaml
+      service: prontoweeper-served-release
+    profiles:
+    - served-release
+    scale: 1
   auth:
     extends:
       file: ./compose.auth.yaml
