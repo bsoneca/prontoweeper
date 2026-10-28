@@ -4,18 +4,18 @@ language: {
 }
 deps: {
 	"github.com/bonisoft3/bayt@v0": {
-		v: "v0.66.0"
+		v: "v0.66.1"
 	}
 	"github.com/bonisoft3/mecha@v0": {
-		v: "v0.17.1-host.3"
+		v: "v0.18.1-host.1"
 	}
 	"github.com/bonisoft3/omnishell@v0": {
-		v: "v0.19.1"
+		v: "v0.20.3"
 	}
 	"github.com/bonisoft3/pronto@v0": {
-		v: "v0.24.1-gcp.19"
+		v: "v0.24.1-gcp.21"
 	}
 	"github.com/bonisoft3/sayt@v0": {
-		v: "v0.45.0"
+		v: "v0.45.1"
 	}
 }
