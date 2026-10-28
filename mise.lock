@@ -253,43 +253,43 @@ url = "https://github.com/bonisoft3/bayt/releases/download/v0.66.1/bayt-windows-
 url_api = "https://api.github.com/repos/bonisoft3/bayt/releases/assets/684532638"
 
 [[tools."github:bonisoft3/mecha"]]
-version = "0.18.1-host.1"
+version = "0.18.1-host.2"
 backend = "github:bonisoft3/mecha"
 
 [tools."github:bonisoft3/mecha"."platforms.linux-arm64"]
-checksum = "sha256:9cf857f22bb2dbf33548bf45e7b382f873e7de4f469e1388ba75d4270aa0314f"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.1/mecha-linux-arm64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685496750"
+checksum = "sha256:e22c32018ca526af9033f2dd053cf90bcdb757fa3cdc6edd77cb4e99c6bee619"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.2/mecha-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/686601071"
 
 [tools."github:bonisoft3/mecha"."platforms.linux-arm64-musl"]
-checksum = "sha256:9cf857f22bb2dbf33548bf45e7b382f873e7de4f469e1388ba75d4270aa0314f"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.1/mecha-linux-arm64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685496750"
+checksum = "sha256:e22c32018ca526af9033f2dd053cf90bcdb757fa3cdc6edd77cb4e99c6bee619"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.2/mecha-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/686601071"
 
 [tools."github:bonisoft3/mecha"."platforms.linux-x64"]
-checksum = "sha256:9cf857f22bb2dbf33548bf45e7b382f873e7de4f469e1388ba75d4270aa0314f"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.1/mecha-linux-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685496752"
+checksum = "sha256:e22c32018ca526af9033f2dd053cf90bcdb757fa3cdc6edd77cb4e99c6bee619"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.2/mecha-linux-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/686601069"
 
 [tools."github:bonisoft3/mecha"."platforms.linux-x64-musl"]
-checksum = "sha256:9cf857f22bb2dbf33548bf45e7b382f873e7de4f469e1388ba75d4270aa0314f"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.1/mecha-linux-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685496752"
+checksum = "sha256:e22c32018ca526af9033f2dd053cf90bcdb757fa3cdc6edd77cb4e99c6bee619"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.2/mecha-linux-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/686601069"
 
 [tools."github:bonisoft3/mecha"."platforms.macos-arm64"]
-checksum = "sha256:9cf857f22bb2dbf33548bf45e7b382f873e7de4f469e1388ba75d4270aa0314f"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.1/mecha-macos-arm64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685496755"
+checksum = "sha256:e22c32018ca526af9033f2dd053cf90bcdb757fa3cdc6edd77cb4e99c6bee619"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.2/mecha-macos-arm64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/686601070"
 
 [tools."github:bonisoft3/mecha"."platforms.macos-x64"]
-checksum = "sha256:9cf857f22bb2dbf33548bf45e7b382f873e7de4f469e1388ba75d4270aa0314f"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.1/mecha-macos-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685496751"
+checksum = "sha256:e22c32018ca526af9033f2dd053cf90bcdb757fa3cdc6edd77cb4e99c6bee619"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.2/mecha-macos-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/686601073"
 
 [tools."github:bonisoft3/mecha"."platforms.windows-x64"]
-checksum = "sha256:9cf857f22bb2dbf33548bf45e7b382f873e7de4f469e1388ba75d4270aa0314f"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.1/mecha-windows-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685496816"
+checksum = "sha256:e22c32018ca526af9033f2dd053cf90bcdb757fa3cdc6edd77cb4e99c6bee619"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/mecha-v0.18.1-host.2/mecha-windows-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/686601114"
 
 [[tools."github:bonisoft3/omnishell"]]
 version = "0.20.2"
