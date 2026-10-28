@@ -30,6 +30,15 @@ const fnOf = (name: string): (...a: any[]) => any => {
   return f;
 };
 const same = (a: unknown, b: unknown) => JSON.stringify(a) === JSON.stringify(b);
+// What of `got` `want` names (a `holds` check): an object's fields named, a list's elements one by
+// one when as many, else `got` whole.
+function named(got: unknown, want: unknown): unknown {
+  if (Array.isArray(want)) return Array.isArray(got) && got.length === want.length ? got.map((g, i) => named(g, want[i])) : got;
+  if (want && typeof want === "object" && got && typeof got === "object" && !Array.isArray(got)) {
+    return Object.fromEntries(Object.keys(want).map((k) => [k, named((got as Record<string, unknown>)[k], (want as Record<string, unknown>)[k])]));
+  }
+  return got;
+}
 // "$" is the value, "$name" a kept one, anywhere in an argument.
 function resolve(v: unknown, now: unknown, kept: Map<string, unknown>): unknown {
   if (v === "$") return now;
@@ -81,6 +90,9 @@ for (const [name, c] of Object.entries(cases)) {
         const { value, within } = step.near as { value: number; within: number };
         if (Math.abs((now as number) - value) > (within ?? 0.05)) throw new Error(`${why}: expected ${value} ± ${within}, got ${now}`);
       }
+      const held = resolve(step.holds, now, kept);
+      if ("holds" in step && !same(named(now, held), held)) throw new Error(`${why}: expected ${JSON.stringify(held)} in ${JSON.stringify(now)}`);
+      if ("matches" in step && !new RegExp(step.matches as string).test(String(now))) throw new Error(`${why}: expected /${step.matches}/, got ${JSON.stringify(now)}`);
     }
   });
 }

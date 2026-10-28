@@ -22,6 +22,10 @@ cases: [Name=string]: #Case
 	// Checks on the value after the step's own action, any of them.
 	expect?: _
 	near?: {value: number, within: number | *0.05}
+	// Only what it names: an object's fields named, a list's elements one by one, the rest exactly.
+	holds?: _
+	// The value, as text, matching a regular expression.
+	matches?: string
 	// Why, when the check is not plain from the case's name.
 	why?: string
 	#Act
