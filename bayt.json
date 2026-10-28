@@ -231,7 +231,7 @@
             "unit": {
               "cmds": [
                 {
-                  "do": "deno test --allow-read tests/sweep.test.ts"
+                  "do": "deno test --allow-read --allow-env --allow-run tests/unit.ts -- unit"
                 }
               ]
             },

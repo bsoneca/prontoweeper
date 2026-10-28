@@ -112,3 +112,16 @@ how to remove it:
   `services/database/sql/010_electric_login.sql` restores it.
 - `.goreleaser.yaml` is emitted only for the `pages` target, but every
   target's release needs it. It is now hand-written.
+
+## 2026-10-27: the unit tests are data
+
+**Before:** 11 Deno tests written as code in `tests/sweep.test.ts`.
+
+**After:** the same 11, same names and every check, are cases in
+`tests/unit/sweep.cue`, held to `tests/unit/schema.cue` and run by
+`tests/unit.ts`, both byte-identical to Bonk Chess's. `tests/unit/registry.js`
+evaluates `sweep` and `clock` as the compartment does; playing a game on rows
+in memory, laying a field and reading it are small measures in
+`tests/unit/probes.js`. A stray `tests/*.test.ts` now fails the `unit` check.
+`generate`, `lint` and `test` exit 0 (`unit`: 11 cases passed), and
+`integrate@local` exits 0 (visual lint: no critical findings, 10 advisory).

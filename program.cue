@@ -246,9 +246,11 @@ cluster:  (pronto.#DefaultCluster & {"code": code, "local": terminal.surface.run
 terminal: (pronto.#DefaultTerminal & {"code": code}).out
 loop:     (pronto.#DefaultLoop & {"code": code, "cluster": cluster, "terminal": terminal}).out
 
+// The suite's cases are data (tests/unit/sweep.cue, held to tests/unit/schema.cue), run by
+// tests/unit.ts: no unit test is written as code.
 loop: surface: checks: "unit": {
 	verb: "test"
-	cmds: ["deno test --allow-read tests/sweep.test.ts"]
+	cmds: ["deno test --allow-read --allow-env --allow-run tests/unit.ts -- unit"]
 	note: "each handler file is a value: evaluated, called with rows and an event, and its updates compared"
 }
 

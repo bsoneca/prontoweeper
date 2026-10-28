@@ -40,7 +40,7 @@
     {"path":"shell/shared/window.css","token":"--bevel"}
   ],
   "artifact": [
-    {"path":"program.cue","sha256":"071dc20dc3ee6ee1d0fcec522df420c290c93f9ee71012d58f7a7a76f33a8f80","derived":false},
+    {"path":"program.cue","sha256":"d275ac39b8c6dce44aeb1506c56234ce89d4de281d30f4bf7ba4b9619f266b07","derived":false},
     {"path":"DESIGN.md","sha256":"d63f976da28882e771bdda8717419c74485b90afd0489074504988090c33a615","derived":false},
     {"path":"ir.html","sha256":"e929d0d551772d31ddaa093e01f6e4872175eab9543b9bcc9b7d202705f10205","derived":false},
     {"path":"acceptance.md","sha256":"9df0e4ddf17ce702b84f0894d3e4f07e3ab679430f8e7a98d2a4496f0c072fe2","derived":false},
