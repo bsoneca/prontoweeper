@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS app_user (
   "scope_id" TEXT GENERATED ALWAYS AS ('user:' || "id") STORED NOT NULL
 );
 ALTER TABLE app_user ADD COLUMN IF NOT EXISTS "handle" text NOT NULL UNIQUE CHECK (char_length(handle) > 0);
+ALTER TABLE app_user DROP CONSTRAINT IF EXISTS "app_user_handle_check", ADD CONSTRAINT "app_user_handle_check" CHECK (char_length(handle) > 0) NOT VALID;
 
 CREATE TABLE IF NOT EXISTS score (
   "id" uuid PRIMARY KEY,
@@ -29,6 +30,10 @@ ALTER TABLE score ADD COLUMN IF NOT EXISTS "time" integer NOT NULL CHECK (time >
 ALTER TABLE score ADD COLUMN IF NOT EXISTS "name" text NOT NULL CHECK (char_length(name) >= 1 AND char_length(name) <= 20);
 ALTER TABLE score ADD COLUMN IF NOT EXISTS "round" text NOT NULL CHECK (round ~ '^[0-9]{1,10}$');
 ALTER TABLE score ADD COLUMN IF NOT EXISTS "created" portable_timestamp DEFAULT now() NOT NULL;
+ALTER TABLE score DROP CONSTRAINT IF EXISTS "score_level_check", ADD CONSTRAINT "score_level_check" CHECK (level IN ('b', 'i', 'e')) NOT VALID;
+ALTER TABLE score DROP CONSTRAINT IF EXISTS "score_time_check", ADD CONSTRAINT "score_time_check" CHECK (time >= 1 AND time <= 999) NOT VALID;
+ALTER TABLE score DROP CONSTRAINT IF EXISTS "score_name_check", ADD CONSTRAINT "score_name_check" CHECK (char_length(name) >= 1 AND char_length(name) <= 20) NOT VALID;
+ALTER TABLE score DROP CONSTRAINT IF EXISTS "score_round_check", ADD CONSTRAINT "score_round_check" CHECK (round ~ '^[0-9]{1,10}$') NOT VALID;
 
 CREATE UNIQUE INDEX IF NOT EXISTS uq_score_round ON score (user_id, round);
 
