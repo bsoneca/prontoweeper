@@ -1,6 +1,7 @@
 // Where prontoweeper runs besides Cloudflare: release@k8s on a cluster of the
 // operator's own, k3s behind NAT, its door the `home` Cloudflare Tunnel and its
-// images built in pronto-metal's Cloud Build (pronto's k8s/README.md#12).
+// images built in brawl-chess's Cloud Build into its pronto registry, which the node reads with
+// metal-reader's key (pronto's k8s/README.md#12; infra/gcp/brawl_chess.cue grants it).
 package prontoweeper
 
 import (
@@ -21,8 +22,8 @@ Metal: envs.Metal & {
 	context:  "contabo"
 	// The node's API listens on it alone: each release tunnels to it over SSH.
 	access: ssh: "pronto@144.91.92.217"
-	registry: "us-central1-docker.pkg.dev/pronto-metal/pronto"
-	build: project: "pronto-metal"
+	registry: "us-central1-docker.pkg.dev/brawl-chess/pronto"
+	build: project: "brawl-chess"
 	ingress: id:    "45248135-7212-417a-af6d-b1bb2184e2d7"
 	domainSuffix: "bsoneca.com"
 }
