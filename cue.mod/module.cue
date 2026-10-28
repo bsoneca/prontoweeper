@@ -13,7 +13,7 @@ deps: {
 		v: "v0.20.3"
 	}
 	"github.com/bonisoft3/pronto@v0": {
-		v: "v0.24.1-gcp.23"
+		v: "v0.24.1-gcp.24"
 	}
 	"github.com/bonisoft3/sayt@v0": {
 		v: "v0.45.1"

@@ -336,43 +336,43 @@ url = "https://github.com/bonisoft3/omnishell/releases/download/v0.20.2/omnishel
 url_api = "https://api.github.com/repos/bonisoft3/omnishell/releases/assets/684741093"
 
 [[tools."github:bonisoft3/pronto"]]
-version = "0.24.1-gcp.23"
+version = "0.24.1-gcp.24"
 backend = "github:bonisoft3/pronto"
 
 [tools."github:bonisoft3/pronto"."platforms.linux-arm64"]
-checksum = "sha256:c15784f755f26eaf3b07c7fa2ee17cb63291091e2529d0d729453c7442b46c7e"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.23/pronto-linux-arm64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685969607"
+checksum = "sha256:d6097b19d44894341f258b658698d89bc28e278cee709d891f434e6100732095"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.24/pronto-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685992890"
 
 [tools."github:bonisoft3/pronto"."platforms.linux-arm64-musl"]
-checksum = "sha256:c15784f755f26eaf3b07c7fa2ee17cb63291091e2529d0d729453c7442b46c7e"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.23/pronto-linux-arm64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685969607"
+checksum = "sha256:d6097b19d44894341f258b658698d89bc28e278cee709d891f434e6100732095"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.24/pronto-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685992890"
 
 [tools."github:bonisoft3/pronto"."platforms.linux-x64"]
-checksum = "sha256:c15784f755f26eaf3b07c7fa2ee17cb63291091e2529d0d729453c7442b46c7e"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.23/pronto-linux-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685969608"
+checksum = "sha256:d6097b19d44894341f258b658698d89bc28e278cee709d891f434e6100732095"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.24/pronto-linux-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685992897"
 
 [tools."github:bonisoft3/pronto"."platforms.linux-x64-musl"]
-checksum = "sha256:c15784f755f26eaf3b07c7fa2ee17cb63291091e2529d0d729453c7442b46c7e"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.23/pronto-linux-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685969608"
+checksum = "sha256:d6097b19d44894341f258b658698d89bc28e278cee709d891f434e6100732095"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.24/pronto-linux-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685992897"
 
 [tools."github:bonisoft3/pronto"."platforms.macos-arm64"]
-checksum = "sha256:c15784f755f26eaf3b07c7fa2ee17cb63291091e2529d0d729453c7442b46c7e"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.23/pronto-macos-arm64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685969606"
+checksum = "sha256:d6097b19d44894341f258b658698d89bc28e278cee709d891f434e6100732095"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.24/pronto-macos-arm64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685992895"
 
 [tools."github:bonisoft3/pronto"."platforms.macos-x64"]
-checksum = "sha256:c15784f755f26eaf3b07c7fa2ee17cb63291091e2529d0d729453c7442b46c7e"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.23/pronto-macos-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685969605"
+checksum = "sha256:d6097b19d44894341f258b658698d89bc28e278cee709d891f434e6100732095"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.24/pronto-macos-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685992888"
 
 [tools."github:bonisoft3/pronto"."platforms.windows-x64"]
-checksum = "sha256:c15784f755f26eaf3b07c7fa2ee17cb63291091e2529d0d729453c7442b46c7e"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.23/pronto-windows-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685969640"
+checksum = "sha256:d6097b19d44894341f258b658698d89bc28e278cee709d891f434e6100732095"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.24/pronto-windows-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/685992955"
 
 [[tools."github:bonisoft3/sayt"]]
 version = "0.45.1"
