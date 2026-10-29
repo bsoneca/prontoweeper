@@ -7,9 +7,9 @@ BEGIN;
 -- tier: container
 DO $$ DECLARE t text; BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'prontoweeper_cdc') THEN
-    CREATE PUBLICATION prontoweeper_cdc FOR TABLE app_user,score;
+    CREATE PUBLICATION prontoweeper_cdc FOR TABLE subscription,app_user,score;
   END IF;
-  FOREACH t IN ARRAY ARRAY['app_user','score'] LOOP
+  FOREACH t IN ARRAY ARRAY['subscription','app_user','score'] LOOP
     IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                    WHERE pubname = 'prontoweeper_cdc' AND schemaname = 'public' AND tablename = t) THEN
       EXECUTE format('ALTER PUBLICATION prontoweeper_cdc ADD TABLE %I', t);
@@ -28,9 +28,9 @@ ALTER PUBLICATION prontoweeper_cdc SET (publish_generated_columns = stored);
 -- tier: container
 DO $$ DECLARE t text; BEGIN
   IF NOT EXISTS (SELECT 1 FROM pg_publication WHERE pubname = 'electric_publication_default') THEN
-    CREATE PUBLICATION electric_publication_default FOR TABLE app_user,score;
+    CREATE PUBLICATION electric_publication_default FOR TABLE subscription,app_user,score;
   END IF;
-  FOREACH t IN ARRAY ARRAY['app_user','score'] LOOP
+  FOREACH t IN ARRAY ARRAY['subscription','app_user','score'] LOOP
     IF NOT EXISTS (SELECT 1 FROM pg_publication_tables
                    WHERE pubname = 'electric_publication_default' AND schemaname = 'public' AND tablename = t) THEN
       EXECUTE format('ALTER PUBLICATION electric_publication_default ADD TABLE %I', t);
@@ -39,6 +39,7 @@ DO $$ DECLARE t text; BEGIN
 END $$;
 ALTER PUBLICATION electric_publication_default SET (publish_generated_columns = stored);
 
+ALTER TABLE subscription REPLICA IDENTITY FULL;
 ALTER TABLE app_user REPLICA IDENTITY FULL;
 ALTER TABLE score REPLICA IDENTITY FULL;
 -- tier: any

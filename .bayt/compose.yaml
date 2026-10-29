@@ -105,6 +105,13 @@ services:
     profiles:
     - database
     scale: 1
+  migrate:
+    extends:
+      file: ./compose.migrate.yaml
+      service: prontoweeper-migrate
+    profiles:
+    - migrate
+    scale: 1
   caddy:
     extends:
       file: ./compose.caddy.yaml
@@ -125,4 +132,18 @@ services:
       service: prontoweeper-electric
     profiles:
     - electric
+    scale: 1
+  billing:
+    extends:
+      file: ./compose.billing.yaml
+      service: prontoweeper-billing
+    profiles:
+    - billing
+    scale: 1
+  billing-broker:
+    extends:
+      file: ./compose.billing-broker.yaml
+      service: prontoweeper-billing-broker
+    profiles:
+    - billing-broker
     scale: 1

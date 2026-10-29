@@ -151,6 +151,7 @@ services:
         prontoweeper-ci-replay_bayt: service:prontoweeper-ci-replay_bayt
         prontoweeper-database_bayt: service:prontoweeper-database_bayt
         prontoweeper-setup_bayt: service:prontoweeper-setup_bayt
+        prontoweeper-migrate_bayt: service:prontoweeper-migrate_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.ci
       target: ci_bayt

@@ -437,10 +437,13 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.auth.yaml",
         "./.bayt/compose.render.yaml",
+        "./.bayt/compose.billing.yaml",
+        "./.bayt/compose.billing-broker.yaml",
         "./.bayt/compose.served-release.yaml"
       ]
     },
@@ -475,10 +478,13 @@
         "./.bayt/compose.caddy.yaml",
         "./.bayt/compose.crud.yaml",
         "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
         "./.bayt/compose.served.yaml",
         "./.bayt/compose.electric.yaml",
         "./.bayt/compose.auth.yaml",
         "./.bayt/compose.render.yaml",
+        "./.bayt/compose.billing.yaml",
+        "./.bayt/compose.billing-broker.yaml",
         "./.bayt/compose.served-release.yaml"
       ]
     }
@@ -495,6 +501,8 @@
     "integrate_bayt",
     "database_srcs",
     "caddy_srcs",
+    "billing_srcs",
+    "billing-broker_srcs",
     "served_srcs",
     "render_srcs",
     "served-release_srcs"
@@ -504,6 +512,8 @@
     "integrate_bayt",
     "database_srcs",
     "caddy_srcs",
+    "billing_srcs",
+    "billing-broker_srcs",
     "served_srcs",
     "render_srcs",
     "served-release_srcs"
@@ -513,12 +523,16 @@
     "integrate_bayt",
     "database_srcs",
     "caddy_srcs",
+    "billing_srcs",
+    "billing-broker_srcs",
     "served_srcs",
     "render_srcs",
     "served-release_srcs",
     "launch_outs_srcs",
     "crud_outs_srcs",
     "served_outs_srcs",
+    "migrate_outs_srcs",
+    "billing-broker_outs_srcs",
     "caddy_outs_srcs",
     "electric_outs_srcs",
     "auth_outs_srcs"
@@ -531,10 +545,13 @@
     "./.bayt/compose.caddy.yaml",
     "./.bayt/compose.crud.yaml",
     "./.bayt/compose.database.yaml",
+    "./.bayt/compose.migrate.yaml",
     "./.bayt/compose.served.yaml",
     "./.bayt/compose.electric.yaml",
     "./.bayt/compose.auth.yaml",
     "./.bayt/compose.render.yaml",
+    "./.bayt/compose.billing.yaml",
+    "./.bayt/compose.billing-broker.yaml",
     "./.bayt/compose.served-release.yaml"
   ],
   "chainedDeps": [
@@ -600,6 +617,30 @@
       "outs": {
         "globs": [
           "docker/Caddyfile"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "billing_srcs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "billing/*.ts",
+          "billing/broker/*.ts"
+        ],
+        "exclude": []
+      }
+    },
+    {
+      "name": "billing-broker_srcs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [
+          "billing/*.ts",
+          "billing/broker/*.ts"
         ],
         "exclude": []
       }

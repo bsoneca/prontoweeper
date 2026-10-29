@@ -14,6 +14,25 @@ package prontoweeper
 import "strings"
 
 code: state: entities: {
+	Subscription: {
+		seed: [...{
+			id?: strings.MaxRunes(80)
+			plan?: strings.MaxRunes(32)
+			ver?: >=0
+		}]
+		cel: {
+			checks: {
+				id: "char_length(id) <= 80"
+				plan: "char_length(plan) <= 32"
+				ver: "ver >= 0"
+			}
+			bounds: {
+				id: {sizeMax: 80}
+				plan: {sizeMax: 32}
+				ver: {intMin: 0}
+			}
+		}
+	}
 	Cell: {
 		seed: [...{
 			id?: =~ "^[bie][0-9]{4}$"

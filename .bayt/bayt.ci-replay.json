@@ -53,6 +53,19 @@
         "link": true,
         "parents": false,
         "exclude": []
+      },
+      {
+        "from": {
+          "ref": ":migrate",
+          "name": "prontoweeper-migrate"
+        },
+        "srcs": [
+          "/pgroll"
+        ],
+        "dst": "/pgroll",
+        "link": true,
+        "parents": false,
+        "exclude": []
       }
     ],
     "epilogue": [],
@@ -123,7 +136,8 @@
       "upClosure": [
         "./.bayt/compose.ci-replay.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.setup.yaml"
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.migrate.yaml"
       ]
     },
     "outs": {
@@ -153,7 +167,8 @@
       "upClosure": [
         "./.bayt/compose.ci-replay.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.setup.yaml"
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.migrate.yaml"
       ]
     },
     "srcs": {
@@ -194,7 +209,9 @@
       "deps": [],
       "transitiveDeps": [
         "database_srcs",
-        "setup_srcs"
+        "setup_srcs",
+        "migrate_srcs",
+        "database_outs_srcs"
       ],
       "transitiveCrossDeps": [
         {
@@ -241,7 +258,8 @@
       "upClosure": [
         "./.bayt/compose.ci-replay.yaml",
         "./.bayt/compose.database.yaml",
-        "./.bayt/compose.setup.yaml"
+        "./.bayt/compose.setup.yaml",
+        "./.bayt/compose.migrate.yaml"
       ]
     }
   },
@@ -254,21 +272,26 @@
   "emitsSrcs": true,
   "deps": [
     "database",
-    "setup"
+    "setup",
+    "migrate"
   ],
   "sameProjectDeps": [
     "database",
-    "setup"
+    "setup",
+    "migrate"
   ],
   "transitiveDeps": [
     "database",
-    "setup"
+    "setup",
+    "migrate",
+    "database_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
     "./.bayt/compose.ci-replay.yaml",
     "./.bayt/compose.database.yaml",
-    "./.bayt/compose.setup.yaml"
+    "./.bayt/compose.setup.yaml",
+    "./.bayt/compose.migrate.yaml"
   ],
   "chainedDeps": [
     {
@@ -282,6 +305,24 @@
     },
     {
       "name": "database",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "database_outs",
       "project": "prontoweeper",
       "dir": ".",
       "outs": {

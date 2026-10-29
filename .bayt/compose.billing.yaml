@@ -1,0 +1,70 @@
+# generated from bayt.cue — do not edit
+services:
+  prontoweeper-billing:
+    build:
+      additional_contexts:
+        prontoweeper-crud: service:prontoweeper-crud
+        prontoweeper-migrate: service:prontoweeper-migrate
+        prontoweeper-billing-broker: service:prontoweeper-billing-broker
+      context: ..
+      dockerfile: .bayt/Dockerfile.billing
+      target: billing
+      tags:
+      - bayt-prontoweeper-billing:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-prontoweeper-billing:latest
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/prontoweeper}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    depends_on:
+      prontoweeper-crud:
+        condition: service_healthy
+        restart: true
+      prontoweeper-migrate:
+        condition: service_completed_successfully
+      prontoweeper-billing-broker:
+        condition: service_healthy
+        restart: true
+    environment:
+      ORIGIN: ${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}
+      BILLING_BROKER: http://localhost:28463
+      BILLING_BROKER_INTERNAL: http://localhost:28463
+      BILLING_DOCUMENT: "{\"owner\":\"S9bB9PZ1ZHcfD71LF-4WN9iCUsUrDwIdFOzANKNDWYA\",\"plans\":{\"pro\":{\"name\":\"Minesweeper Pro\",\"interval\":\"month\",\"prices\":{\"usd\":299,\"brl\":990}}}}"
+      BILLING_GRANTS: "[]"
+      BILLING_FLAGS: ""
+      CRUD_URL: http://crud:3000
+      SERVICE_JWT: >-
+        ${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+      BILLING_PORT: "8688"
+    image: bayt-prontoweeper-billing:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    networks:
+      default:
+        aliases:
+        - billing
+    restart: on-failure
+  prontoweeper-billing_bayt:
+    build:
+      additional_contexts:
+        prontoweeper-crud_bayt: service:prontoweeper-crud_bayt
+        prontoweeper-migrate_bayt: service:prontoweeper-migrate_bayt
+        prontoweeper-billing-broker_bayt: service:prontoweeper-billing-broker_bayt
+      context: ..
+      dockerfile: .bayt/Dockerfile.billing
+      target: billing_bayt
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/prontoweeper}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-prontoweeper-billing_bayt:latest
+    scale: 0
+  prontoweeper-billing_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.billing
+      target: billing_srcs
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/prontoweeper}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-prontoweeper-billing_srcs:latest
+    scale: 0

@@ -4,6 +4,19 @@ SET statement_timeout = '60s';
 
 BEGIN;
 
+CALL rls_protect('subscription');
+ALTER TABLE subscription ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS subscription_app_user_select ON subscription;
+CREATE POLICY subscription_app_user_select ON subscription FOR SELECT TO app_user USING (subscription.owner_id = auth_uid());
+DROP POLICY IF EXISTS subscription_app_user_insert ON subscription;
+CREATE POLICY subscription_app_user_insert ON subscription FOR INSERT TO app_user WITH CHECK (subscription.owner_id = auth_uid());
+DROP POLICY IF EXISTS subscription_app_user_update ON subscription;
+CREATE POLICY subscription_app_user_update ON subscription FOR UPDATE TO app_user USING (subscription.owner_id = auth_uid());
+DROP POLICY IF EXISTS subscription_app_user_delete ON subscription;
+CREATE POLICY subscription_app_user_delete ON subscription FOR DELETE TO app_user USING (subscription.owner_id = auth_uid());
+DROP POLICY IF EXISTS subscription_service_all ON subscription;
+CREATE POLICY subscription_service_all ON subscription FOR ALL TO service USING (true) WITH CHECK (true);
+
 INSERT INTO mecha.rls_exempt VALUES ('public.app_user', 'internal except a person reading their own row, which the self-select policy alone allows') ON CONFLICT DO NOTHING;
 ALTER TABLE app_user ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS app_user_self_select ON app_user;

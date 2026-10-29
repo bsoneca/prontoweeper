@@ -48,6 +48,8 @@ services:
         prontoweeper-integrate_bayt: service:prontoweeper-integrate_bayt
         prontoweeper-database_srcs: service:prontoweeper-database_srcs
         prontoweeper-caddy_srcs: service:prontoweeper-caddy_srcs
+        prontoweeper-billing_srcs: service:prontoweeper-billing_srcs
+        prontoweeper-billing-broker_srcs: service:prontoweeper-billing-broker_srcs
         prontoweeper-served_srcs: service:prontoweeper-served_srcs
         prontoweeper-render_srcs: service:prontoweeper-render_srcs
         prontoweeper-served-release_srcs: service:prontoweeper-served-release_srcs
@@ -152,6 +154,8 @@ services:
         prontoweeper-integrate_bayt: service:prontoweeper-integrate_bayt
         prontoweeper-database_bayt: service:prontoweeper-database_bayt
         prontoweeper-caddy_bayt: service:prontoweeper-caddy_bayt
+        prontoweeper-billing_bayt: service:prontoweeper-billing_bayt
+        prontoweeper-billing-broker_bayt: service:prontoweeper-billing-broker_bayt
         prontoweeper-served_bayt: service:prontoweeper-served_bayt
         prontoweeper-render_bayt: service:prontoweeper-render_bayt
         prontoweeper-served-release_bayt: service:prontoweeper-served-release_bayt

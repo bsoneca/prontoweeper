@@ -1,0 +1,58 @@
+# generated from bayt.cue — do not edit
+services:
+  prontoweeper-billing-broker:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.billing-broker
+      target: billing-broker
+      tags:
+      - bayt-prontoweeper-billing-broker:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+      - bayt-prontoweeper-billing-broker:latest
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/prontoweeper}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    environment:
+      BROKER_ISSUER: http://localhost:28463
+      BROKER_SECRET: pronto-billing-local-launch-secret-000000
+      BILLING_FAKE_TENANTS: ${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}
+      PORT: "28463"
+    healthcheck:
+      test:
+      - CMD
+      - httpcheck
+      - http://127.0.0.1:28463/health
+      interval: 1s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+      start_interval: 200ms
+    image: bayt-prontoweeper-billing-broker:${BAYT_IMAGE_TAG:-${COMPOSE_PROJECT_NAME}}
+    networks:
+      default:
+        aliases:
+        - billing-broker
+    ports:
+    - 28463:28463
+  prontoweeper-billing-broker_bayt:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.billing-broker
+      target: billing-broker_bayt
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/prontoweeper}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-prontoweeper-billing-broker_bayt:latest
+    scale: 0
+  prontoweeper-billing-broker_srcs:
+    build:
+      context: ..
+      dockerfile: .bayt/Dockerfile.billing-broker
+      target: billing-broker_srcs
+      args:
+        BAYT_DIR: ${MONOREPO_COMPOSE_MODE:+apps/prontoweeper}
+        BUILDKIT_SYNTAX: >-
+          docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+    image: bayt-prontoweeper-billing-broker_srcs:latest
+    scale: 0

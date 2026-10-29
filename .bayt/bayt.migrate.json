@@ -1,0 +1,185 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "build": {
+      "additional_contexts": {
+        "libraries_mecha-database-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-database:0.18.0@sha256:b44f283f271dfefd5c6453874f81b8626ac2e9dac755123e21e3e9eeb8eca18a}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-database-image}"
+      },
+      "secrets": [],
+      "args": {}
+    },
+    "environment": {
+      "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-prontoweeper}?sslmode=disable"
+    },
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "prontoweeper-database": {
+        "condition": "service_healthy"
+      }
+    },
+    "networks": {
+      "default": {
+        "aliases": [
+          "migrate"
+        ]
+      }
+    }
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "name": "libraries_mecha-database-image"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [
+      "COPY <<'PGROLL' /pgroll/billing_01.json\n{\"operations\":[{\"sql\":{\"up\":\"CREATE SCHEMA IF NOT EXISTS billing;\\nREVOKE ALL ON SCHEMA billing FROM PUBLIC;\\nCREATE TABLE IF NOT EXISTS billing.manage (account uuid PRIMARY KEY, token text NOT NULL, ver bigint NOT NULL DEFAULT 0);\\n\\nCREATE OR REPLACE FUNCTION billing.sessions_read_only() RETURNS trigger LANGUAGE plpgsql AS $f$\\nBEGIN\\n  IF current_user IN ('app_user', 'anon') THEN\\n    RAISE EXCEPTION 'subscriptions are the billing broker''s to write' USING ERRCODE = 'insufficient_privilege';\\n  END IF;\\n  RETURN coalesce(NEW, OLD);\\nEND $f$;\\nDROP TRIGGER IF EXISTS subscription_read_only ON public.subscription;\\nCREATE TRIGGER subscription_read_only BEFORE INSERT OR UPDATE OR DELETE ON public.subscription\\n  FOR EACH ROW EXECUTE FUNCTION billing.sessions_read_only();\\n-- Whatever a session wrote before the trigger stood (a release between its initdb and this\\n-- migration): a row the broker did not write is no plan.\\nDELETE FROM public.subscription s WHERE s.id <> s.plan || '/' || s.owner_id\\n  OR NOT EXISTS (SELECT 1 FROM billing.manage m WHERE m.account = s.owner_id);\\n\\nCREATE OR REPLACE FUNCTION public.billing_entitle(account uuid, plan text, active boolean, through timestamptz, manage text, ver bigint)\\nRETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog, public AS $f$\\nBEGIN\\n  -- The constraints by name: a column by its name would be the parameter of that name.\\n  INSERT INTO billing.manage AS m (account, token, ver) VALUES (account, manage, ver)\\n    ON CONFLICT ON CONSTRAINT manage_pkey DO UPDATE SET token = EXCLUDED.token, ver = EXCLUDED.ver\\n    WHERE m.ver < EXCLUDED.ver;\\n  INSERT INTO public.subscription AS s (id, plan, active, through, ver, owner_id)\\n    VALUES (plan || '/' || account, plan, active, through, ver, account)\\n    ON CONFLICT ON CONSTRAINT subscription_pkey DO UPDATE SET active = EXCLUDED.active, through = EXCLUDED.through, ver = EXCLUDED.ver\\n    WHERE s.ver < EXCLUDED.ver;\\nEND $f$;\\nREVOKE ALL ON FUNCTION public.billing_entitle(uuid, text, boolean, timestamptz, text, bigint) FROM PUBLIC;\\nGRANT EXECUTE ON FUNCTION public.billing_entitle(uuid, text, boolean, timestamptz, text, bigint) TO service;\\n\\nCREATE OR REPLACE FUNCTION public.billing_manage(account uuid) RETURNS text\\nLANGUAGE sql STABLE SECURITY DEFINER SET search_path = pg_catalog, public AS $f$\\n  SELECT m.token FROM billing.manage m WHERE m.account = billing_manage.account\\n$f$;\\nREVOKE ALL ON FUNCTION public.billing_manage(uuid) FROM PUBLIC;\\nGRANT EXECUTE ON FUNCTION public.billing_manage(uuid) TO service;\\n\\n-- Who a reader is, as the gateway verified their session: what the billing\\n-- service asks before it sends anyone to pay or to manage.\\nCREATE OR REPLACE FUNCTION public.billing_me() RETURNS json\\nLANGUAGE sql STABLE SET search_path = pg_catalog, public AS $f$\\n  SELECT json_build_object('account', auth_uid(),\\n    'guest', coalesce((nullif(current_setting('request.jwt.claims', true), '')::jsonb ->> 'guest')::boolean, false))\\n$f$;\\nREVOKE ALL ON FUNCTION public.billing_me() FROM PUBLIC;\\nGRANT EXECUTE ON FUNCTION public.billing_me() TO app_user;\\n\\nNOTIFY pgrst, 'reload schema';\"}}]}\nPGROLL",
+      "COPY <<'PGROLL' /pgroll/billing_02.json\n{\"operations\":[{\"sql\":{\"up\":\"CREATE OR REPLACE FUNCTION public.billing_grant(grants json) RETURNS void\\nLANGUAGE plpgsql SECURITY DEFINER SET search_path = pg_catalog, public AS $f$\\nBEGIN\\n  DELETE FROM public.subscription s WHERE s.ver = 0 AND NOT EXISTS (\\n    SELECT 1 FROM json_to_recordset(grants) AS g(account uuid, plan text, through timestamptz) WHERE s.id = g.plan || '/' || g.account);\\n  INSERT INTO public.subscription AS s (id, plan, active, through, ver, owner_id)\\n    SELECT g.plan || '/' || g.account, g.plan, true, g.through, 0, g.account\\n    FROM json_to_recordset(grants) AS g(account uuid, plan text, through timestamptz)\\n    ON CONFLICT ON CONSTRAINT subscription_pkey DO UPDATE SET active = true, through = EXCLUDED.through, ver = 0\\n    WHERE s.ver = 0 OR NOT (s.active AND s.through > now());\\nEND $f$;\\nREVOKE ALL ON FUNCTION public.billing_grant(json) FROM PUBLIC;\\nGRANT EXECUTE ON FUNCTION public.billing_grant(json) TO service;\\nNOTIFY pgrst, 'reload schema';\"}}]}\nPGROLL"
+    ],
+    "copy": [],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "entrypoint": {
+    "do": "exec bash \"$(mise where github:bonisoft3/mecha)\"/services/migrate/host.sh 00_initdb billing_01 eyJvcGVyYXRpb25zIjpbeyJzcWwiOnsidXAiOiJDUkVBVEUgU0NIRU1BIElGIE5PVCBFWElTVFMgYmlsbGluZztcblJFVk9LRSBBTEwgT04gU0NIRU1BIGJpbGxpbmcgRlJPTSBQVUJMSUM7XG5DUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBiaWxsaW5nLm1hbmFnZSAoYWNjb3VudCB1dWlkIFBSSU1BUlkgS0VZLCB0b2tlbiB0ZXh0IE5PVCBOVUxMLCB2ZXIgYmlnaW50IE5PVCBOVUxMIERFRkFVTFQgMCk7XG5cbkNSRUFURSBPUiBSRVBMQUNFIEZVTkNUSU9OIGJpbGxpbmcuc2Vzc2lvbnNfcmVhZF9vbmx5KCkgUkVUVVJOUyB0cmlnZ2VyIExBTkdVQUdFIHBscGdzcWwgQVMgJGYkXG5CRUdJTlxuICBJRiBjdXJyZW50X3VzZXIgSU4gKCdhcHBfdXNlcicsICdhbm9uJykgVEhFTlxuICAgIFJBSVNFIEVYQ0VQVElPTiAnc3Vic2NyaXB0aW9ucyBhcmUgdGhlIGJpbGxpbmcgYnJva2VyJydzIHRvIHdyaXRlJyBVU0lORyBFUlJDT0RFID0gJ2luc3VmZmljaWVudF9wcml2aWxlZ2UnO1xuICBFTkQgSUY7XG4gIFJFVFVSTiBjb2FsZXNjZShORVcsIE9MRCk7XG5FTkQgJGYkO1xuRFJPUCBUUklHR0VSIElGIEVYSVNUUyBzdWJzY3JpcHRpb25fcmVhZF9vbmx5IE9OIHB1YmxpYy5zdWJzY3JpcHRpb247XG5DUkVBVEUgVFJJR0dFUiBzdWJzY3JpcHRpb25fcmVhZF9vbmx5IEJFRk9SRSBJTlNFUlQgT1IgVVBEQVRFIE9SIERFTEVURSBPTiBwdWJsaWMuc3Vic2NyaXB0aW9uXG4gIEZPUiBFQUNIIFJPVyBFWEVDVVRFIEZVTkNUSU9OIGJpbGxpbmcuc2Vzc2lvbnNfcmVhZF9vbmx5KCk7XG4tLSBXaGF0ZXZlciBhIHNlc3Npb24gd3JvdGUgYmVmb3JlIHRoZSB0cmlnZ2VyIHN0b29kIChhIHJlbGVhc2UgYmV0d2VlbiBpdHMgaW5pdGRiIGFuZCB0aGlzXG4tLSBtaWdyYXRpb24pOiBhIHJvdyB0aGUgYnJva2VyIGRpZCBub3Qgd3JpdGUgaXMgbm8gcGxhbi5cbkRFTEVURSBGUk9NIHB1YmxpYy5zdWJzY3JpcHRpb24gcyBXSEVSRSBzLmlkIDw+IHMucGxhbiB8fCAnLycgfHwgcy5vd25lcl9pZFxuICBPUiBOT1QgRVhJU1RTIChTRUxFQ1QgMSBGUk9NIGJpbGxpbmcubWFuYWdlIG0gV0hFUkUgbS5hY2NvdW50ID0gcy5vd25lcl9pZCk7XG5cbkNSRUFURSBPUiBSRVBMQUNFIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX2VudGl0bGUoYWNjb3VudCB1dWlkLCBwbGFuIHRleHQsIGFjdGl2ZSBib29sZWFuLCB0aHJvdWdoIHRpbWVzdGFtcHR6LCBtYW5hZ2UgdGV4dCwgdmVyIGJpZ2ludClcblJFVFVSTlMgdm9pZCBMQU5HVUFHRSBwbHBnc3FsIFNFQ1VSSVRZIERFRklORVIgU0VUIHNlYXJjaF9wYXRoID0gcGdfY2F0YWxvZywgcHVibGljIEFTICRmJFxuQkVHSU5cbiAgLS0gVGhlIGNvbnN0cmFpbnRzIGJ5IG5hbWU6IGEgY29sdW1uIGJ5IGl0cyBuYW1lIHdvdWxkIGJlIHRoZSBwYXJhbWV0ZXIgb2YgdGhhdCBuYW1lLlxuICBJTlNFUlQgSU5UTyBiaWxsaW5nLm1hbmFnZSBBUyBtIChhY2NvdW50LCB0b2tlbiwgdmVyKSBWQUxVRVMgKGFjY291bnQsIG1hbmFnZSwgdmVyKVxuICAgIE9OIENPTkZMSUNUIE9OIENPTlNUUkFJTlQgbWFuYWdlX3BrZXkgRE8gVVBEQVRFIFNFVCB0b2tlbiA9IEVYQ0xVREVELnRva2VuLCB2ZXIgPSBFWENMVURFRC52ZXJcbiAgICBXSEVSRSBtLnZlciA8IEVYQ0xVREVELnZlcjtcbiAgSU5TRVJUIElOVE8gcHVibGljLnN1YnNjcmlwdGlvbiBBUyBzIChpZCwgcGxhbiwgYWN0aXZlLCB0aHJvdWdoLCB2ZXIsIG93bmVyX2lkKVxuICAgIFZBTFVFUyAocGxhbiB8fCAnLycgfHwgYWNjb3VudCwgcGxhbiwgYWN0aXZlLCB0aHJvdWdoLCB2ZXIsIGFjY291bnQpXG4gICAgT04gQ09ORkxJQ1QgT04gQ09OU1RSQUlOVCBzdWJzY3JpcHRpb25fcGtleSBETyBVUERBVEUgU0VUIGFjdGl2ZSA9IEVYQ0xVREVELmFjdGl2ZSwgdGhyb3VnaCA9IEVYQ0xVREVELnRocm91Z2gsIHZlciA9IEVYQ0xVREVELnZlclxuICAgIFdIRVJFIHMudmVyIDwgRVhDTFVERUQudmVyO1xuRU5EICRmJDtcblJFVk9LRSBBTEwgT04gRlVOQ1RJT04gcHVibGljLmJpbGxpbmdfZW50aXRsZSh1dWlkLCB0ZXh0LCBib29sZWFuLCB0aW1lc3RhbXB0eiwgdGV4dCwgYmlnaW50KSBGUk9NIFBVQkxJQztcbkdSQU5UIEVYRUNVVEUgT04gRlVOQ1RJT04gcHVibGljLmJpbGxpbmdfZW50aXRsZSh1dWlkLCB0ZXh0LCBib29sZWFuLCB0aW1lc3RhbXB0eiwgdGV4dCwgYmlnaW50KSBUTyBzZXJ2aWNlO1xuXG5DUkVBVEUgT1IgUkVQTEFDRSBGVU5DVElPTiBwdWJsaWMuYmlsbGluZ19tYW5hZ2UoYWNjb3VudCB1dWlkKSBSRVRVUk5TIHRleHRcbkxBTkdVQUdFIHNxbCBTVEFCTEUgU0VDVVJJVFkgREVGSU5FUiBTRVQgc2VhcmNoX3BhdGggPSBwZ19jYXRhbG9nLCBwdWJsaWMgQVMgJGYkXG4gIFNFTEVDVCBtLnRva2VuIEZST00gYmlsbGluZy5tYW5hZ2UgbSBXSEVSRSBtLmFjY291bnQgPSBiaWxsaW5nX21hbmFnZS5hY2NvdW50XG4kZiQ7XG5SRVZPS0UgQUxMIE9OIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX21hbmFnZSh1dWlkKSBGUk9NIFBVQkxJQztcbkdSQU5UIEVYRUNVVEUgT04gRlVOQ1RJT04gcHVibGljLmJpbGxpbmdfbWFuYWdlKHV1aWQpIFRPIHNlcnZpY2U7XG5cbi0tIFdobyBhIHJlYWRlciBpcywgYXMgdGhlIGdhdGV3YXkgdmVyaWZpZWQgdGhlaXIgc2Vzc2lvbjogd2hhdCB0aGUgYmlsbGluZ1xuLS0gc2VydmljZSBhc2tzIGJlZm9yZSBpdCBzZW5kcyBhbnlvbmUgdG8gcGF5IG9yIHRvIG1hbmFnZS5cbkNSRUFURSBPUiBSRVBMQUNFIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX21lKCkgUkVUVVJOUyBqc29uXG5MQU5HVUFHRSBzcWwgU1RBQkxFIFNFVCBzZWFyY2hfcGF0aCA9IHBnX2NhdGFsb2csIHB1YmxpYyBBUyAkZiRcbiAgU0VMRUNUIGpzb25fYnVpbGRfb2JqZWN0KCdhY2NvdW50JywgYXV0aF91aWQoKSxcbiAgICAnZ3Vlc3QnLCBjb2FsZXNjZSgobnVsbGlmKGN1cnJlbnRfc2V0dGluZygncmVxdWVzdC5qd3QuY2xhaW1zJywgdHJ1ZSksICcnKTo6anNvbmIgLT4+ICdndWVzdCcpOjpib29sZWFuLCBmYWxzZSkpXG4kZiQ7XG5SRVZPS0UgQUxMIE9OIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX21lKCkgRlJPTSBQVUJMSUM7XG5HUkFOVCBFWEVDVVRFIE9OIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX21lKCkgVE8gYXBwX3VzZXI7XG5cbk5PVElGWSBwZ3JzdCwgJ3JlbG9hZCBzY2hlbWEnOyJ9fV19 billing_02 eyJvcGVyYXRpb25zIjpbeyJzcWwiOnsidXAiOiJDUkVBVEUgT1IgUkVQTEFDRSBGVU5DVElPTiBwdWJsaWMuYmlsbGluZ19ncmFudChncmFudHMganNvbikgUkVUVVJOUyB2b2lkXG5MQU5HVUFHRSBwbHBnc3FsIFNFQ1VSSVRZIERFRklORVIgU0VUIHNlYXJjaF9wYXRoID0gcGdfY2F0YWxvZywgcHVibGljIEFTICRmJFxuQkVHSU5cbiAgREVMRVRFIEZST00gcHVibGljLnN1YnNjcmlwdGlvbiBzIFdIRVJFIHMudmVyID0gMCBBTkQgTk9UIEVYSVNUUyAoXG4gICAgU0VMRUNUIDEgRlJPTSBqc29uX3RvX3JlY29yZHNldChncmFudHMpIEFTIGcoYWNjb3VudCB1dWlkLCBwbGFuIHRleHQsIHRocm91Z2ggdGltZXN0YW1wdHopIFdIRVJFIHMuaWQgPSBnLnBsYW4gfHwgJy8nIHx8IGcuYWNjb3VudCk7XG4gIElOU0VSVCBJTlRPIHB1YmxpYy5zdWJzY3JpcHRpb24gQVMgcyAoaWQsIHBsYW4sIGFjdGl2ZSwgdGhyb3VnaCwgdmVyLCBvd25lcl9pZClcbiAgICBTRUxFQ1QgZy5wbGFuIHx8ICcvJyB8fCBnLmFjY291bnQsIGcucGxhbiwgdHJ1ZSwgZy50aHJvdWdoLCAwLCBnLmFjY291bnRcbiAgICBGUk9NIGpzb25fdG9fcmVjb3Jkc2V0KGdyYW50cykgQVMgZyhhY2NvdW50IHV1aWQsIHBsYW4gdGV4dCwgdGhyb3VnaCB0aW1lc3RhbXB0eilcbiAgICBPTiBDT05GTElDVCBPTiBDT05TVFJBSU5UIHN1YnNjcmlwdGlvbl9wa2V5IERPIFVQREFURSBTRVQgYWN0aXZlID0gdHJ1ZSwgdGhyb3VnaCA9IEVYQ0xVREVELnRocm91Z2gsIHZlciA9IDBcbiAgICBXSEVSRSBzLnZlciA9IDAgT1IgTk9UIChzLmFjdGl2ZSBBTkQgcy50aHJvdWdoID4gbm93KCkpO1xuRU5EICRmJDtcblJFVk9LRSBBTEwgT04gRlVOQ1RJT04gcHVibGljLmJpbGxpbmdfZ3JhbnQoanNvbikgRlJPTSBQVUJMSUM7XG5HUkFOVCBFWEVDVVRFIE9OIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX2dyYW50KGpzb24pIFRPIHNlcnZpY2U7XG5OT1RJRlkgcGdyc3QsICdyZWxvYWQgc2NoZW1hJzsifX1dfQ==",
+    "dockerfile": {
+      "do": "/migrate.sh /pgroll 00_initdb",
+      "shell": "exec"
+    },
+    "shell": "sh",
+    "env": {
+      "DATABASE_URL": "postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database:5432/${POSTGRES_DB:-prontoweeper}?sslmode=disable"
+    },
+    "after": {
+      "database": "healthy"
+    },
+    "host": true
+  },
+  "name": "migrate",
+  "process-compose": {
+    "activate": "mise x --"
+  },
+  "project": "prontoweeper",
+  "dir": ".",
+  "activate": "",
+  "srcs": {
+    "globs": [],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "migrate_bayt",
+      "project": "prontoweeper",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.migrate.yaml",
+          ".bayt/Dockerfile.migrate",
+          ".bayt/bayt.migrate.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.database.yaml"
+      ]
+    },
+    "outs": {
+      "name": "migrate_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.database.yaml"
+      ]
+    }
+  },
+  "visibility": "internal",
+  "emitsSrcs": false,
+  "deps": [
+    "database_outs"
+  ],
+  "sameProjectDeps": [
+    "database_outs"
+  ],
+  "transitiveDeps": [
+    "database_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.database.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "database_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

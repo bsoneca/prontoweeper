@@ -1,4 +1,39 @@
 {
+  "0x8c41a02eca805674": {
+    "name": "subscription",
+    "fields": {
+      "1": {
+        "name": "id",
+        "type": "text",
+        "retired": false
+      },
+      "2": {
+        "name": "plan",
+        "type": "text",
+        "retired": false
+      },
+      "3": {
+        "name": "active",
+        "type": "bool",
+        "retired": false
+      },
+      "4": {
+        "name": "through",
+        "type": "timestamp",
+        "retired": false
+      },
+      "5": {
+        "name": "ver",
+        "type": "int64",
+        "retired": false
+      },
+      "6": {
+        "name": "owner_id",
+        "type": "uuid",
+        "retired": false
+      }
+    }
+  },
   "0xaf63c2b72fcfda24": {
     "name": "cell",
     "fields": {

@@ -6,6 +6,8 @@ include:
   required: false
 - path: .././.bayt/compose.setup.yaml
   required: false
+- path: .././.bayt/compose.migrate.yaml
+  required: false
 - path: .././.bayt/compose.lint.yaml
   required: false
 - path: .././.bayt/compose.generate.yaml
@@ -31,6 +33,10 @@ include:
 - path: .././.bayt/compose.integrate.yaml
   required: false
 - path: .././.bayt/compose.served-release.yaml
+  required: false
+- path: .././.bayt/compose.billing.yaml
+  required: false
+- path: .././.bayt/compose.billing-broker.yaml
   required: false
 - path: ../monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
   required: false

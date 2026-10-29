@@ -56,6 +56,15 @@ message Score {
   google.protobuf.Timestamp created = 7 [json_name = "created"];
 }
 
+message Subscription {
+  optional string id = 1 [json_name = "id"];
+  optional string plan = 2 [json_name = "plan"];
+  optional bool active = 3 [json_name = "active"];
+  google.protobuf.Timestamp through = 4 [json_name = "through"];
+  optional int64 ver = 5 [json_name = "ver"];
+  optional string owner_id = 6 [json_name = "owner_id"];
+}
+
 message Tick {
   optional string id = 1 [json_name = "id"];
   optional int32 n = 2 [json_name = "n"];

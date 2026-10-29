@@ -1,5 +1,10 @@
 {
   "schema": {
+    "pgroll": {
+      "target": "migrate",
+      "dir": "/pgroll",
+      "baseline": "00_initdb"
+    },
     "target": "database",
     "initdb": "/docker-entrypoint-initdb.d"
   },

@@ -4,6 +4,24 @@ SET statement_timeout = '60s';
 
 BEGIN;
 
+CREATE TABLE IF NOT EXISTS subscription (
+  "id" TEXT PRIMARY KEY CHECK (char_length(id) <= 80),
+  "plan" TEXT NOT NULL CHECK (char_length(plan) <= 32),
+  "active" boolean NOT NULL,
+  "through" portable_timestamp NOT NULL,
+  "ver" portable_int64 NOT NULL CHECK (ver >= 0),
+  "owner_id" uuid DEFAULT auth_uid() NOT NULL,
+  "txid" BIGINT DEFAULT pg_current_xact_id()::text::bigint,
+  "scope_id" TEXT GENERATED ALWAYS AS ('user:' || "owner_id") STORED NOT NULL
+);
+ALTER TABLE subscription ADD COLUMN IF NOT EXISTS "plan" TEXT NOT NULL CHECK (char_length(plan) <= 32);
+ALTER TABLE subscription ADD COLUMN IF NOT EXISTS "active" boolean NOT NULL;
+ALTER TABLE subscription ADD COLUMN IF NOT EXISTS "through" portable_timestamp NOT NULL;
+ALTER TABLE subscription ADD COLUMN IF NOT EXISTS "ver" portable_int64 NOT NULL CHECK (ver >= 0);
+ALTER TABLE subscription ADD COLUMN IF NOT EXISTS "owner_id" uuid DEFAULT auth_uid() NOT NULL;
+ALTER TABLE subscription DROP CONSTRAINT IF EXISTS "subscription_plan_check", ADD CONSTRAINT "subscription_plan_check" CHECK (char_length(plan) <= 32) NOT VALID;
+ALTER TABLE subscription DROP CONSTRAINT IF EXISTS "subscription_ver_check", ADD CONSTRAINT "subscription_ver_check" CHECK (ver >= 0) NOT VALID;
+
 CREATE TABLE IF NOT EXISTS app_user (
   "id" uuid PRIMARY KEY,
   "handle" text NOT NULL UNIQUE CHECK (char_length(handle) > 0),

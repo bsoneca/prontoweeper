@@ -4,6 +4,7 @@ services:
     build:
       additional_contexts:
         prontoweeper-setup: service:prontoweeper-setup
+        prontoweeper-migrate: service:prontoweeper-migrate
         prontoweeper-database: service:prontoweeper-database
       context: ..
       dockerfile: .bayt/Dockerfile.ci-replay
@@ -22,6 +23,7 @@ services:
       additional_contexts:
         prontoweeper-setup_bayt: service:prontoweeper-setup_bayt
         prontoweeper-database_bayt: service:prontoweeper-database_bayt
+        prontoweeper-migrate_bayt: service:prontoweeper-migrate_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.ci-replay
       target: ci-replay_bayt

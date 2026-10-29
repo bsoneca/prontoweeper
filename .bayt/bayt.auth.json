@@ -23,6 +23,9 @@
     "depends_on": {
       "prontoweeper-database": {
         "condition": "service_healthy"
+      },
+      "prontoweeper-migrate": {
+        "condition": "service_completed_successfully"
       }
     },
     "networks": {
@@ -70,7 +73,8 @@
       "OIDC_PROVIDERS": ""
     },
     "after": {
-      "database": "healthy"
+      "database": "healthy",
+      "migrate": "completed"
     },
     "host": true
   },
@@ -133,7 +137,8 @@
       },
       "upClosure": [
         "./.bayt/compose.auth.yaml",
-        "./.bayt/compose.database.yaml"
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml"
       ]
     },
     "outs": {
@@ -162,29 +167,43 @@
       },
       "upClosure": [
         "./.bayt/compose.auth.yaml",
-        "./.bayt/compose.database.yaml"
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml"
       ]
     }
   },
   "visibility": "internal",
   "emitsSrcs": false,
   "deps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "sameProjectDeps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "transitiveDeps": [
-    "database_outs"
+    "database_outs",
+    "migrate_outs"
   ],
   "transitiveCrossDeps": [],
   "upClosure": [
     "./.bayt/compose.auth.yaml",
-    "./.bayt/compose.database.yaml"
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.migrate.yaml"
   ],
   "chainedDeps": [
     {
       "name": "database_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_outs",
       "project": "prontoweeper",
       "dir": ".",
       "outs": {

@@ -73,6 +73,8 @@ processes:
     depends_on:
       database:
         condition: process_healthy
+      migrate:
+        condition: process_completed_successfully
     entrypoint:
     - mise
     - x
@@ -135,6 +137,25 @@ processes:
       period_seconds: 1
       timeout_seconds: 5
       failure_threshold: 330
+  migrate:
+    depends_on:
+      database:
+        condition: process_healthy
+    entrypoint:
+    - mise
+    - x
+    - --
+    - sh
+    - -c
+    - >-
+      exec bash "$$(mise where github:bonisoft3/mecha)"/services/migrate/host.sh
+      00_initdb billing_01
+      eyJvcGVyYXRpb25zIjpbeyJzcWwiOnsidXAiOiJDUkVBVEUgU0NIRU1BIElGIE5PVCBFWElTVFMgYmlsbGluZztcblJFVk9LRSBBTEwgT04gU0NIRU1BIGJpbGxpbmcgRlJPTSBQVUJMSUM7XG5DUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBiaWxsaW5nLm1hbmFnZSAoYWNjb3VudCB1dWlkIFBSSU1BUlkgS0VZLCB0b2tlbiB0ZXh0IE5PVCBOVUxMLCB2ZXIgYmlnaW50IE5PVCBOVUxMIERFRkFVTFQgMCk7XG5cbkNSRUFURSBPUiBSRVBMQUNFIEZVTkNUSU9OIGJpbGxpbmcuc2Vzc2lvbnNfcmVhZF9vbmx5KCkgUkVUVVJOUyB0cmlnZ2VyIExBTkdVQUdFIHBscGdzcWwgQVMgJGYkXG5CRUdJTlxuICBJRiBjdXJyZW50X3VzZXIgSU4gKCdhcHBfdXNlcicsICdhbm9uJykgVEhFTlxuICAgIFJBSVNFIEVYQ0VQVElPTiAnc3Vic2NyaXB0aW9ucyBhcmUgdGhlIGJpbGxpbmcgYnJva2VyJydzIHRvIHdyaXRlJyBVU0lORyBFUlJDT0RFID0gJ2luc3VmZmljaWVudF9wcml2aWxlZ2UnO1xuICBFTkQgSUY7XG4gIFJFVFVSTiBjb2FsZXNjZShORVcsIE9MRCk7XG5FTkQgJGYkO1xuRFJPUCBUUklHR0VSIElGIEVYSVNUUyBzdWJzY3JpcHRpb25fcmVhZF9vbmx5IE9OIHB1YmxpYy5zdWJzY3JpcHRpb247XG5DUkVBVEUgVFJJR0dFUiBzdWJzY3JpcHRpb25fcmVhZF9vbmx5IEJFRk9SRSBJTlNFUlQgT1IgVVBEQVRFIE9SIERFTEVURSBPTiBwdWJsaWMuc3Vic2NyaXB0aW9uXG4gIEZPUiBFQUNIIFJPVyBFWEVDVVRFIEZVTkNUSU9OIGJpbGxpbmcuc2Vzc2lvbnNfcmVhZF9vbmx5KCk7XG4tLSBXaGF0ZXZlciBhIHNlc3Npb24gd3JvdGUgYmVmb3JlIHRoZSB0cmlnZ2VyIHN0b29kIChhIHJlbGVhc2UgYmV0d2VlbiBpdHMgaW5pdGRiIGFuZCB0aGlzXG4tLSBtaWdyYXRpb24pOiBhIHJvdyB0aGUgYnJva2VyIGRpZCBub3Qgd3JpdGUgaXMgbm8gcGxhbi5cbkRFTEVURSBGUk9NIHB1YmxpYy5zdWJzY3JpcHRpb24gcyBXSEVSRSBzLmlkIDw+IHMucGxhbiB8fCAnLycgfHwgcy5vd25lcl9pZFxuICBPUiBOT1QgRVhJU1RTIChTRUxFQ1QgMSBGUk9NIGJpbGxpbmcubWFuYWdlIG0gV0hFUkUgbS5hY2NvdW50ID0gcy5vd25lcl9pZCk7XG5cbkNSRUFURSBPUiBSRVBMQUNFIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX2VudGl0bGUoYWNjb3VudCB1dWlkLCBwbGFuIHRleHQsIGFjdGl2ZSBib29sZWFuLCB0aHJvdWdoIHRpbWVzdGFtcHR6LCBtYW5hZ2UgdGV4dCwgdmVyIGJpZ2ludClcblJFVFVSTlMgdm9pZCBMQU5HVUFHRSBwbHBnc3FsIFNFQ1VSSVRZIERFRklORVIgU0VUIHNlYXJjaF9wYXRoID0gcGdfY2F0YWxvZywgcHVibGljIEFTICRmJFxuQkVHSU5cbiAgLS0gVGhlIGNvbnN0cmFpbnRzIGJ5IG5hbWU6IGEgY29sdW1uIGJ5IGl0cyBuYW1lIHdvdWxkIGJlIHRoZSBwYXJhbWV0ZXIgb2YgdGhhdCBuYW1lLlxuICBJTlNFUlQgSU5UTyBiaWxsaW5nLm1hbmFnZSBBUyBtIChhY2NvdW50LCB0b2tlbiwgdmVyKSBWQUxVRVMgKGFjY291bnQsIG1hbmFnZSwgdmVyKVxuICAgIE9OIENPTkZMSUNUIE9OIENPTlNUUkFJTlQgbWFuYWdlX3BrZXkgRE8gVVBEQVRFIFNFVCB0b2tlbiA9IEVYQ0xVREVELnRva2VuLCB2ZXIgPSBFWENMVURFRC52ZXJcbiAgICBXSEVSRSBtLnZlciA8IEVYQ0xVREVELnZlcjtcbiAgSU5TRVJUIElOVE8gcHVibGljLnN1YnNjcmlwdGlvbiBBUyBzIChpZCwgcGxhbiwgYWN0aXZlLCB0aHJvdWdoLCB2ZXIsIG93bmVyX2lkKVxuICAgIFZBTFVFUyAocGxhbiB8fCAnLycgfHwgYWNjb3VudCwgcGxhbiwgYWN0aXZlLCB0aHJvdWdoLCB2ZXIsIGFjY291bnQpXG4gICAgT04gQ09ORkxJQ1QgT04gQ09OU1RSQUlOVCBzdWJzY3JpcHRpb25fcGtleSBETyBVUERBVEUgU0VUIGFjdGl2ZSA9IEVYQ0xVREVELmFjdGl2ZSwgdGhyb3VnaCA9IEVYQ0xVREVELnRocm91Z2gsIHZlciA9IEVYQ0xVREVELnZlclxuICAgIFdIRVJFIHMudmVyIDwgRVhDTFVERUQudmVyO1xuRU5EICRmJDtcblJFVk9LRSBBTEwgT04gRlVOQ1RJT04gcHVibGljLmJpbGxpbmdfZW50aXRsZSh1dWlkLCB0ZXh0LCBib29sZWFuLCB0aW1lc3RhbXB0eiwgdGV4dCwgYmlnaW50KSBGUk9NIFBVQkxJQztcbkdSQU5UIEVYRUNVVEUgT04gRlVOQ1RJT04gcHVibGljLmJpbGxpbmdfZW50aXRsZSh1dWlkLCB0ZXh0LCBib29sZWFuLCB0aW1lc3RhbXB0eiwgdGV4dCwgYmlnaW50KSBUTyBzZXJ2aWNlO1xuXG5DUkVBVEUgT1IgUkVQTEFDRSBGVU5DVElPTiBwdWJsaWMuYmlsbGluZ19tYW5hZ2UoYWNjb3VudCB1dWlkKSBSRVRVUk5TIHRleHRcbkxBTkdVQUdFIHNxbCBTVEFCTEUgU0VDVVJJVFkgREVGSU5FUiBTRVQgc2VhcmNoX3BhdGggPSBwZ19jYXRhbG9nLCBwdWJsaWMgQVMgJGYkXG4gIFNFTEVDVCBtLnRva2VuIEZST00gYmlsbGluZy5tYW5hZ2UgbSBXSEVSRSBtLmFjY291bnQgPSBiaWxsaW5nX21hbmFnZS5hY2NvdW50XG4kZiQ7XG5SRVZPS0UgQUxMIE9OIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX21hbmFnZSh1dWlkKSBGUk9NIFBVQkxJQztcbkdSQU5UIEVYRUNVVEUgT04gRlVOQ1RJT04gcHVibGljLmJpbGxpbmdfbWFuYWdlKHV1aWQpIFRPIHNlcnZpY2U7XG5cbi0tIFdobyBhIHJlYWRlciBpcywgYXMgdGhlIGdhdGV3YXkgdmVyaWZpZWQgdGhlaXIgc2Vzc2lvbjogd2hhdCB0aGUgYmlsbGluZ1xuLS0gc2VydmljZSBhc2tzIGJlZm9yZSBpdCBzZW5kcyBhbnlvbmUgdG8gcGF5IG9yIHRvIG1hbmFnZS5cbkNSRUFURSBPUiBSRVBMQUNFIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX21lKCkgUkVUVVJOUyBqc29uXG5MQU5HVUFHRSBzcWwgU1RBQkxFIFNFVCBzZWFyY2hfcGF0aCA9IHBnX2NhdGFsb2csIHB1YmxpYyBBUyAkZiRcbiAgU0VMRUNUIGpzb25fYnVpbGRfb2JqZWN0KCdhY2NvdW50JywgYXV0aF91aWQoKSxcbiAgICAnZ3Vlc3QnLCBjb2FsZXNjZSgobnVsbGlmKGN1cnJlbnRfc2V0dGluZygncmVxdWVzdC5qd3QuY2xhaW1zJywgdHJ1ZSksICcnKTo6anNvbmIgLT4+ICdndWVzdCcpOjpib29sZWFuLCBmYWxzZSkpXG4kZiQ7XG5SRVZPS0UgQUxMIE9OIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX21lKCkgRlJPTSBQVUJMSUM7XG5HUkFOVCBFWEVDVVRFIE9OIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX21lKCkgVE8gYXBwX3VzZXI7XG5cbk5PVElGWSBwZ3JzdCwgJ3JlbG9hZCBzY2hlbWEnOyJ9fV19 billing_02 eyJvcGVyYXRpb25zIjpbeyJzcWwiOnsidXAiOiJDUkVBVEUgT1IgUkVQTEFDRSBGVU5DVElPTiBwdWJsaWMuYmlsbGluZ19ncmFudChncmFudHMganNvbikgUkVUVVJOUyB2b2lkXG5MQU5HVUFHRSBwbHBnc3FsIFNFQ1VSSVRZIERFRklORVIgU0VUIHNlYXJjaF9wYXRoID0gcGdfY2F0YWxvZywgcHVibGljIEFTICRmJFxuQkVHSU5cbiAgREVMRVRFIEZST00gcHVibGljLnN1YnNjcmlwdGlvbiBzIFdIRVJFIHMudmVyID0gMCBBTkQgTk9UIEVYSVNUUyAoXG4gICAgU0VMRUNUIDEgRlJPTSBqc29uX3RvX3JlY29yZHNldChncmFudHMpIEFTIGcoYWNjb3VudCB1dWlkLCBwbGFuIHRleHQsIHRocm91Z2ggdGltZXN0YW1wdHopIFdIRVJFIHMuaWQgPSBnLnBsYW4gfHwgJy8nIHx8IGcuYWNjb3VudCk7XG4gIElOU0VSVCBJTlRPIHB1YmxpYy5zdWJzY3JpcHRpb24gQVMgcyAoaWQsIHBsYW4sIGFjdGl2ZSwgdGhyb3VnaCwgdmVyLCBvd25lcl9pZClcbiAgICBTRUxFQ1QgZy5wbGFuIHx8ICcvJyB8fCBnLmFjY291bnQsIGcucGxhbiwgdHJ1ZSwgZy50aHJvdWdoLCAwLCBnLmFjY291bnRcbiAgICBGUk9NIGpzb25fdG9fcmVjb3Jkc2V0KGdyYW50cykgQVMgZyhhY2NvdW50IHV1aWQsIHBsYW4gdGV4dCwgdGhyb3VnaCB0aW1lc3RhbXB0eilcbiAgICBPTiBDT05GTElDVCBPTiBDT05TVFJBSU5UIHN1YnNjcmlwdGlvbl9wa2V5IERPIFVQREFURSBTRVQgYWN0aXZlID0gdHJ1ZSwgdGhyb3VnaCA9IEVYQ0xVREVELnRocm91Z2gsIHZlciA9IDBcbiAgICBXSEVSRSBzLnZlciA9IDAgT1IgTk9UIChzLmFjdGl2ZSBBTkQgcy50aHJvdWdoID4gbm93KCkpO1xuRU5EICRmJDtcblJFVk9LRSBBTEwgT04gRlVOQ1RJT04gcHVibGljLmJpbGxpbmdfZ3JhbnQoanNvbikgRlJPTSBQVUJMSUM7XG5HUkFOVCBFWEVDVVRFIE9OIEZVTkNUSU9OIHB1YmxpYy5iaWxsaW5nX2dyYW50KGpzb24pIFRPIHNlcnZpY2U7XG5OT1RJRlkgcGdyc3QsICdyZWxvYWQgc2NoZW1hJzsifX1dfQ==
+    availability:
+      exit_on_skipped: true
+    environment:
+    - >-
+      DATABASE_URL=postgres://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@127.0.0.1:${DATABASE_PG_PORT:-29796}/${POSTGRES_DB:-prontoweeper}?sslmode=disable
   caddy:
     depends_on:
       crud:
@@ -150,67 +171,67 @@ processes:
     - >-
       exec deno run --allow-all "$$(mise where
       github:bonisoft3/mecha)"/services/proxy/host.ts 'docker/Caddyfile' --door 8443 --health 8080 --peers
-      'crud=3000,electric=3000,auth=9999,render=8090' '/srv/shell/index.html' 'shell/index.html'
-      '/srv/shell/shell.css' 'shell/shell.css' '/srv/shell/boot.js' 'shell/boot.js'
-      '/srv/offline-first-sw.js' 'offline-first-sw.js' '/srv/shell/shell.yaml' 'shell/shell.yaml'
-      '/srv/shell/shell.json' 'shell/shell.json' '/srv/shell/design.css'
-      'shell/design.css' '/srv/shell/screens/beginner.html' 'shell/screens/beginner.html'
-      '/srv/shell/screens/beginner.css' 'shell/screens/beginner.css'
-      '/srv/shell/screens/intermediate.html' 'shell/screens/intermediate.html' '/srv/shell/screens/intermediate.css'
-      'shell/screens/intermediate.css' '/srv/shell/screens/expert.html'
-      'shell/screens/expert.html' '/srv/shell/screens/expert.css' 'shell/screens/expert.css'
-      '/srv/shell/screens/halloffame.html' 'shell/screens/halloffame.html'
-      '/srv/shell/screens/halloffame.css' 'shell/screens/halloffame.css' '/srv/shell/handlers/bump.js'
-      'shell/handlers/bump.js' '/srv/shell/handlers/clock.js' 'shell/handlers/clock.js'
-      '/srv/shell/handlers/sweep.js' 'shell/handlers/sweep.js'
-      '/srv/shell/shared/window.css' 'shell/shared/window.css' '/srv/messages/en.json' 'messages/en.json'
-      '/srv/messages/pt-BR.json' 'messages/pt-BR.json' '/srv/docs/brief.html' 'brief.html'
-      '/srv/docs/ir.html' 'ir.html' '/srv/docs/ir/card.css' 'ir/card.css'
-      '/srv/docs/acceptance.md' 'acceptance.md' '/srv/docs/DESIGN.md' 'DESIGN.md' '/srv/robots.txt'
-      'robots.txt' '/srv/sitemap.xml' 'sitemap.xml' '/omnishell/interpreter/shell.js'
-      '{github:bonisoft3/omnishell}/interpreter/shell.js' '/omnishell/interpreter/chrome.js'
-      '{github:bonisoft3/omnishell}/interpreter/chrome.js'
+      'crud=3000,electric=3000,auth=9999,render=8090,billing=8688' '/srv/shell/index.html'
+      'shell/index.html' '/srv/shell/shell.css' 'shell/shell.css' '/srv/shell/boot.js'
+      'shell/boot.js' '/srv/offline-first-sw.js' 'offline-first-sw.js' '/srv/shell/shell.yaml'
+      'shell/shell.yaml' '/srv/shell/shell.json' 'shell/shell.json' '/srv/shell/design.css'
+      'shell/design.css' '/srv/shell/screens/beginner.html'
+      'shell/screens/beginner.html' '/srv/shell/screens/beginner.css' 'shell/screens/beginner.css'
+      '/srv/shell/screens/intermediate.html' 'shell/screens/intermediate.html'
+      '/srv/shell/screens/intermediate.css' 'shell/screens/intermediate.css' '/srv/shell/screens/expert.html'
+      'shell/screens/expert.html' '/srv/shell/screens/expert.css'
+      'shell/screens/expert.css' '/srv/shell/screens/halloffame.html' 'shell/screens/halloffame.html'
+      '/srv/shell/screens/halloffame.css' 'shell/screens/halloffame.css'
+      '/srv/shell/handlers/bump.js' 'shell/handlers/bump.js' '/srv/shell/handlers/clock.js'
+      'shell/handlers/clock.js' '/srv/shell/handlers/sweep.js' 'shell/handlers/sweep.js'
+      '/srv/shell/shared/window.css' 'shell/shared/window.css' '/srv/messages/en.json'
+      'messages/en.json' '/srv/messages/pt-BR.json' 'messages/pt-BR.json' '/srv/docs/brief.html'
+      'brief.html' '/srv/docs/ir.html' 'ir.html' '/srv/docs/ir/card.css' 'ir/card.css'
+      '/srv/docs/acceptance.md' 'acceptance.md' '/srv/docs/DESIGN.md' 'DESIGN.md'
+      '/srv/robots.txt' 'robots.txt' '/srv/sitemap.xml' 'sitemap.xml'
+      '/omnishell/interpreter/shell.js' '{github:bonisoft3/omnishell}/interpreter/shell.js'
+      '/omnishell/interpreter/chrome.js' '{github:bonisoft3/omnishell}/interpreter/chrome.js'
       '/omnishell/interpreter/screen.js' '{github:bonisoft3/omnishell}/interpreter/screen.js'
-      '/omnishell/interpreter/fragment.js' '{github:bonisoft3/omnishell}/interpreter/fragment.js'
-      '/omnishell/interpreter/data-sync.js'
+      '/omnishell/interpreter/fragment.js'
+      '{github:bonisoft3/omnishell}/interpreter/fragment.js' '/omnishell/interpreter/data-sync.js'
       '{github:bonisoft3/omnishell}/interpreter/data-sync.js' '/omnishell/interpreter/validate.js'
       '{github:bonisoft3/omnishell}/interpreter/validate.js' '/omnishell/interpreter/render.js'
       '{github:bonisoft3/omnishell}/interpreter/render.js' '/omnishell/interpreter/release-plan.js'
-      '{github:bonisoft3/omnishell}/interpreter/release-plan.js' '/omnishell/interpreter/preloads.js'
-      '{github:bonisoft3/omnishell}/interpreter/preloads.js'
-      '/omnishell/interpreter/link-prefetch.js' '{github:bonisoft3/omnishell}/interpreter/link-prefetch.js'
-      '/omnishell/interpreter/markup.js' '{github:bonisoft3/omnishell}/interpreter/markup.js'
-      '/omnishell/interpreter/script-url.js'
+      '{github:bonisoft3/omnishell}/interpreter/release-plan.js'
+      '/omnishell/interpreter/preloads.js' '{github:bonisoft3/omnishell}/interpreter/preloads.js'
+      '/omnishell/interpreter/link-prefetch.js'
+      '{github:bonisoft3/omnishell}/interpreter/link-prefetch.js' '/omnishell/interpreter/markup.js'
+      '{github:bonisoft3/omnishell}/interpreter/markup.js' '/omnishell/interpreter/script-url.js'
       '{github:bonisoft3/omnishell}/interpreter/script-url.js' '/omnishell/interpreter/deferred-boot.js'
-      '{github:bonisoft3/omnishell}/interpreter/deferred-boot.js' '/omnishell/interpreter/host-dom.js'
-      '{github:bonisoft3/omnishell}/interpreter/host-dom.js' '/omnishell/interpreter/hatch.js'
-      '{github:bonisoft3/omnishell}/interpreter/hatch.js'
-      '/omnishell/interpreter/hatch-worker.js' '{github:bonisoft3/omnishell}/interpreter/hatch-worker.js'
-      '/omnishell/interpreter/hatch-presenter.js'
+      '{github:bonisoft3/omnishell}/interpreter/deferred-boot.js'
+      '/omnishell/interpreter/host-dom.js' '{github:bonisoft3/omnishell}/interpreter/host-dom.js'
+      '/omnishell/interpreter/hatch.js' '{github:bonisoft3/omnishell}/interpreter/hatch.js'
+      '/omnishell/interpreter/hatch-worker.js'
+      '{github:bonisoft3/omnishell}/interpreter/hatch-worker.js' '/omnishell/interpreter/hatch-presenter.js'
       '{github:bonisoft3/omnishell}/interpreter/hatch-presenter.js' '/omnishell/interpreter/presenter-realm.js'
-      '{github:bonisoft3/omnishell}/interpreter/presenter-realm.js' '/omnishell/interpreter/presenter.js'
-      '{github:bonisoft3/omnishell}/interpreter/presenter.js'
+      '{github:bonisoft3/omnishell}/interpreter/presenter-realm.js'
+      '/omnishell/interpreter/presenter.js' '{github:bonisoft3/omnishell}/interpreter/presenter.js'
       '/omnishell/interpreter/storybook.js' '{github:bonisoft3/omnishell}/interpreter/storybook.js'
-      '/omnishell/interpreter/jessie.js' '{github:bonisoft3/omnishell}/interpreter/jessie.js'
-      '/omnishell/interpreter/kinetic.js' '{github:bonisoft3/omnishell}/interpreter/kinetic.js'
-      '/omnishell/interpreter/kinetic-milestones.js'
-      '{github:bonisoft3/omnishell}/interpreter/kinetic-milestones.js' '/omnishell/interpreter/kinetic-session.js'
-      '{github:bonisoft3/omnishell}/interpreter/kinetic-session.js'
-      '/omnishell/interpreter/kinetic-sound.js' '{github:bonisoft3/omnishell}/interpreter/kinetic-sound.js'
-      '/omnishell/interpreter/kinetic-mount.js'
+      '/omnishell/interpreter/jessie.js'
+      '{github:bonisoft3/omnishell}/interpreter/jessie.js' '/omnishell/interpreter/kinetic.js'
+      '{github:bonisoft3/omnishell}/interpreter/kinetic.js' '/omnishell/interpreter/kinetic-milestones.js'
+      '{github:bonisoft3/omnishell}/interpreter/kinetic-milestones.js'
+      '/omnishell/interpreter/kinetic-session.js' '{github:bonisoft3/omnishell}/interpreter/kinetic-session.js'
+      '/omnishell/interpreter/kinetic-sound.js'
+      '{github:bonisoft3/omnishell}/interpreter/kinetic-sound.js' '/omnishell/interpreter/kinetic-mount.js'
       '{github:bonisoft3/omnishell}/interpreter/kinetic-mount.js' '/omnishell/interpreter/rtc-channel.js'
       '{github:bonisoft3/omnishell}/interpreter/rtc-channel.js' '/omnishell/interpreter/prng.js'
       '{github:bonisoft3/omnishell}/interpreter/prng.js'
-      '/omnishell/interpreter/vendor/mecha-client.js' '{github:bonisoft3/omnishell}/interpreter/vendor/mecha-client.js'
-      '/omnishell/interpreter/vendor/js-yaml.js'
+      '/omnishell/interpreter/vendor/mecha-client.js'
+      '{github:bonisoft3/omnishell}/interpreter/vendor/mecha-client.js' '/omnishell/interpreter/vendor/js-yaml.js'
       '{github:bonisoft3/omnishell}/interpreter/vendor/js-yaml.js' '/omnishell/interpreter/vendor/ses.umd.min.js'
       '{github:bonisoft3/omnishell}/interpreter/vendor/ses.umd.min.js'
       '/omnishell/interpreter/vendor/morphlex.js' '{github:bonisoft3/omnishell}/interpreter/vendor/morphlex.js'
       '/omnishell/interpreter/vendor/messages.js'
       '{github:bonisoft3/omnishell}/interpreter/vendor/messages.js' '/omnishell/interpreter/vendor/game-inputs.js'
       '{github:bonisoft3/omnishell}/interpreter/vendor/game-inputs.js'
-      '/omnishell/interpreter/vendor/ggrs/ggrs_wasm.js' '{github:bonisoft3/omnishell}/interpreter/vendor/ggrs/ggrs_wasm.js'
-      '/omnishell/interpreter/vendor/ggrs/ggrs_wasm_bg.wasm'
+      '/omnishell/interpreter/vendor/ggrs/ggrs_wasm.js'
+      '{github:bonisoft3/omnishell}/interpreter/vendor/ggrs/ggrs_wasm.js' '/omnishell/interpreter/vendor/ggrs/ggrs_wasm_bg.wasm'
       '{github:bonisoft3/omnishell}/interpreter/vendor/ggrs/ggrs_wasm_bg.wasm'
       '/omnishell/components/wallclock.js' '{github:bonisoft3/omnishell}/components/wallclock.js'
     availability:
@@ -220,6 +241,7 @@ processes:
     - >-
       DOOR_PEERS=127.0.0.1:${CRUD_HTTP_PORT:-15951}
       127.0.0.1:${ELECTRIC_HTTP_PORT:-29624} 127.0.0.1:${AUTH_HTTP_PORT:-13923} 127.0.0.1:${RENDER_HTTP_PORT:-13058}
+      127.0.0.1:${BILLING_HTTP_PORT:-10348}
     - DOOR_PORT=${CADDY_DOOR_PORT:-24894}
     - ELECTRIC_SECRET=${ELECTRIC_SECRET:-dev-electric-secret}
     - HEALTH_PORT=${CADDY_HEALTH_PORT:-21183}
@@ -233,6 +255,8 @@ processes:
     depends_on:
       database:
         condition: process_healthy
+      migrate:
+        condition: process_completed_successfully
       "bayt:httpcheck":
         condition: process_completed_successfully
     entrypoint:
@@ -264,6 +288,8 @@ processes:
     depends_on:
       database:
         condition: process_healthy
+      migrate:
+        condition: process_completed_successfully
       "bayt:httpcheck":
         condition: process_completed_successfully
     entrypoint:
@@ -291,3 +317,58 @@ processes:
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 24
+  billing:
+    depends_on:
+      billing-broker:
+        condition: process_healthy
+      crud:
+        condition: process_healthy
+      migrate:
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - sh
+    - -c
+    - exec deno run --no-config --allow-net --allow-env billing/service.ts
+    availability:
+      exit_on_skipped: true
+    environment:
+    - BILLING_BROKER=http://localhost:28463
+    - BILLING_BROKER_INTERNAL=http://localhost:28463
+    - >-
+      BILLING_DOCUMENT={"owner":"S9bB9PZ1ZHcfD71LF-4WN9iCUsUrDwIdFOzANKNDWYA","plans":{"pro":{"name":"Minesweeper Pro","interval":"month","prices":{"usd":299,"brl":990}}}}
+    - BILLING_FLAGS=
+    - BILLING_GRANTS=[]
+    - BILLING_PORT=${BILLING_HTTP_PORT:-10348}
+    - CRUD_URL=http://127.0.0.1:${CRUD_HTTP_PORT:-15951}
+    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}
+    - >-
+      SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
+  billing-broker:
+    depends_on:
+      "bayt:httpcheck":
+        condition: process_completed_successfully
+    entrypoint:
+    - mise
+    - x
+    - --
+    - sh
+    - -c
+    - >-
+      exec deno run --no-config --allow-net --allow-env
+      --unsafely-ignore-certificate-errors=localhost billing/broker/main.ts
+    availability:
+      exit_on_skipped: true
+    environment:
+    - BILLING_FAKE_TENANTS=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}
+    - BROKER_ISSUER=http://localhost:28463
+    - BROKER_SECRET=pronto-billing-local-launch-secret-000000
+    - PORT=28463
+    readiness_probe:
+      exec:
+        command: bayt microcheck httpcheck http://127.0.0.1:28463/health
+      period_seconds: 1
+      timeout_seconds: 5
+      failure_threshold: 60

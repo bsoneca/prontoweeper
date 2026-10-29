@@ -29,3 +29,12 @@ Metal: envs.Metal & {
 }
 
 metalManifests: (schema.#BuildManifests & {release: App, env: Metal}).manifests
+
+// The billing service sells through the operator's broker (connect stripe, docs/intents.md).
+App: services: billing: {
+	port: 8688
+	env: {
+		BILLING_BROKER:          "https://billing.bonkchess.com"
+		BILLING_BROKER_INTERNAL: "https://billing.bonkchess.com"
+	}
+}

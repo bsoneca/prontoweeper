@@ -233,6 +233,97 @@
     }
   },
   "entities": {
+    "Subscription": {
+      "name": "Subscription",
+      "ir": "Subscription",
+      "read": "eager",
+      "table": "subscription",
+      "id": "0x8c41a02eca805674",
+      "access": {
+        "scope": "private",
+        "owner": "owner_id"
+      },
+      "durability": "live",
+      "fields": [
+        {
+          "name": "id",
+          "ordinal": 1,
+          "retired": false,
+          "type": "text",
+          "pk": true,
+          "required": true,
+          "cel": "this.size() <= 80"
+        },
+        {
+          "name": "plan",
+          "ordinal": 2,
+          "retired": false,
+          "type": "text",
+          "pk": false,
+          "required": true,
+          "cel": "this.size() <= 32"
+        },
+        {
+          "name": "active",
+          "ordinal": 3,
+          "retired": false,
+          "type": "bool",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "through",
+          "ordinal": 4,
+          "retired": false,
+          "type": "timestamp",
+          "pk": false,
+          "required": true
+        },
+        {
+          "name": "ver",
+          "ordinal": 5,
+          "retired": false,
+          "type": "int64",
+          "pk": false,
+          "required": true,
+          "cel": "this >= 0"
+        },
+        {
+          "name": "owner_id",
+          "ordinal": 6,
+          "retired": false,
+          "type": "uuid",
+          "pk": false,
+          "required": true,
+          "default": "auth_uid()"
+        }
+      ],
+      "seed": [],
+      "level": "compensable",
+      "server": true,
+      "writers": [],
+      "cel": {
+        "checks": {
+          "id": "char_length(id) <= 80",
+          "plan": "char_length(plan) <= 32",
+          "ver": "ver >= 0"
+        },
+        "enums": {},
+        "bounds": {
+          "id": {
+            "sizeMax": 80
+          },
+          "plan": {
+            "sizeMax": 32
+          },
+          "ver": {
+            "intMin": 0
+          }
+        }
+      },
+      "uniques": [],
+      "validations": {}
+    },
     "Cell": {
       "name": "Cell",
       "ir": "Cell",
@@ -7565,7 +7656,14 @@
     }
   },
   "hybrids": {},
-  "hatches": {},
+  "hatches": {
+    "billing": {
+      "forms": {},
+      "ir": "billing",
+      "kind": "container",
+      "note": "pronto-billing's service: publishes the plans, takes the broker's entitlements into the database, and sends an account to pay or to manage what it pays for"
+    }
+  },
   "rawMigrations": [
     {
       "name": "010_electric_login.sql",

@@ -1,0 +1,292 @@
+{
+  "_generated_from": "bayt.cue (do not edit)",
+  "compose": {
+    "up": false,
+    "manual": false,
+    "environment": {
+      "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}",
+      "BILLING_BROKER": "http://localhost:28463",
+      "BILLING_BROKER_INTERNAL": "http://localhost:28463",
+      "BILLING_DOCUMENT": "{\"owner\":\"S9bB9PZ1ZHcfD71LF-4WN9iCUsUrDwIdFOzANKNDWYA\",\"plans\":{\"pro\":{\"name\":\"Minesweeper Pro\",\"interval\":\"month\",\"prices\":{\"usd\":299,\"brl\":990}}}}",
+      "BILLING_GRANTS": "[]",
+      "BILLING_FLAGS": "",
+      "CRUD_URL": "http://crud:3000",
+      "SERVICE_JWT": "${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}"
+    },
+    "ports": [],
+    "volumes": [],
+    "depends_on": {
+      "prontoweeper-crud": {
+        "condition": "service_healthy"
+      },
+      "prontoweeper-migrate": {
+        "condition": "service_completed_successfully"
+      },
+      "prontoweeper-billing-broker": {
+        "condition": "service_healthy"
+      }
+    },
+    "networks": {
+      "default": {
+        "aliases": [
+          "billing"
+        ]
+      }
+    },
+    "restart": "on-failure"
+  },
+  "dockerfile": {
+    "preamble": [],
+    "preambleCopyContexts": [],
+    "from": {
+      "name": "denoland/deno:alpine-2.5.0"
+    },
+    "add": [],
+    "mounts": [],
+    "secrets": {},
+    "extra_hosts": [],
+    "epilogue": [],
+    "copy": [
+      {
+        "from": null,
+        "srcs": [
+          "billing/service.ts",
+          "billing/entitlement.ts",
+          "billing/shared.ts"
+        ],
+        "dst": "/app/billing/",
+        "link": true,
+        "parents": false,
+        "exclude": []
+      }
+    ],
+    "healthcheck": null,
+    "expose": [],
+    "entrypoint": null,
+    "incremental": false,
+    "cmd": null
+  },
+  "entrypoint": {
+    "do": "exec deno run --no-config --allow-net --allow-env billing/service.ts",
+    "dockerfile": {
+      "do": "deno run --no-config --allow-net --allow-env /app/billing/service.ts",
+      "shell": "exec"
+    },
+    "shell": "sh",
+    "env": {
+      "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}",
+      "BILLING_BROKER": "http://localhost:28463",
+      "BILLING_BROKER_INTERNAL": "http://localhost:28463",
+      "BILLING_DOCUMENT": "{\"owner\":\"S9bB9PZ1ZHcfD71LF-4WN9iCUsUrDwIdFOzANKNDWYA\",\"plans\":{\"pro\":{\"name\":\"Minesweeper Pro\",\"interval\":\"month\",\"prices\":{\"usd\":299,\"brl\":990}}}}",
+      "BILLING_GRANTS": "[]",
+      "BILLING_FLAGS": "",
+      "CRUD_URL": "http://crud:3000",
+      "SERVICE_JWT": "${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}"
+    },
+    "after": {
+      "billing-broker": "healthy",
+      "crud": "healthy",
+      "migrate": "completed"
+    },
+    "host": true
+  },
+  "expose": {
+    "http": {
+      "port": 8688,
+      "env": "BILLING_PORT"
+    }
+  },
+  "name": "billing",
+  "process-compose": {
+    "activate": "mise x --"
+  },
+  "project": "prontoweeper",
+  "dir": ".",
+  "activate": "mise x --",
+  "srcs": {
+    "globs": [
+      "billing/*.ts",
+      "billing/broker/*.ts"
+    ],
+    "exclude": []
+  },
+  "outs": {
+    "globs": [],
+    "exclude": []
+  },
+  "state": {
+    "globs": []
+  },
+  "env": {},
+  "synthetics": {
+    "bayt": {
+      "name": "billing_bayt",
+      "project": "prontoweeper",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          ".bayt/compose.billing.yaml",
+          ".bayt/Dockerfile.billing",
+          ".bayt/bayt.billing.json",
+          ".bayt/Taskfile.yml",
+          ".bayt/Taskfile.bayt.yml",
+          ".bayt/process-compose.yaml"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.billing.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.billing-broker.yaml"
+      ]
+    },
+    "outs": {
+      "name": "billing_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.billing.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.billing-broker.yaml"
+      ]
+    },
+    "srcs": {
+      "name": "billing_srcs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "activate": "",
+      "srcs": {
+        "globs": [],
+        "exclude": []
+      },
+      "outs": {
+        "globs": [
+          "billing/*.ts",
+          "billing/broker/*.ts"
+        ],
+        "exclude": []
+      },
+      "env": {},
+      "visibility": "internal",
+      "deps": [],
+      "transitiveDeps": [
+        "crud_outs_srcs",
+        "migrate_outs_srcs",
+        "billing-broker_outs_srcs"
+      ],
+      "transitiveCrossDeps": [],
+      "chainedDeps": [],
+      "cmds": [],
+      "cache": {
+        "full": false,
+        "similar": false
+      },
+      "upClosure": [
+        "./.bayt/compose.billing.yaml",
+        "./.bayt/compose.crud.yaml",
+        "./.bayt/compose.database.yaml",
+        "./.bayt/compose.migrate.yaml",
+        "./.bayt/compose.billing-broker.yaml"
+      ]
+    }
+  },
+  "visibility": "internal",
+  "emitsSrcs": true,
+  "deps": [
+    "crud_outs",
+    "migrate_outs",
+    "billing-broker_outs"
+  ],
+  "sameProjectDeps": [
+    "crud_outs",
+    "migrate_outs",
+    "billing-broker_outs"
+  ],
+  "transitiveDeps": [
+    "crud_outs",
+    "migrate_outs",
+    "billing-broker_outs"
+  ],
+  "transitiveCrossDeps": [],
+  "upClosure": [
+    "./.bayt/compose.billing.yaml",
+    "./.bayt/compose.crud.yaml",
+    "./.bayt/compose.database.yaml",
+    "./.bayt/compose.migrate.yaml",
+    "./.bayt/compose.billing-broker.yaml"
+  ],
+  "chainedDeps": [
+    {
+      "name": "crud_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "migrate_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    },
+    {
+      "name": "billing-broker_outs",
+      "project": "prontoweeper",
+      "dir": ".",
+      "outs": {
+        "globs": [],
+        "exclude": []
+      }
+    }
+  ],
+  "cmds": [],
+  "cache": {
+    "full": false,
+    "similar": false
+  }
+}

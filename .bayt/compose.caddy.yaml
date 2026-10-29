@@ -116,7 +116,7 @@ services:
       ELECTRIC_SECRET: ${ELECTRIC_SECRET:-dev-electric-secret}
       ORIGIN: ${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-24894}}
       DOOR_ORIGIN: ${ORIGIN:-https://localhost:8443}
-      DOOR_PEERS: crud:3000 electric:3000 auth:9999 render:8090
+      DOOR_PEERS: crud:3000 electric:3000 auth:9999 render:8090 billing:8688
       DOOR_PORT: "8443"
       HEALTH_PORT: "8080"
     healthcheck:

@@ -1,0 +1,32 @@
+# generated from bayt.cue — do not edit
+FROM denoland/deno:alpine-2.5.0 AS billing
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY billing/service.ts billing/entitlement.ts billing/shared.ts /app/billing/
+COPY --parents billing/*.ts billing/broker/*.ts ./
+COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.billing.json ./.bayt/
+EXPOSE 8688
+ENTRYPOINT ["deno","run","--no-config","--allow-net","--allow-env","/app/billing/service.ts"]
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS billing_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents billing/*.ts billing/broker/*.ts ./
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS billing_srcs
+COPY --from=billing_ctxs /monorepo /monorepo
+
+FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS billing_bayt_ctxs
+ARG BAYT_DIR
+WORKDIR /monorepo/${BAYT_DIR}
+COPY --parents .bayt/compose.billing.yaml .bayt/Dockerfile.billing .bayt/bayt.billing.json .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/process-compose.yaml ./
+COPY --from=prontoweeper-crud_bayt /monorepo /monorepo
+COPY --from=prontoweeper-migrate_bayt /monorepo /monorepo
+COPY --from=prontoweeper-billing-broker_bayt /monorepo /monorepo
+ARG SOURCE_DATE_EPOCH
+ARG BAYT_CLAMP=1
+RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi
+FROM scratch AS billing_bayt
+COPY --from=billing_bayt_ctxs /monorepo /monorepo

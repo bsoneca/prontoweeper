@@ -42,10 +42,10 @@
   "artifact": [
     {"path":"program.cue","sha256":"4cfae647ec547d7541e463d1ff55d347ed77a8bae0fedda102f02ac19fe50839","derived":false},
     {"path":"DESIGN.md","sha256":"d63f976da28882e771bdda8717419c74485b90afd0489074504988090c33a615","derived":false},
-    {"path":"ir.html","sha256":"e929d0d551772d31ddaa093e01f6e4872175eab9543b9bcc9b7d202705f10205","derived":false},
+    {"path":"ir.html","sha256":"d89aef0fb88a355a943998454c0b1b1e938f759821f8636356784b839c6945e6","derived":false},
     {"path":"acceptance.md","sha256":"9df0e4ddf17ce702b84f0894d3e4f07e3ab679430f8e7a98d2a4496f0c072fe2","derived":false},
-    {"path":".pronto/cel.json","sha256":"1aa6a86aad6200a0a1519915353b601a9a6c048c02687eff4f5a06eb3eeec2c7","derived":true},
-    {"path":"program_cel.cue","sha256":"a096d823492d64b7115f13cfa042b20f090385d4fafd90c6320692939ec28d66","derived":true},
+    {"path":".pronto/cel.json","sha256":"0dc227320560751ac2748af9c6a561b4c7bd9df2e3f684c9f29e8c9fc352b802","derived":true},
+    {"path":"program_cel.cue","sha256":"b9d8dfab2848715a01aa9859c32042e5e607714fbfc718c1d252e0e765a0e8a6","derived":true},
     {"path":"program_derived.cue","sha256":"11fa6f2b5e374e81712c8499262180c1dc014c9e49fe53485325533a7f0afe79","derived":true},
     {"path":"shell/screens/beginner.css","sha256":"8e74290098372610dfcb87a41db7ad51d8906c735bb5341f898f936a4a42ed7b","derived":false},
     {"path":"shell/screens/expert.css","sha256":"6c5697db61ee62cd73ab594567dcf9f9faee8dee6a89f2eecf32105b0fdeac02","derived":false},
@@ -79,11 +79,16 @@
     {"cel":"this.matches('^[0-9]{1,10}$')"},
     {"cel":"this.matches('^[0-9]{3}$')"},
     {"cel":"this.matches('^[bie][0-9]{4}$')"},
+    {"cel":"this.size() <= 32"},
+    {"cel":"this.size() <= 80"},
     {"cel":"this.size() > 0"},
     {"cel":"this.size() >= 1 && this.size() <= 20"},
     {"cel":"this.size() >= 1 && this.size() <= 32"}
   ],
   "cel_site": [
+    {"entity":"Subscription","col":"id","cel":"this.size() <= 80"},
+    {"entity":"Subscription","col":"plan","cel":"this.size() <= 32"},
+    {"entity":"Subscription","col":"ver","cel":"this >= 0"},
     {"entity":"Cell","col":"id","cel":"this.matches('^[bie][0-9]{4}$')"},
     {"entity":"Cell","col":"lv","cel":"this in ['b', 'i', 'e']"},
     {"entity":"Cell","col":"mine","cel":"this in ['no', 'yes']"},
@@ -179,6 +184,7 @@
     {"rung":"ir","kind":"entity","id":"Best","where":null,"owed":null},
     {"rung":"ir","kind":"entity","id":"Score","where":null,"owed":null},
     {"rung":"ir","kind":"entity","id":"AppUser","where":null,"owed":null},
+    {"rung":"ir","kind":"entity","id":"Subscription","where":null,"owed":null},
     {"rung":"ir","kind":"screen","id":"beginner","where":null,"owed":null},
     {"rung":"ir","kind":"screen","id":"intermediate","where":null,"owed":null},
     {"rung":"ir","kind":"screen","id":"expert","where":null,"owed":null},
@@ -192,6 +198,8 @@
     {"rung":"ir","kind":"decision","id":"decision-score-writes","where":null,"owed":null},
     {"rung":"ir","kind":"decision","id":"decision-hosting","where":null,"owed":null},
     {"rung":"ir","kind":"decision","id":"decision-durability","where":null,"owed":null},
+    {"rung":"ir","kind":"hatch","id":"billing","where":null,"owed":null},
+    {"rung":"program","kind":"entity","id":"Subscription","where":"entities.Subscription","owed":true},
     {"rung":"program","kind":"entity","id":"Cell","where":"entities.Cell","owed":false},
     {"rung":"program","kind":"entity","id":"Game","where":"entities.Game","owed":false},
     {"rung":"program","kind":"entity","id":"Best","where":"entities.Best","owed":true},
@@ -208,6 +216,7 @@
     {"rung":"program","kind":"decision","id":"decision-guests","where":"decisions.decision-guests","owed":true},
     {"rung":"program","kind":"decision","id":"decision-score-writes","where":"decisions.decision-score-writes","owed":true},
     {"rung":"program","kind":"decision","id":"decision-hosting","where":"decisions.decision-hosting","owed":true},
+    {"rung":"program","kind":"hatch","id":"billing","where":"hatches.billing","owed":true},
     {"rung":"program","kind":"state","id":"beginner-populated","where":"screens.beginner.states.populated","owed":true},
     {"rung":"program","kind":"state","id":"expert-populated","where":"screens.expert.states.populated","owed":true},
     {"rung":"program","kind":"state","id":"halloffame-populated","where":"screens.halloffame.states.populated","owed":true},
@@ -485,6 +494,7 @@
 
   ],
   "entity": [
+    {"name":"Subscription","table":"subscription","durability":"live"},
     {"name":"Cell","table":"cell","durability":"tab"},
     {"name":"Game","table":"game","durability":"tab"},
     {"name":"Best","table":"best","durability":"device"},
@@ -545,6 +555,12 @@
     {"reason":"pending"}
   ],
   "field": [
+    {"entity":"Subscription","name":"id","type":"text","cel":"this.size() <= 80"},
+    {"entity":"Subscription","name":"plan","type":"text","cel":"this.size() <= 32"},
+    {"entity":"Subscription","name":"active","type":"bool","cel":null},
+    {"entity":"Subscription","name":"through","type":"timestamp","cel":null},
+    {"entity":"Subscription","name":"ver","type":"int64","cel":"this >= 0"},
+    {"entity":"Subscription","name":"owner_id","type":"uuid","cel":null},
     {"entity":"Cell","name":"id","type":"string","cel":"this.matches('^[bie][0-9]{4}$')"},
     {"entity":"Cell","name":"lv","type":"string","cel":"this in ['b', 'i', 'e']"},
     {"entity":"Cell","name":"mine","type":"string","cel":"this in ['no', 'yes']"},
@@ -944,6 +960,7 @@
     {"id":"intermediate","route":"/intermediate","where":"screens.intermediate"}
   ],
   "read_mode": [
+    {"entity":"Subscription","table":"subscription","mode":"eager","reason":"Subscription is private, and a view cannot restate its visibility"},
     {"entity":"AppUser","table":"app_user","mode":"eager","reason":"AppUser is internal, and a view cannot restate its visibility"},
     {"entity":"Score","table":"score","mode":"lazy","reason":"each active query demands its own subset or complete snapshot"}
   ],

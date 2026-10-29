@@ -6,5 +6,6 @@ tasks:
     deps:
     - "::bayt:database"
     - "::bayt:setup"
+    - "::bayt:migrate"
     run: once
 version: "3"

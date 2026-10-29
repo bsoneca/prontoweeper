@@ -149,6 +149,10 @@ say:
         cmds:
         - use: ./auto-bayt.nu
           do: auto-bayt
+      billing:
+        priority: 3
+        cmds:
+        - do: use ./billing/billing.nu; billing route
   setup:
     rulemap:
       builtin:

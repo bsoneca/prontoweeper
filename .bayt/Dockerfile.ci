@@ -169,6 +169,7 @@ COPY --from=prontoweeper-ci-visual_bayt /monorepo /monorepo
 COPY --from=prontoweeper-ci-replay_bayt /monorepo /monorepo
 COPY --from=prontoweeper-database_bayt /monorepo /monorepo
 COPY --from=prontoweeper-setup_bayt /monorepo /monorepo
+COPY --from=prontoweeper-migrate_bayt /monorepo /monorepo
 ARG SOURCE_DATE_EPOCH
 ARG BAYT_CLAMP=1
 RUN if [ "${BAYT_CLAMP:-1}" != 0 ]; then find /monorepo/${BAYT_DIR} -exec touch -hd @${SOURCE_DATE_EPOCH:-0} {} + && { d=$(dirname /monorepo/${BAYT_DIR}); while [ "$d" != / ]; do touch -hd @${SOURCE_DATE_EPOCH:-0} "$d" || exit; d=$(dirname "$d"); done; }; fi

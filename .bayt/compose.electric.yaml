@@ -4,6 +4,7 @@ services:
     build:
       additional_contexts:
         prontoweeper-database: service:prontoweeper-database
+        prontoweeper-migrate: service:prontoweeper-migrate
       context: ..
       dockerfile: .bayt/Dockerfile.electric
       target: electric
@@ -18,6 +19,8 @@ services:
       prontoweeper-database:
         condition: service_healthy
         restart: true
+      prontoweeper-migrate:
+        condition: service_completed_successfully
     environment:
       DATABASE_URL: >-
         postgresql://electric:${ELECTRIC_PASSWORD:-dev-electric-password}@database:5432/${POSTGRES_DB:-prontoweeper}?sslmode=disable
@@ -44,6 +47,7 @@ services:
     build:
       additional_contexts:
         prontoweeper-database_bayt: service:prontoweeper-database_bayt
+        prontoweeper-migrate_bayt: service:prontoweeper-migrate_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.electric
       target: electric_bayt

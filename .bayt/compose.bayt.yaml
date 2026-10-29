@@ -30,11 +30,17 @@ include:
   required: false
 - path: ./compose.database.yaml
   required: false
+- path: ./compose.migrate.yaml
+  required: false
 - path: ./compose.caddy.yaml
   required: false
 - path: ./compose.crud.yaml
   required: false
 - path: ./compose.electric.yaml
+  required: false
+- path: ./compose.billing.yaml
+  required: false
+- path: ./compose.billing-broker.yaml
   required: false
 - path: ../monorepo/${MONOREPO_COMPOSE_MODE:-docker-image}.yaml
   required: false

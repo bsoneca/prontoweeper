@@ -4,6 +4,7 @@ services:
     build:
       additional_contexts:
         prontoweeper-database: service:prontoweeper-database
+        prontoweeper-migrate: service:prontoweeper-migrate
       context: ..
       dockerfile: .bayt/Dockerfile.crud
       target: crud
@@ -18,6 +19,8 @@ services:
       prontoweeper-database:
         condition: service_healthy
         restart: true
+      prontoweeper-migrate:
+        condition: service_completed_successfully
     environment:
       PGRST_DB_URI: >-
         postgres://authenticator:${AUTHENTICATOR_PASSWORD:-dev-authenticator-password}@database:5432/${POSTGRES_DB:-prontoweeper}
@@ -47,6 +50,7 @@ services:
     build:
       additional_contexts:
         prontoweeper-database_bayt: service:prontoweeper-database_bayt
+        prontoweeper-migrate_bayt: service:prontoweeper-migrate_bayt
       context: ..
       dockerfile: .bayt/Dockerfile.crud
       target: crud_bayt
