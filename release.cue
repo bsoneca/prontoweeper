@@ -30,6 +30,10 @@ Metal: envs.Metal & {
 
 metalManifests: (schema.#BuildManifests & {release: App, env: Metal}).manifests
 
+// Where connect stripe and release keep its author's payout secret: a release on a cluster names
+// no Google Cloud project of its own, and pronto-billing has no default (its docs/intents.md).
+billingSecretsProject: "brawl-chess"
+
 // The billing service sells through the operator's broker (connect stripe, docs/intents.md).
 App: services: billing: {
 	port: 8688
