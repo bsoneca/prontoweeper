@@ -109,7 +109,6 @@ url = "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.
 url_api = "https://api.github.com/repos/FiloSottile/mkcert/releases/assets/63709955"
 
 [tools."github:FiloSottile/mkcert"."platforms.macos-arm64"]
-checksum = "blake3:18a249f7661813367d21569c610e4a4a1445f76aaeb7bb90121fb4780f7b1eb7"
 url = "https://github.com/FiloSottile/mkcert/releases/download/v1.4.4/mkcert-v1.4.4-darwin-arm64"
 url_api = "https://api.github.com/repos/FiloSottile/mkcert/releases/assets/63709954"
 
@@ -336,43 +335,43 @@ url = "https://github.com/bonisoft3/omnishell/releases/download/v0.20.2/omnishel
 url_api = "https://api.github.com/repos/bonisoft3/omnishell/releases/assets/684741093"
 
 [[tools."github:bonisoft3/pronto"]]
-version = "0.24.1-gcp.27"
+version = "0.24.1-gcp.37"
 backend = "github:bonisoft3/pronto"
 
 [tools."github:bonisoft3/pronto"."platforms.linux-arm64"]
-checksum = "sha256:efbd0f916b0ea8a32dc4e2938f810f9b21a0a78ae7d2890a968a6f35e52a48cb"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.27/pronto-linux-arm64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/689314214"
+checksum = "sha256:a35e50fcd938517a810e62cc124895638797d8b4f2f686eabe7d6c5f1f22a4b3"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.37/pronto-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/696586919"
 
 [tools."github:bonisoft3/pronto"."platforms.linux-arm64-musl"]
-checksum = "sha256:efbd0f916b0ea8a32dc4e2938f810f9b21a0a78ae7d2890a968a6f35e52a48cb"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.27/pronto-linux-arm64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/689314214"
+checksum = "sha256:a35e50fcd938517a810e62cc124895638797d8b4f2f686eabe7d6c5f1f22a4b3"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.37/pronto-linux-arm64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/696586919"
 
 [tools."github:bonisoft3/pronto"."platforms.linux-x64"]
-checksum = "sha256:efbd0f916b0ea8a32dc4e2938f810f9b21a0a78ae7d2890a968a6f35e52a48cb"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.27/pronto-linux-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/689314213"
+checksum = "sha256:a35e50fcd938517a810e62cc124895638797d8b4f2f686eabe7d6c5f1f22a4b3"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.37/pronto-linux-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/696586917"
 
 [tools."github:bonisoft3/pronto"."platforms.linux-x64-musl"]
-checksum = "sha256:efbd0f916b0ea8a32dc4e2938f810f9b21a0a78ae7d2890a968a6f35e52a48cb"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.27/pronto-linux-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/689314213"
+checksum = "sha256:a35e50fcd938517a810e62cc124895638797d8b4f2f686eabe7d6c5f1f22a4b3"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.37/pronto-linux-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/696586917"
 
 [tools."github:bonisoft3/pronto"."platforms.macos-arm64"]
-checksum = "sha256:efbd0f916b0ea8a32dc4e2938f810f9b21a0a78ae7d2890a968a6f35e52a48cb"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.27/pronto-macos-arm64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/689314212"
+checksum = "sha256:a35e50fcd938517a810e62cc124895638797d8b4f2f686eabe7d6c5f1f22a4b3"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.37/pronto-macos-arm64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/696586918"
 
 [tools."github:bonisoft3/pronto"."platforms.macos-x64"]
-checksum = "sha256:efbd0f916b0ea8a32dc4e2938f810f9b21a0a78ae7d2890a968a6f35e52a48cb"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.27/pronto-macos-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/689314211"
+checksum = "sha256:a35e50fcd938517a810e62cc124895638797d8b4f2f686eabe7d6c5f1f22a4b3"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.37/pronto-macos-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/696586916"
 
 [tools."github:bonisoft3/pronto"."platforms.windows-x64"]
-checksum = "sha256:efbd0f916b0ea8a32dc4e2938f810f9b21a0a78ae7d2890a968a6f35e52a48cb"
-url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.27/pronto-windows-x64.tar.gz"
-url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/689314331"
+checksum = "sha256:a35e50fcd938517a810e62cc124895638797d8b4f2f686eabe7d6c5f1f22a4b3"
+url = "https://github.com/bsoneca/pronto-fork/releases/download/v0.24.1-gcp.37/pronto-windows-x64.tar.gz"
+url_api = "https://api.github.com/repos/bsoneca/pronto-fork/releases/assets/696586945"
 
 [[tools."github:bonisoft3/sayt"]]
 version = "0.45.1"
@@ -595,7 +594,7 @@ url = "https://github.com/denoland/deno/releases/download/v2.9.7/deno-x86_64-pc-
 url_api = "https://api.github.com/repos/denoland/deno/releases/assets/568431369"
 
 [[tools."github:go-task/task"]]
-version = "v3.54.0"
+version = "3.54.0"
 backend = "github:go-task/task"
 
 [tools."github:go-task/task"."platforms.linux-arm64"]
@@ -858,32 +857,25 @@ version = "1.5.6"
 backend = "http:duckdb"
 
 [tools."http:duckdb"."platforms.linux-arm64"]
-checksum = "sha256:c544e92c9b7c31fc53c2139802cabd8e2d1b2b3e3f933117f31611239c1402db"
 url = "https://github.com/duckdb/duckdb/releases/download/v1.5.6/duckdb_cli-linux-arm64.zip"
 
 [tools."http:duckdb"."platforms.linux-arm64-musl"]
-checksum = "sha256:c544e92c9b7c31fc53c2139802cabd8e2d1b2b3e3f933117f31611239c1402db"
 url = "https://github.com/duckdb/duckdb/releases/download/v1.5.6/duckdb_cli-linux-arm64.zip"
 
 [tools."http:duckdb"."platforms.linux-x64"]
-checksum = "sha256:6e89deac1ebbc36eed0291caf8b567b030c7b86ac35998f71854e22b3c5d5e2f"
 url = "https://github.com/duckdb/duckdb/releases/download/v1.5.6/duckdb_cli-linux-amd64.zip"
 
 [tools."http:duckdb"."platforms.linux-x64-musl"]
-checksum = "sha256:6e89deac1ebbc36eed0291caf8b567b030c7b86ac35998f71854e22b3c5d5e2f"
 url = "https://github.com/duckdb/duckdb/releases/download/v1.5.6/duckdb_cli-linux-amd64.zip"
 
 [tools."http:duckdb"."platforms.macos-arm64"]
-checksum = "sha256:8e0f6825653f8d057922e6147db920bebf072cb41f4b041fd35521c18d7d126e"
 url = "https://github.com/duckdb/duckdb/releases/download/v1.5.6/duckdb_cli-osx-arm64.zip"
 
 [tools."http:duckdb"."platforms.macos-x64"]
-checksum = "sha256:ae74c8cd74304bde1d92d941aca37bc72084ee8daa5660913819d8a9e9d29331"
 url = "https://github.com/duckdb/duckdb/releases/download/v1.5.6/duckdb_cli-osx-amd64.zip"
 
 [tools."http:duckdb"."platforms.windows-arm64"]
 url = "https://github.com/duckdb/duckdb/releases/download/v1.5.6/duckdb_cli-windows-arm64.zip"
 
 [tools."http:duckdb"."platforms.windows-x64"]
-checksum = "sha256:798eae475d07c645ff3b914f7b0e676d06502b5412dd7552638fafed81f9e916"
 url = "https://github.com/duckdb/duckdb/releases/download/v1.5.6/duckdb_cli-windows-amd64.zip"
