@@ -7,7 +7,7 @@ deps: {
 		v: "v0.66.1"
 	}
 	"github.com/bonisoft3/mecha@v0": {
-		v: "v0.18.1-host.3"
+		v: "v0.18.1-host.5"
 	}
 	"github.com/bonisoft3/omnishell@v0": {
 		v: "v0.20.3"
