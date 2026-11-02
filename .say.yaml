@@ -12,7 +12,7 @@ say:
         priority: -1
         stop: true
         cmds:
-          - do: 'use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); run-mise exec -- env MISE_LOCKED=0 sh -c "bash \"$(mise where github:bonisoft3/mecha)\"/services/electric/host.sh build 1.8.1 0f404200402f918a4b1596bc5c8a53479a435349 29.0.2 1.20.2-otp-29"; run-mise exec -- env MISE_LOCKED=0 deno run -A --config ($pronto | path join deno.json) ($pronto | path join integrate-local.ts) . --omnishell (run-mise where github:bonisoft3/omnishell | str trim) --settle 50000'
+          - do: 'use tools.nu [run-mise]; let pronto = (run-mise where github:bonisoft3/pronto | str trim); if (''tests/slot.ts'' | path exists) and ($env.STACK_SLOT? | is-empty) { run-mise exec -- deno run -A tests/slot.ts ./saytw integrate@local } else { run-mise exec -- env MISE_LOCKED=0 sh -c "bash \"$(mise where github:bonisoft3/mecha)\"/services/electric/host.sh build 1.8.1 0f404200402f918a4b1596bc5c8a53479a435349 29.0.2 1.20.2-otp-29"; run-mise exec -- env MISE_LOCKED=0 deno run -A --config ($pronto | path join deno.json) ($pronto | path join integrate-local.ts) . --omnishell (run-mise where github:bonisoft3/omnishell | str trim) --settle 50000 }'
   launch:
     rulemap:
       builtin:

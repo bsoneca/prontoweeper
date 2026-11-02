@@ -317,6 +317,8 @@ processes:
       period_seconds: 5
       timeout_seconds: 5
       failure_threshold: 24
+    shutdown:
+      timeout_seconds: 2
   billing:
     depends_on:
       billing-broker:

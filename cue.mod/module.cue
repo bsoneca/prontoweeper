@@ -7,13 +7,13 @@ deps: {
 		v: "v0.66.1"
 	}
 	"github.com/bonisoft3/mecha@v0": {
-		v: "v0.18.1-host.5"
+		v: "v0.18.1-host.6"
 	}
 	"github.com/bonisoft3/omnishell@v0": {
 		v: "v0.20.3"
 	}
 	"github.com/bonisoft3/pronto@v0": {
-		v: "v0.24.1-gcp.43"
+		v: "v0.24.1-gcp.44"
 	}
 	"github.com/bonisoft3/sayt@v0": {
 		v: "v0.45.1"

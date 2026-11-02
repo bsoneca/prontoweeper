@@ -142,7 +142,7 @@ export const claim = async (pid = Deno.pid, what = Deno.args.join(" ")): Promise
       say(`slot ${n}: ${url}, ports ${door}-${door + 99}, from ${copy}`);
       // mise reads the copy's .mise.toml, which it trusts as the checkout's.
       const trusted = [Deno.env.get("MISE_TRUSTED_CONFIG_PATHS"), copy].filter(Boolean).join(":");
-      const env = { ...Object.fromEntries(Object.entries(ports).map(([k, v]) => [k, String(v)])), ORIGIN: url, APP_URL: url, STACK_SLOT: String(n), MISE_TRUSTED_CONFIG_PATHS: trusted };
+      const env = { ...Object.fromEntries(Object.entries(ports).map(([k, v]) => [k, String(v)])), ORIGIN: url, APP_URL: url, STACK_SLOT: String(n), PRONTO_GATE_DIR: app, MISE_TRUSTED_CONFIG_PATHS: trusted };
       const release = () => { try { Deno.removeSync(`${dir}/pid`); } catch { /* gone */ } };
       return { n, dir: copy, door, env, release };
     }

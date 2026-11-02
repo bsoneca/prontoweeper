@@ -122,7 +122,10 @@
   },
   "name": "electric",
   "process-compose": {
-    "activate": "mise x --"
+    "activate": "mise x --",
+    "shutdown": {
+      "timeout_seconds": 2
+    }
   },
   "project": "prontoweeper",
   "dir": ".",
