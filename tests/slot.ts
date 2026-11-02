@@ -17,12 +17,18 @@
 // (pronto's integrate-local.ts reads that file), a launch (below), verify@local
 // (tests/rehearse.ts, which takes a slot of its own).
 //
-// The pool: at most STACK_SLOTS stacks at once on the machine, of every app (3 unless set; why 3,
-// apps/brawl-chess/README.md's "Several stacks at once"), held as <pool>/slot-<n>/pid
-// (STACK_POOL, else /tmp/pronto-stacks). A stack on the app's own ports (a plain launch@local)
-// is outside the pool and holds no slot. A slot is taken when its holder is gone and
-// nothing answers on its ports (a stack orphaned by a killed holder keeps its slot until it is
-// down); STACK_SLOT=<n> asks for one by number and waits for it.
+// The pool: the machine's cores, shared by every app's stacks, as a budget of weight
+// (STACK_BUDGET, else the cores less 2: 16 on an 18-core Mac). A holder declares its weight, the
+// cores it keeps busy: a plain stack (a launch, integrate@local, the scenarios once) 1, a
+// rehearsal (verify@local: three throttled pages, at their bursts, and the stack) 9, so two never
+// overlap within the default budget; STACK_WEIGHT=<n> names another.
+// One is admitted while the weights held, its own added, stay within the budget (the first
+// always is); STACK_SLOTS=<n>, when set, also caps the count. Why these numbers:
+// apps/brawl-chess/README.md's "Several stacks at once". A slot is held as <pool>/slot-<n>/pid,
+// its weight beside it (STACK_POOL, else /tmp/pronto-stacks). A stack on the app's own ports (a
+// plain launch@local) is outside the pool and holds no slot. A slot is taken when its holder is
+// gone and nothing answers on its ports (a stack orphaned by a killed holder keeps its slot until
+// it is down); STACK_SLOT=<n> asks for one by number and waits for it.
 //
 //   deno run -A tests/slot.ts <command...>   the command on a slot, in the slot's copy, with
 //                                            APP_URL, ORIGIN and every port variable set
@@ -34,7 +40,8 @@
 
 const app = new URL("..", import.meta.url).pathname.replace(/\/$/, "");
 const pool = Deno.env.get("STACK_POOL") ?? "/tmp/pronto-stacks";
-const cap = Number(Deno.env.get("STACK_SLOTS") ?? "3");
+const budget = Number(Deno.env.get("STACK_BUDGET") ?? Math.max(1, navigator.hardwareConcurrency - 2));
+const cap = Number(Deno.env.get("STACK_SLOTS") ?? Infinity);
 const asked = Number(Deno.env.get("STACK_SLOT") ?? "0");
 const say = (s: string) => console.error(`slot: ${s}`);
 
@@ -83,6 +90,14 @@ const misePath = (): string => {
 const alive = async (pid: number) =>
   pid > 0 && (await new Deno.Command("kill", { args: ["-0", String(pid)], stderr: "null" }).output()).code === 0;
 const holder = async (n: number) => Number(await Deno.readTextFile(`${pool}/slot-${n}/pid`).catch(() => "0"));
+// The weights a holder declares (the README's measures): a stack, and a rehearsal.
+export const weights = { stack: 1, rehearsal: 9 };
+// A slot's weight, "<pid> <weight>", its holder's only while the pid is the holder's: a holder
+// that wrote none (a slot.ts before weights) weighs a stack.
+const weighs = async (n: number, pid: number) => {
+  const [p, w] = (await Deno.readTextFile(`${pool}/slot-${n}/weight`).catch(() => "")).split(" ").map(Number);
+  return p === pid && w > 0 ? w : weights.stack;
+};
 // Held when something answers there, on either loopback.
 const answers = (port: number) => Promise.all(["127.0.0.1", "::1"].map((hostname) =>
   Deno.connect({ hostname, port }).then((c) => (c.close(), true), () => false))).then((a) => a.some(Boolean));
@@ -100,18 +115,20 @@ const choosing = async <T>(f: () => Promise<T>): Promise<T> => {
   try { return await f(); } finally { await Deno.remove(lock, { recursive: true }).catch(() => {}); }
 };
 
-export const claim = async (pid = Deno.pid, what = Deno.args.join(" ")): Promise<Slot> => {
+export const claim = async (pid = Deno.pid, what = Deno.args.join(" "), weight = Number(Deno.env.get("STACK_WEIGHT") ?? weights.stack)): Promise<Slot> => {
   await Deno.mkdir(pool, { recursive: true });
   const compose = await Deno.readTextFile(`${app}/.bayt/process-compose.yaml`);
   let told = "";
   for (const end = Date.now() + 2 * 3600_000; ;) {
     const got = await choosing(async () => {
-      let live = 0;
+      let live = 0, used = 0;
       for await (const e of Deno.readDir(pool)) {
         const m = e.name.match(/^slot-([0-9]+)$/);
-        if (m && await alive(await holder(Number(m[1])))) live++;
+        const pid = m ? await holder(Number(m[1])) : 0;
+        if (m && await alive(pid)) { live++; used += await weighs(Number(m[1]), pid); }
       }
       if (live >= cap) return `${live} stacks up, the cap (STACK_SLOTS=${cap})`;
+      if (used && used + weight > budget) return `weight ${used} of ${budget} held, this needs ${weight} (STACK_BUDGET)`;
       const busy: string[] = [];
       for (const n of asked ? [asked] : Array.from({ length: 160 }, (_, i) => i + 1)) {
         if (await alive(await holder(n))) { busy.push(`${n} held by ${await holder(n)}`); continue; }
@@ -121,8 +138,9 @@ export const claim = async (pid = Deno.pid, what = Deno.args.join(" ")): Promise
         if (held.length) { busy.push(`${n}'s ports ${held.join(", ")} answer, its stack not down`); continue; }
         const dir = `${pool}/slot-${n}`;
         await Deno.mkdir(dir, { recursive: true });
+        await Deno.writeTextFile(`${dir}/weight`, `${pid} ${weight}`);
         await Deno.writeTextFile(`${dir}/pid`, String(pid));
-        await Deno.writeTextFile(`${dir}/owner`, `${pid} ${new Date().toISOString()} ${app} ${what}\n`);
+        await Deno.writeTextFile(`${dir}/owner`, `${pid} ${new Date().toISOString()} ${app} ${what} (weight ${weight})\n`);
         return { n, dir, door, ports, text };
       }
       return `slot ${busy.join("; ")}`;
@@ -139,7 +157,7 @@ export const claim = async (pid = Deno.pid, what = Deno.args.join(" ")): Promise
       }
       await Deno.writeTextFile(`${copy}/.bayt/process-compose.yaml`, text);
       const url = `https://localhost:${door}`;
-      say(`slot ${n}: ${url}, ports ${door}-${door + 99}, from ${copy}`);
+      say(`slot ${n}: ${url}, ports ${door}-${door + 99}, weight ${weight} of ${budget}, from ${copy}`);
       // mise reads the copy's .mise.toml, which it trusts as the checkout's.
       const trusted = [Deno.env.get("MISE_TRUSTED_CONFIG_PATHS"), copy].filter(Boolean).join(":");
       const env = { ...Object.fromEntries(Object.entries(ports).map(([k, v]) => [k, String(v)])), ORIGIN: url, APP_URL: url, STACK_SLOT: String(n), PRONTO_GATE_DIR: app, MISE_TRUSTED_CONFIG_PATHS: trusted };
