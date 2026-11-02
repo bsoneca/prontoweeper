@@ -1,0 +1,4 @@
+/* Prontoweeper at intermediate on the Unity surface: the field is 16 squares wide (program.cue's level), each 65 px. The window's look is window.uss. */
+.field { width: 1054px; }
+.cell { width: 65px; height: 65px; }
+.field .cell { font-size: 40px; }

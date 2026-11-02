@@ -1,0 +1,67 @@
+/* Prontoweeper's window on the Unity surface, the look its screens share (the web's
+   shell/shared/window.css). Only the look: the field, the face, the metronome and the right button
+   are shell/screens/<level>.html, shared with the web. The host gives each element its tag and
+   classes and each data-x="v" as x--v. Reference pixels of a 1080-wide portrait panel; colours are
+   DESIGN.md's tokens (design.uss, generated). The web draws the face, a flag and a mine with ::before and ::after, which USS has not: here they are the same drawings as images (unity/sprites, rendered from the web's own CSS). */
+
+.desk { flex-grow: 1; background-color: var(--neutral); align-items: center; justify-content: center; padding: 0; }
+.window {
+    background-color: var(--surface-muted);
+    border-width: 4px;
+    border-top-color: var(--hilite); border-left-color: var(--hilite);
+    border-right-color: var(--lowlite); border-bottom-color: var(--lowlite);
+    padding: 3px;
+    flex-shrink: 0;
+}
+.titlebar { flex-direction: row; align-items: center; height: 88px; padding: 0 12px; background-color: var(--accent); color: var(--title-ink); }
+.titlebar .h1 { font-size: 44px; -unity-font-style: bold; flex-grow: 1; }
+.titlebar .icon, .titlebar .caps { display: none; }
+.menubar { flex-direction: row; height: 80px; align-items: center; }
+.menu-title { font-size: 38px; padding: 0 24px; color: var(--primary); }
+.body { padding: 6px; }
+.status-panel { margin-bottom: 6px; padding: 10px; }
+.raised, .face {
+    border-width: 5px;
+    border-top-color: var(--hilite); border-left-color: var(--hilite);
+    border-right-color: var(--lowlite); border-bottom-color: var(--lowlite);
+}
+.sunk {
+    border-width: 5px;
+    border-top-color: var(--lowlite); border-left-color: var(--lowlite);
+    border-right-color: var(--hilite); border-bottom-color: var(--hilite);
+}
+.status { flex-direction: row; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+.led { background-color: var(--led-ground); color: var(--led); -unity-font: url("../fonts/Cousine-Bold.ttf"); -unity-font-definition: initial; font-size: 92px; padding: 0 8px; min-width: 170px; height: 104px; -unity-text-align: middle-center; letter-spacing: 0; }
+.face { width: 136px; height: 136px; padding: 10px; background-color: var(--surface-muted); justify-content: center; align-items: center; }
+.smiley { width: 100%; height: 100%; -unity-background-scale-mode: scale-to-fit; }
+.face--smile .smiley { background-image: url("../sprites/face-smile.png"); }
+.face--cool .smiley { background-image: url("../sprites/face-cool.png"); }
+.face--dead .smiley { background-image: url("../sprites/face-dead.png"); }
+.field { flex-direction: row; flex-wrap: wrap; flex-shrink: 0; }
+.cell {
+    justify-content: center;
+    align-items: center;
+    font-size: 72px;
+    -unity-font-style: bold;
+    background-color: var(--surface-muted);
+    border-width: 1px;
+    border-color: var(--lowlite);
+    -unity-background-scale-mode: scale-to-fit;
+}
+.cell.look--hidden, .cell.look--flag, .cell.look--mark {
+    border-width: 6px;
+    border-top-color: var(--hilite); border-left-color: var(--hilite);
+    border-right-color: var(--lowlite); border-bottom-color: var(--lowlite);
+}
+.cell.look--flag { background-image: url("../sprites/cell-flag.png"); }
+.cell.look--mine { background-image: url("../sprites/cell-mine.png"); }
+.cell.look--boom { background-color: var(--danger); background-image: url("../sprites/cell-boom.png"); }
+.cell.look--wrong { background-image: url("../sprites/cell-wrong.png"); }
+.cell.n--1 { color: #0000FF; } .cell.n--2 { color: #008000; } .cell.n--3 { color: #FF0000; } .cell.n--4 { color: #000080; }
+.cell.n--5 { color: #800000; } .cell.n--6 { color: #008080; } .cell.n--7 { color: #000000; } .cell.n--8 { color: #808080; }
+.say { width: 100%; font-size: 34px; color: var(--primary); margin-top: 6px; -unity-text-align: middle-center; }
+
+/* The Hall of Fame form shows after a win only. */
+.post-panel .post { display: none; }
+.post-panel .post.status--won { display: flex; }
+.post-form .input, .post-form .button { font-size: 38px; }

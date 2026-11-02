@@ -1,0 +1,3 @@
+/* Prontoweeper at beginner on the Unity surface: the field is 9 squares wide (program.cue's level), each 115 px (44 dp on a 1080-wide, 420 dpi phone: a touch target). The window's look is window.uss. */
+.field { width: 1045px; }
+.cell { width: 115px; height: 115px; }
