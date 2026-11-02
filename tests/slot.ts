@@ -291,7 +291,11 @@ if (import.meta.main) {
     else console.error((await Deno.readTextFile(`${tmp}/process-compose.log`).catch(() => "")).split("\n").slice(-40).join("\n"));
   } else {
     const [cmd, ...args] = Deno.args;
-    const child = new Deno.Command(cmd, { args, cwd: slot.dir, env: { ...slot.env, PATH: misePath() }, stdin: "inherit", stdout: "inherit", stderr: "inherit" }).spawn();
+    // Not ORIGIN or APP_URL: a command that brings a stack up (integrate-local.ts) moves every port to
+    // a free one, the door's too, and the stack's default origin follows its door; the slot's would name
+    // a door nothing binds.
+    const { ORIGIN: _o, APP_URL: _u, ...ports } = slot.env;
+    const child = new Deno.Command(cmd, { args, cwd: slot.dir, env: { ...ports, PATH: misePath() }, stdin: "inherit", stdout: "inherit", stderr: "inherit" }).spawn();
     // Its own stack comes down on its own signal handler (integrate-local.ts and rehearse.ts have one).
     stopping = async () => { try { child.kill("SIGTERM"); } catch { /* gone */ } await Promise.race([child.status, new Promise((r) => setTimeout(r, 120_000))]); };
     code = (await child.status).code;
