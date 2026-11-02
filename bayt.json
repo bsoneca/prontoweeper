@@ -5096,9 +5096,9 @@
         "up": false,
         "manual": false,
         "environment": {
-          "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}",
-          "BILLING_BROKER": "http://localhost:28463",
-          "BILLING_BROKER_INTERNAL": "http://localhost:28463",
+          "BILLING_DOOR": "caddy:8443",
+          "BILLING_BROKER": "http://localhost:32166",
+          "BILLING_BROKER_INTERNAL": "http://localhost:32166",
           "BILLING_DOCUMENT": "{\"owner\":\"S9bB9PZ1ZHcfD71LF-4WN9iCUsUrDwIdFOzANKNDWYA\",\"plans\":{\"pro\":{\"name\":\"Minesweeper Pro\",\"interval\":\"month\",\"prices\":{\"usd\":299,\"brl\":990}}}}",
           "BILLING_GRANTS": "[]",
           "BILLING_FLAGS": "",
@@ -5132,7 +5132,7 @@
       },
       "entrypoint": {
         "name": "entrypoint",
-        "do": "exec deno run --no-config --allow-net --allow-env billing/service.ts",
+        "do": "export ORIGIN=\"${ORIGIN:-https://localhost:${BILLING_DOOR##*:}}\"; exec deno run --no-config --allow-net --allow-env billing/service.ts",
         "priority": 0,
         "shell": "sh",
         "stop": false,
@@ -5143,13 +5143,13 @@
           "defaultExclude": null
         },
         "dockerfile": {
-          "do": "deno run --no-config --allow-net --allow-env /app/billing/service.ts",
-          "shell": "exec"
+          "do": "export ORIGIN=\"${ORIGIN:-https://localhost:${BILLING_DOOR##*:}}\"; exec deno run --no-config --allow-net --allow-env /app/billing/service.ts",
+          "shell": "sh"
         },
         "env": {
-          "ORIGIN": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}",
-          "BILLING_BROKER": "http://localhost:28463",
-          "BILLING_BROKER_INTERNAL": "http://localhost:28463",
+          "BILLING_DOOR": "caddy:8443",
+          "BILLING_BROKER": "http://localhost:32166",
+          "BILLING_BROKER_INTERNAL": "http://localhost:32166",
           "BILLING_DOCUMENT": "{\"owner\":\"S9bB9PZ1ZHcfD71LF-4WN9iCUsUrDwIdFOzANKNDWYA\",\"plans\":{\"pro\":{\"name\":\"Minesweeper Pro\",\"interval\":\"month\",\"prices\":{\"usd\":299,\"brl\":990}}}}",
           "BILLING_GRANTS": "[]",
           "BILLING_FLAGS": "",
@@ -5258,7 +5258,7 @@
           "test": [
             "CMD",
             "httpcheck",
-            "http://127.0.0.1:28463/health"
+            "http://127.0.0.1:32166/health"
           ],
           "interval": "1s",
           "timeout": "5s",
@@ -5274,13 +5274,13 @@
         "up": false,
         "manual": false,
         "environment": {
-          "BROKER_ISSUER": "http://localhost:28463",
+          "BROKER_ISSUER": "http://localhost:32166",
           "BROKER_SECRET": "pronto-billing-local-launch-secret-000000",
-          "BILLING_FAKE_TENANTS": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}",
-          "PORT": "28463"
+          "BILLING_DOOR": "caddy:8443",
+          "PORT": "32166"
         },
         "ports": [
-          "28463:28463"
+          "32166:32166"
         ],
         "volumes": [],
         "depends_on": {},
@@ -5295,7 +5295,7 @@
           "test": [
             "CMD",
             "httpcheck",
-            "http://127.0.0.1:28463/health"
+            "http://127.0.0.1:32166/health"
           ],
           "interval": "1s",
           "timeout": "5s",
@@ -5309,7 +5309,7 @@
       },
       "healthcheck": {
         "template": "http",
-        "url": "http://127.0.0.1:28463/health",
+        "url": "http://127.0.0.1:32166/health",
         "authorization": null,
         "headers": [],
         "start_interval": "200ms",
@@ -5320,7 +5320,7 @@
       },
       "entrypoint": {
         "name": "entrypoint",
-        "do": "exec deno run --no-config --allow-net --allow-env --unsafely-ignore-certificate-errors=localhost billing/broker/main.ts",
+        "do": "export ORIGIN=\"${ORIGIN:-https://localhost:${BILLING_DOOR##*:}}\"; BILLING_FAKE_TENANTS=\"$ORIGIN\" exec deno run --no-config --allow-net --allow-env --unsafely-ignore-certificate-errors=localhost billing/broker/main.ts",
         "priority": 0,
         "shell": "sh",
         "stop": false,
@@ -5331,21 +5331,21 @@
           "defaultExclude": null
         },
         "dockerfile": {
-          "do": "deno run --no-config --allow-net --allow-env --unsafely-ignore-certificate-errors=localhost /app/billing/broker/main.ts",
-          "shell": "exec"
+          "do": "export ORIGIN=\"${ORIGIN:-https://localhost:${BILLING_DOOR##*:}}\"; BILLING_FAKE_TENANTS=\"$ORIGIN\" exec deno run --no-config --allow-net --allow-env --unsafely-ignore-certificate-errors=localhost /app/billing/broker/main.ts",
+          "shell": "sh"
         },
         "env": {
-          "BROKER_ISSUER": "http://localhost:28463",
+          "BROKER_ISSUER": "http://localhost:32166",
           "BROKER_SECRET": "pronto-billing-local-launch-secret-000000",
-          "BILLING_FAKE_TENANTS": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}",
-          "PORT": "28463"
+          "BILLING_DOOR": "caddy:8443",
+          "PORT": "32166"
         },
         "after": {},
         "host": true
       },
       "expose": {
         "http": {
-          "port": 28463
+          "port": 32166
         }
       },
       "cmds": [],

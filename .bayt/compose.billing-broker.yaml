@@ -13,15 +13,15 @@ services:
         BUILDKIT_SYNTAX: >-
           docker/dockerfile:1.27@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
     environment:
-      BROKER_ISSUER: http://localhost:28463
+      BROKER_ISSUER: http://localhost:32166
       BROKER_SECRET: pronto-billing-local-launch-secret-000000
-      BILLING_FAKE_TENANTS: ${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}
-      PORT: "28463"
+      BILLING_DOOR: caddy:8443
+      PORT: "32166"
     healthcheck:
       test:
       - CMD
       - httpcheck
-      - http://127.0.0.1:28463/health
+      - http://127.0.0.1:32166/health
       interval: 1s
       timeout: 5s
       retries: 30
@@ -33,7 +33,7 @@ services:
         aliases:
         - billing-broker
     ports:
-    - 28463:28463
+    - 32166:32166
   prontoweeper-billing-broker_bayt:
     build:
       context: ..

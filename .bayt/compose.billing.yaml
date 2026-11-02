@@ -26,9 +26,9 @@ services:
         condition: service_healthy
         restart: true
     environment:
-      ORIGIN: ${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}
-      BILLING_BROKER: http://localhost:28463
-      BILLING_BROKER_INTERNAL: http://localhost:28463
+      BILLING_DOOR: caddy:8443
+      BILLING_BROKER: http://localhost:32166
+      BILLING_BROKER_INTERNAL: http://localhost:32166
       BILLING_DOCUMENT: "{\"owner\":\"S9bB9PZ1ZHcfD71LF-4WN9iCUsUrDwIdFOzANKNDWYA\",\"plans\":{\"pro\":{\"name\":\"Minesweeper Pro\",\"interval\":\"month\",\"prices\":{\"usd\":299,\"brl\":990}}}}"
       BILLING_GRANTS: "[]"
       BILLING_FLAGS: ""

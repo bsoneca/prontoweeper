@@ -4,13 +4,13 @@
     "up": false,
     "manual": false,
     "environment": {
-      "BROKER_ISSUER": "http://localhost:28463",
+      "BROKER_ISSUER": "http://localhost:32166",
       "BROKER_SECRET": "pronto-billing-local-launch-secret-000000",
-      "BILLING_FAKE_TENANTS": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}",
-      "PORT": "28463"
+      "BILLING_DOOR": "caddy:8443",
+      "PORT": "32166"
     },
     "ports": [
-      "28463:28463"
+      "32166:32166"
     ],
     "volumes": [],
     "depends_on": {},
@@ -25,7 +25,7 @@
       "test": [
         "CMD",
         "httpcheck",
-        "http://127.0.0.1:28463/health"
+        "http://127.0.0.1:32166/health"
       ],
       "interval": "1s",
       "timeout": "5s",
@@ -87,7 +87,7 @@
       "test": [
         "CMD",
         "httpcheck",
-        "http://127.0.0.1:28463/health"
+        "http://127.0.0.1:32166/health"
       ],
       "interval": "1s",
       "timeout": "5s",
@@ -100,29 +100,29 @@
     "cmd": null
   },
   "entrypoint": {
-    "do": "exec deno run --no-config --allow-net --allow-env --unsafely-ignore-certificate-errors=localhost billing/broker/main.ts",
+    "do": "export ORIGIN=\"${ORIGIN:-https://localhost:${BILLING_DOOR##*:}}\"; BILLING_FAKE_TENANTS=\"$ORIGIN\" exec deno run --no-config --allow-net --allow-env --unsafely-ignore-certificate-errors=localhost billing/broker/main.ts",
     "dockerfile": {
-      "do": "deno run --no-config --allow-net --allow-env --unsafely-ignore-certificate-errors=localhost /app/billing/broker/main.ts",
-      "shell": "exec"
+      "do": "export ORIGIN=\"${ORIGIN:-https://localhost:${BILLING_DOOR##*:}}\"; BILLING_FAKE_TENANTS=\"$ORIGIN\" exec deno run --no-config --allow-net --allow-env --unsafely-ignore-certificate-errors=localhost /app/billing/broker/main.ts",
+      "shell": "sh"
     },
     "shell": "sh",
     "env": {
-      "BROKER_ISSUER": "http://localhost:28463",
+      "BROKER_ISSUER": "http://localhost:32166",
       "BROKER_SECRET": "pronto-billing-local-launch-secret-000000",
-      "BILLING_FAKE_TENANTS": "${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}",
-      "PORT": "28463"
+      "BILLING_DOOR": "caddy:8443",
+      "PORT": "32166"
     },
     "after": {},
     "host": true
   },
   "expose": {
     "http": {
-      "port": 28463
+      "port": 32166
     }
   },
   "healthcheck": {
     "template": "http",
-    "url": "http://127.0.0.1:28463/health",
+    "url": "http://127.0.0.1:32166/health",
     "authorization": null,
     "headers": [],
     "start_interval": "200ms",

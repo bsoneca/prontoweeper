@@ -7,9 +7,9 @@ COPY billing/shared.ts /app/billing/
 COPY billing/broker/core.ts billing/broker/main.ts billing/broker/stripe.ts billing/broker/fake.ts /app/billing/broker/
 COPY --parents billing/*.ts billing/broker/*.ts ./
 COPY .bayt/Taskfile.yml .bayt/Taskfile.bayt.yml .bayt/bayt.billing-broker.json ./.bayt/
-EXPOSE 28463
-ENTRYPOINT ["deno","run","--no-config","--allow-net","--allow-env","--unsafely-ignore-certificate-errors=localhost","/app/billing/broker/main.ts"]
-HEALTHCHECK --interval=1s --timeout=5s --retries=30 --start-period=30s CMD ["httpcheck","http://127.0.0.1:28463/health"]
+EXPOSE 32166
+ENTRYPOINT ["sh","-c","export ORIGIN=\"${ORIGIN:-https://localhost:${BILLING_DOOR##*:}}\"; BILLING_FAKE_TENANTS=\"$ORIGIN\" exec deno run --no-config --allow-net --allow-env --unsafely-ignore-certificate-errors=localhost /app/billing/broker/main.ts"]
+HEALTHCHECK --interval=1s --timeout=5s --retries=30 --start-period=30s CMD ["httpcheck","http://127.0.0.1:32166/health"]
 
 FROM busybox:musl@sha256:03db190ed4c1ceb1c55d179a0940e2d71d42130636a780272629735893292223 AS billing-broker_ctxs
 ARG BAYT_DIR

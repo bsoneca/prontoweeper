@@ -331,19 +331,21 @@ processes:
     - --
     - sh
     - -c
-    - exec deno run --no-config --allow-net --allow-env billing/service.ts
+    - >-
+      export ORIGIN="$${ORIGIN:-https://localhost:$${BILLING_DOOR##*:}}"; exec deno
+      run --no-config --allow-net --allow-env billing/service.ts
     availability:
       exit_on_skipped: true
     environment:
-    - BILLING_BROKER=http://localhost:28463
-    - BILLING_BROKER_INTERNAL=http://localhost:28463
+    - BILLING_BROKER=http://localhost:32166
+    - BILLING_BROKER_INTERNAL=http://localhost:32166
     - >-
       BILLING_DOCUMENT={"owner":"S9bB9PZ1ZHcfD71LF-4WN9iCUsUrDwIdFOzANKNDWYA","plans":{"pro":{"name":"Minesweeper Pro","interval":"month","prices":{"usd":299,"brl":990}}}}
+    - BILLING_DOOR=127.0.0.1:${CADDY_DOOR_PORT:-24894}
     - BILLING_FLAGS=
     - BILLING_GRANTS=[]
     - BILLING_PORT=${BILLING_HTTP_PORT:-10348}
     - CRUD_URL=http://127.0.0.1:${CRUD_HTTP_PORT:-15951}
-    - ORIGIN=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}
     - >-
       SERVICE_JWT=${SERVICE_JWT:-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoic2VydmljZSIsInN1YiI6IjAwMDAwMDAwLTAwMDAtMDAwMC0wMDAwLTAwMDAwMDAwMDAwMCIsImV4cCI6MTk4ODE1MDQwMH0.dGYz_sMSnOvZy0eANh7spJbgyr2fEzeynOERIqW7gd4}
   billing-broker:
@@ -357,18 +359,19 @@ processes:
     - sh
     - -c
     - >-
-      exec deno run --no-config --allow-net --allow-env
+      export ORIGIN="$${ORIGIN:-https://localhost:$${BILLING_DOOR##*:}}";
+      BILLING_FAKE_TENANTS="$$ORIGIN" exec deno run --no-config --allow-net --allow-env
       --unsafely-ignore-certificate-errors=localhost billing/broker/main.ts
     availability:
       exit_on_skipped: true
     environment:
-    - BILLING_FAKE_TENANTS=${ORIGIN:-https://localhost:${CADDY_TLS_HOST_PORT:-28102}}
-    - BROKER_ISSUER=http://localhost:28463
+    - BILLING_DOOR=127.0.0.1:${CADDY_DOOR_PORT:-24894}
+    - BROKER_ISSUER=http://localhost:32166
     - BROKER_SECRET=pronto-billing-local-launch-secret-000000
-    - PORT=28463
+    - PORT=32166
     readiness_probe:
       exec:
-        command: bayt microcheck httpcheck http://127.0.0.1:28463/health
+        command: bayt microcheck httpcheck http://127.0.0.1:32166/health
       period_seconds: 1
       timeout_seconds: 5
       failure_threshold: 60
