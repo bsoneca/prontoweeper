@@ -5,7 +5,7 @@
     "manual": false,
     "build": {
       "additional_contexts": {
-        "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://bonitao/mecha-auth:0.18.0@sha256:fc880aa71831b5bdcaa8bc6181bddd161f2bf4af24833afb14a94b402094133c}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
+        "libraries_mecha-auth-image": "${MONOREPO_COMPOSE_MODE:-docker-image://ghcr.io/bsoneca/mecha-auth:0.18.1-host.3@sha256:168f6e577c113ac60620094219b20dc08ebcdee98228b4136e1bdf877412fe4f}${MONOREPO_COMPOSE_MODE:+:libraries_mecha-auth-image}"
       },
       "secrets": [],
       "args": {}
