@@ -205,23 +205,6 @@
       }
     }
   }
-  # pronto-billing:begin — the plans, the broker's entitlements and paying, to the billing service
-  handle /.well-known/pronto-billing.json {
-    reverse_proxy {$PRONTO_UPSTREAM_BILLING:billing:8688} {
-      header_up dapr-app-id billing
-      header_up Host {upstream_hostport}
-    }
-  }
-  handle /billing/* {
-    request_body {
-      max_size 16KB
-    }
-    reverse_proxy {$PRONTO_UPSTREAM_BILLING:billing:8688} {
-      header_up dapr-app-id billing
-      header_up Host {upstream_hostport}
-    }
-  }
-  # pronto-billing:end
   # No strip_prefix: the auth service mounts its routes WITH the /auth
   # prefix. Ships unconditionally — in a cluster without an auth service
   # the upstream never resolves and this unused route just 502s.

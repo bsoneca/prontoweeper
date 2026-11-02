@@ -3,6 +3,8 @@
 //   deno test --allow-read --allow-env --allow-run tests/unit.ts -- <suite>
 // A suite whose inputs are as at its last green run is reported cached and not run (select.js,
 // docs/test-selection.md); `-- <suite> --all` or UNIT_ALL=1 runs it anyway.
+// A suite the app gives jobs (suites.cue) runs its cases over that many processes at once, each
+// every n-th case ("-- <suite> <k>/<n>" runs the k-th share alone).
 // Every app's copy of this file, tests/unit/select.js and tests/unit/schema.cue is the same; what
 // an app's cases call is its own tests/unit/registry.js, and its suites its tests/unit/suites.cue.
 import { called, imports, key, needed, reach, sha } from "./unit/select.js";
@@ -10,7 +12,7 @@ import { dirname, relative, resolve } from "node:path";
 import { tmpdir } from "node:os";
 
 const all = Deno.args.includes("--all") || !!Deno.env.get("UNIT_ALL");
-const [suite] = Deno.args.filter((a) => a !== "--all");
+const [suite, share] = Deno.args.filter((a) => a !== "--all");
 if (!suite) throw new Error("name the suite (tests/unit/suites.cue)");
 const dir = new URL("./unit/", import.meta.url).pathname;
 // A unit test is a case here, never code: a *.test.* file beside them fails every suite.
@@ -19,10 +21,12 @@ if (coded.length) throw new Error(`write these as cases in tests/unit/*.cue: ${c
 const files = [...Deno.readDirSync(dir)].filter((f) => f.name.endsWith(".cue")).map((f) => dir + f.name).sort();
 const out = await new Deno.Command(Deno.env.get("CUE") ?? "cue", { args: ["vet", "-c", ...files], stdout: "piped", stderr: "piped" }).output();
 if (!out.success) throw new Error("the cases do not meet their schema:\n" + new TextDecoder().decode(out.stderr));
-const exported = await new Deno.Command(Deno.env.get("CUE") ?? "cue", { args: ["export", ...files, "-e", "cases", "--out", "json"], stdout: "piped", stderr: "piped" }).output();
+const exported = await new Deno.Command(Deno.env.get("CUE") ?? "cue", { args: ["export", ...files, "-e", "{c: cases, j: jobs}", "--out", "json"], stdout: "piped", stderr: "piped" }).output();
 if (!exported.success) throw new Error(new TextDecoder().decode(exported.stderr));
-const cases: Record<string, { suite: string; steps: Step[] }> = JSON.parse(new TextDecoder().decode(exported.stdout));
-const mine = Object.entries(cases).filter(([, c]) => c.suite === suite);
+const { c: cases, j: jobs }: { c: Record<string, { suite: string; steps: Step[] }>; j: Record<string, number> } = JSON.parse(new TextDecoder().decode(exported.stdout));
+// This process's share of the suite, the k-th of n: every case of it when no share is named.
+const [k, n] = share ? share.split("/").map(Number) : [0, 1];
+const mine = Object.entries(cases).filter(([, c]) => c.suite === suite).filter((_, i) => i % n === k);
 
 // --- Selection: the suite's inputs, and its last green run's (.task/unit/<suite>.json). ---
 const app = new URL("../", import.meta.url).pathname;
@@ -64,6 +68,7 @@ function fixed(): string[] | null {
   return [
     `suite ${suite}`,
     `cases ${sha(JSON.stringify(mine))}`,
+    `jobs ${jobs[suite] ?? 1}`,
     ...["tests/unit.ts", "tests/unit/select.js", "tests/unit/schema.cue", "mise.lock", "deno.json", "deno.jsonc", "deno.lock", "package.json"].map((f) => `file ${f} ${hashOf(app + f)}`),
     `deno ${Deno.version.deno}`,
     `args ${JSON.stringify(Deno.args.filter((a) => a !== "--all"))}`,
@@ -146,21 +151,38 @@ if (!observedTo) {
   const pending = `${record}.pending`;
   await Promise.all([persist(record, null), persist(pending, null)]);
   const granted = ["read", "write", "env", "run", "net", "sys", "ffi"].filter((name) => Deno.permissions.querySync({ name } as Deno.PermissionDescriptor).state === "granted");
-  const child = new Deno.Command(Deno.execPath(), {
-    args: ["test", "--no-config", ...granted.map((p) => `--allow-${p}`), new URL(import.meta.url).pathname, "--", suite],
-    env: { UNIT_OBSERVED_TO: pending },
-  }).spawn();
-  const { code } = await child.status;
+  // One child a share, each saying what it saw in its own file; one share is the whole suite.
+  const shares = jobs[suite] ?? 1;
+  const pendings = Array.from({ length: shares }, (_, i) => shares > 1 ? `${pending}.${i}` : pending);
+  if (shares > 1) await Promise.all(pendings.map((to) => persist(to, null)));
+  const children = pendings.map((to, i) => new Deno.Command(Deno.execPath(), {
+    args: ["test", "--no-config", ...granted.map((p) => `--allow-${p}`), new URL(import.meta.url).pathname, "--", suite, ...(shares > 1 ? [`${i}/${shares}`] : [])],
+    env: { UNIT_OBSERVED_TO: to },
+    ...(shares > 1 ? { stdout: "piped", stderr: "piped" } : {}),
+  }).spawn());
+  const codes: number[] = [];
+  for (const child of children) {
+    if (shares === 1) { codes.push((await child.status).code); continue; }
+    const o = await child.output();
+    await Deno.stdout.write(o.stdout);
+    await Deno.stderr.write(o.stderr);
+    codes.push(o.code);
+  }
+  const code = codes.find((c) => c !== 0) ?? 0;
   if (code === 0 && base) {
-    let got: Seen | null = null;
-    try { got = JSON.parse(Deno.readTextFileSync(pending)); } catch { /* it kept nothing */ }
+    // Each share's snapshot; when one kept none, the run keeps none.
+    const each = pendings.map((to): Seen | null => { try { return JSON.parse(Deno.readTextFileSync(to)); } catch { return null; } });
+    const got: Seen | null = each.some((x) => !x) ? null : (each as Seen[]).reduce((a, b) => ({
+      read: { ...b.read, ...a.read }, dir: { ...b.dir, ...a.dir }, stat: { ...b.stat, ...a.stat }, env: { ...b.env, ...a.env }, tree: { ...b.tree, ...a.tree },
+      cmd: [...new Set([...a.cmd, ...b.cmd])].sort(), open: a.open ?? b.open,
+    }));
     if (got?.open) console.log(`${suite}: green, not kept: ${got.open}`);
     else if (got) {
       const lines = [...base, ...linesOf(got)];
       await persist(record, JSON.stringify({ key: key(lines), at: new Date().toISOString(), observed: got, lines }, null, 1));
     }
   }
-  await persist(pending, null);
+  await Promise.all(pendings.map((to) => persist(to, null)));
   Deno.exit(code);
 }
 
